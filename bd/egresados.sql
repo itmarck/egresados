@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-07-2019 a las 07:20:51
+-- Tiempo de generación: 02-07-2019 a las 23:59:11
 -- Versión del servidor: 10.1.40-MariaDB
 -- Versión de PHP: 7.3.5
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `proyectofinal`
+-- Base de datos: `egresados`
 --
 
 -- --------------------------------------------------------
@@ -40,11 +40,11 @@ CREATE TABLE `actividadeconomica` (
 --
 
 INSERT INTO `actividadeconomica` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Mineria', 'Actividad económica del sector primario representada por la explotación o extracción de los minerales que se han acumulado en el suelo y subsuelo en forma de yacimientos.', 0),
+(1, 'Mineria', 'Actividad economica del sector primario representada por la explotación o extracción de los minerales que se han acumulado en el suelo y subsuelo en forma de yacimientos.', 0),
 (2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o marítimas.', 0),
-(3, 'Ganaderia', 'Actividad económica de origen muy antiguo que consiste en el manejo y explotación de animales domesticables con fines de producción, para su aprovechamiento.', 0),
+(3, 'Ganaderia', 'Actividad economica de origen muy antiguo que consiste en el manejo y explotación de animales domesticables con fines de producción, para su aprovechamiento.', 0),
 (4, 'Industria', 'Actividad que tiene como finalidad de transformar las materias primas en productos elaborados o semielaborados utilizando una fuente de energía.', 0),
-(5, 'Agricultura', 'Conjunto de técnicas, conocimientos y saberes para cultivar la tierra y la parte del sector primario que se dedica a ello. En ella se engloban los diferentes trabajos de tratamiento del suelo y los cultivos de vegetales.', 0),
+(5, 'Agricultura', 'Conjunto de tecnicas, conocimientos y saberes para cultivar la tierra y la parte del sector primario que se dedica a ello. En ella se engloban los diferentes trabajos de tratamiento del suelo y los cultivos de vegetales.', 0),
 (6, 'Turismo', 'Actividad que realizan las personas durante sus viajes y estancias en lugares distintos a su entorno habitual durante un período de tiempo inferior a un año, con fines de ocio, negocios u otros', 0);
 
 -- --------------------------------------------------------
@@ -206,7 +206,7 @@ CREATE TABLE `distrito` (
 INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUES
 (1, 1, 'Chiclayo', 0),
 (2, 1, 'Pimentel', 0),
-(3, 2, 'Ferreñafe', 0),
+(3, 2, 'Ferrenafe', 0),
 (4, 3, 'Morrope', 0),
 (5, 3, 'Lambayeque', 0),
 (6, 6, 'Miraflores', 0),
@@ -267,11 +267,11 @@ CREATE TABLE `escuelaprofesional` (
 --
 
 INSERT INTO `escuelaprofesional` (`codigo`, `codigoFacultad`, `nombre`, `siglas`, `estado`, `codigoUniversidad`, `vigencia`) VALUES
-(1, 1, 'Escuela de Ingeniería en Computación e Informática', 'EPICI', 1, 5, 1),
-(2, 1, 'Escuela Profesional de Estadística', 'EPE', 1, 5, 1),
-(3, 2, 'Escuela Profesional de Mecánica Eléctrica', 'FIME', 1, 5, 1),
-(4, 3, 'Escuela Profesional de Enfermería', 'EPEN', 1, 4, 1),
-(5, 5, 'Escuela Profesional de Ingeniería Agrícola', 'EPIA', 1, 5, 1);
+(1, 1, 'Escuela de Ingenieria en Computacion e Informatica', 'EPICI', 1, 5, 1),
+(2, 1, 'Escuela Profesional de Estadistica', 'EPE', 1, 5, 1),
+(3, 2, 'Escuela Profesional de Mecanica Electrica', 'FIME', 1, 5, 1),
+(4, 3, 'Escuela Profesional de Enfermeria', 'EPEN', 1, 4, 1),
+(5, 5, 'Escuela Profesional de Ingenieria Agricola', 'EPIA', 1, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -310,11 +310,11 @@ CREATE TABLE `facultad` (
 --
 
 INSERT INTO `facultad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) VALUES
-(1, 'Facultad de Ciencias Físicas y Matemáticas', 'FACFYM', 1, 1),
-(2, 'Facultad de Mecánica Eléctrica', 'FIME', 1, 1),
-(3, 'Facultad de Enfermería', 'FE', 1, 1),
+(1, 'Facultad de Ciencias Fisicas y Matematicas', 'FACFYM', 1, 1),
+(2, 'Facultad de Mecanica Electrica', 'FIME', 1, 1),
+(3, 'Facultad de Enfermeria', 'FE', 1, 1),
 (4, 'Facultad de Agronomia', 'FAG', 1, 1),
-(5, 'Facultad de Ingeniería Agrícola', 'FIA', 1, 1);
+(5, 'Facultad de Ingenieria Agricola', 'FIA', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -324,7 +324,7 @@ INSERT INTO `facultad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) VALU
 
 CREATE TABLE `modalidadadmision` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(22) COLLATE utf8_unicode_ci NOT NULL,
   `descripcion` text COLLATE utf8_unicode_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -334,12 +334,12 @@ CREATE TABLE `modalidadadmision` (
 --
 
 INSERT INTO `modalidadadmision` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Ordinario', 'Examen de Admisión para cualquier postulante con un solo requisito, haber terminado el colegio.', 1),
-(2, 'Extraordinario', 'Examen de Admisión para alumnos de quinto que aun no terminan el colegio.', 1),
-(3, 'Centro PRE', 'Examen de Admisión para chicos que ya han culminado el colegio y están en la academia de la universidad.', 1),
-(4, 'Exonerados', 'Examen de Admisión para chicos que ocuparon los primeros puestos en su etapa académica.', 1),
-(5, 'Casos Especiales', 'Examen de Admisión para chicos con alguna discapacidad.', 1),
-(6, 'Deportista Calificad', 'Examen de Admisión para chicos que destacan en algún deporte. ', 1);
+(1, 'Ordinario', 'Examen de Admision para cualquier postulante con un solo requisito, haber terminado el colegio.', 1),
+(2, 'Extraordinario', 'Examen de Admision para alumnos de quinto que aun no terminan el colegio.', 1),
+(3, 'Centro PRE', 'Examen de Admision para chicos que ya han culminado el colegio y estan en la academia de la universidad.', 1),
+(4, 'Exonerados', 'Examen de Admision para chicos que ocuparon los primeros puestos en su etapa academica.', 1),
+(5, 'Casos Especiales', 'Examen de Admision para chicos con alguna discapacidad.', 1),
+(6, 'Deportista Calificado', 'Examen de Admision para chicos que destacan en algún deporte. ', 1);
 
 -- --------------------------------------------------------
 
@@ -359,8 +359,8 @@ CREATE TABLE `modalidadtitulacion` (
 --
 
 INSERT INTO `modalidadtitulacion` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Sistematización EXP', 'Esta modalidad es válida para aquellos egresados que están o hayan desarrollado\r\nactividad profesional en el campo educativo preferentemente en un periodo no\r\nmenor de cinco años. ', 0),
-(2, 'Tesis', 'Esta modalidad es valida para los estudiantes y egresados sin restricción del\r\ntiempo de egreso. ', 0);
+(1, 'Sistematización EXP', 'Esta modalidad es valida para aquellos egresados que estan o hayan desarrollado\r\nactividad profesional en el campo educativo preferentemente en un periodo no\r\nmenor de cinco anhos. ', 0),
+(2, 'Tesis', 'Esta modalidad es valida para los estudiantes y egresados sin restriccion del\r\ntiempo de egreso. ', 0);
 
 -- --------------------------------------------------------
 
@@ -389,9 +389,9 @@ CREATE TABLE `persona` (
 INSERT INTO `persona` (`codigo`, `nombres`, `apellidoMaterno`, `apellidoPaterno`, `genero`, `fechaNacimiento`, `celular`, `correo`, `dni`, `estadoCivil`, `vigencia`) VALUES
 (160012, 'Christian Robert', 'Flores', 'Torres', 1, '1998-12-10', '98534656', 'cflores@unprg.edu.pe', '65734654', '1', 1),
 (165032, 'David', 'Paz', 'Rioja', 1, '1999-07-13', '93523622', 'drioja@unprg.edu.pe', '74575683', '1', 1),
-(165058, 'Marcelo', 'Villar', 'Velásquez', 1, '1999-02-18', '974657567', 'mvelasquez@unprg.edu.pe', '56845346', '1', 1),
-(169025, 'Javier Arturo', 'Sialer', 'Chávez', 1, '1999-06-12', '90348543', 'achavez@unprg.edu.pe', '67723032', '1', 1),
-(169027, 'Fabián Andrés', 'Bautista', 'Pacherres', 1, '1998-12-13', '953172725', 'fpacherres@gmail.com', '73860228', '1', 1);
+(165058, 'Marcelo', 'Villar', 'Velasquez', 1, '1999-02-18', '974657567', 'mvelasquez@unprg.edu.pe', '56845346', '1', 1),
+(169025, 'Javier Arturo', 'Sialer', 'Chavez', 1, '1999-06-12', '90348543', 'achavez@unprg.edu.pe', '67723032', '1', 1),
+(169027, 'Fabian Andres', 'Bautista', 'Pacherres', 1, '1998-12-13', '953172725', 'fpacherres@gmail.com', '73860228', '1', 1);
 
 -- --------------------------------------------------------
 
@@ -416,10 +416,10 @@ CREATE TABLE `personal` (
 --
 
 INSERT INTO `personal` (`codigo`, `apellidoPaterno`, `apellidoMaterno`, `dni`, `genero`, `correo`, `celular`, `vigencia`, `nombres`) VALUES
-(1, 'Portocarrero', 'Rojas', '76867943', 1, 'portocarrero_rojas@unprg.edu.pe', '983297423', 1, 'José Eduardo'),
+(1, 'Portocarrero', 'Rojas', '76867943', 1, 'portocarrero_rojas@unprg.edu.pe', '983297423', 1, 'Jose Eduardo'),
 (2, 'Espejo', 'Cornejo', '78453245', 1, 'espejo_cornejo@unprg.edu.pe', '989345346', 1, 'Alejandro Miguel'),
-(3, 'Montes', 'Eslava', '97942442', 1, 'montes_eslava@unprg.edu.pe', '973435645', 1, 'Óscar'),
-(4, 'Álamo', 'Rioja', '56235222', 1, 'alamo_rioja@unprg.edu.pe', '934151121', 1, 'Jordi Erick'),
+(3, 'Montes', 'Eslava', '97942442', 1, 'montes_eslava@unprg.edu.pe', '973435645', 1, 'Oscar'),
+(4, 'Alamo', 'Rioja', '56235222', 1, 'alamo_rioja@unprg.edu.pe', '934151121', 1, 'Jordi Erick'),
 (5, 'Supo', 'Chumpen', '84523132', 1, 'supo_chumpen@unprg.edu.pe', '983423512', 1, 'Marco Antonio');
 
 -- --------------------------------------------------------
@@ -441,7 +441,7 @@ CREATE TABLE `provincia` (
 
 INSERT INTO `provincia` (`codigo`, `codigoDepartamento`, `nombre`, `vigencia`) VALUES
 (1, 1, 'Chiclayo', 0),
-(2, 1, 'Ferreñafe', 0),
+(2, 1, 'Ferrenafe', 0),
 (3, 1, 'Lambayeque', 0),
 (4, 2, 'Piura', 0),
 (5, 3, 'Trujillo', 0),
@@ -465,11 +465,11 @@ CREATE TABLE `tipoestudiopostgrado` (
 --
 
 INSERT INTO `tipoestudiopostgrado` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Máster Oficial', 'Son los másteres con los que se obtiene una titulación oficial y reconocida, que permite acceder al doctorado y para la que es necesario poseer una titulación universitaria.', 1),
-(2, 'Máster Título Propio', 'Son unos másteres no oficiales ni homologados, ofertados y diseñados por las propias universidades, donde también fijan los requisitos de acceso y el plan de estudios.', 1),
-(3, 'Doctorado', 'Es la máxima formación académica a la que se puede optar, tras realizar un máster y realizar una tesis de investigación, ya sea si tu objetivo es la docencia o ser un referente en tu ámbito profesional.', 1),
-(4, 'Curso de Esp', 'Se tratan de cursos de corta duración ofertados para aquellos que quieren conocer mejor un nuevo ámbito de su trabajo, dominar una nueva competencia o reciclar su perfil.', 1),
-(5, 'MBA', 'Master of Business Administration (o Maestría en Administración de Empresas), es un tipo de posgrado muy específico dirigido a los profesionales del mundo de los negocios con cargos de responsabilidad o que quieren optar a un ascenso laboral. Se trata de una formación muy orientada a su aplicación práctica en sus puestos de trabajo.', 1);
+(1, 'Master Oficial', 'Son los masteres con los que se obtiene una titulación oficial y reconocida, que permite acceder al doctorado y para la que es necesario poseer una titulación universitaria.', 1),
+(2, 'Master Titulo Propio', 'Son unos masteres no oficiales ni homologados, ofertados y disenados por las propias universidades, donde también fijan los requisitos de acceso y el plan de estudios.', 1),
+(3, 'Doctorado', 'Es la maxima formacion academica a la que se puede optar, tras realizar un master y realizar una tesis de investigación, ya sea si tu objetivo es la docencia o ser un referente en tu ámbito profesional.', 1),
+(4, 'Curso de Esp', 'Se tratan de cursos de corta duracion ofertados para aquellos que quieren conocer mejor un nuevo ambito de su trabajo, dominar una nueva competencia o reciclar su perfil.', 1),
+(5, 'MBA', 'Master of Business Administration (o Maestría en Administración de Empresas), es un tipo de posgrado muy específico dirigido a los profesionales del mundo de los negocios con cargos de responsabilidad o que quieren optar a un ascenso laboral. Se trata de una formación muy orientada a su aplicación practica en sus puestos de trabajo.', 1);
 
 -- --------------------------------------------------------
 
