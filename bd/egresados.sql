@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-07-2019 a las 23:59:11
+-- Tiempo de generación: 04-07-2019 a las 05:12:49
 -- Versión del servidor: 10.1.40-MariaDB
 -- Versión de PHP: 7.3.5
 
@@ -164,6 +164,17 @@ CREATE TABLE `contrato` (
   `vigencia` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `contrato`
+--
+
+INSERT INTO `contrato` (`codigo`, `codigoEgresado`, `codigoCentroLaboral`, `cargo`, `fechaInicio`, `fechaTermino`, `detalleFunciones`, `vigencia`) VALUES
+(1, 2, 1, 'Jefe de Gestión', '2018-04-02', '2019-01-31', 'Gestionaba...', 1),
+(2, 4, 4, 'Jefe de Diseño ', '2018-01-01', '2019-06-30', 'Responsable de definir el enfoque estratégico, de precisar el planteamiento táctico y operativo del diseño del producto, servicio o sistema, y de definir la ventaja competitiva para la organización gracias a las aportaciones del diseño.', 1),
+(4, 3, 6, 'Programador Web', '2018-12-03', '2019-12-31', 'Programador independiente. Desarrollador de software, crea y realiza mantenimiento a paginas y aplicaciones web.', 1),
+(5, 5, 5, 'Network Marketing', '2019-01-01', '2020-01-01', 'Distribuidor de productos y servicios a través de una Red de comercialización. Ayuda a personas sobre el apalancamiento en redes de mercadeo.', 1),
+(6, 1, 3, 'Creador de videojueg', '2018-10-15', '2020-02-14', 'Desarrollador de software (ya sea un individuo o una empresa) que crea videojuegos para diversas plataformas (videoconsola o computadora personal). Algunos desarrolladores también se especializan en ciertos tipos de juegos, como los RPG o los FPS.', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -283,13 +294,23 @@ CREATE TABLE `estudiospostgrados` (
   `codigo` int(11) NOT NULL,
   `codigoEgresado` int(11) NOT NULL,
   `codigoTipo` int(11) NOT NULL,
-  `codigoUniversidad` int(11) NOT NULL,
-  `codigoCentroEstudios` int(11) NOT NULL,
-  `nombre` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `codigoUniversidad` int(11) DEFAULT NULL,
+  `codigoCentroEstudios` int(11) DEFAULT NULL,
+  `nombre` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `fechaInicio` date NOT NULL,
   `fechaTermino` date NOT NULL,
   `vigencia` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `estudiospostgrados`
+--
+
+INSERT INTO `estudiospostgrados` (`codigo`, `codigoEgresado`, `codigoTipo`, `codigoUniversidad`, `codigoCentroEstudios`, `nombre`, `fechaInicio`, `fechaTermino`, `vigencia`) VALUES
+(1, 1, 3, 1, NULL, 'Implementacion de drones acuat', '2015-04-06', '2018-12-21', 1),
+(2, 4, 4, NULL, 2, 'Seguridad Informatica', '2018-04-02', '2018-12-14', 1),
+(3, 5, 1, 2, NULL, 'Cloud Computing ', '2017-08-07', '2018-08-31', 1),
+(4, 2, 2, NULL, 5, 'Diseño y Desarrollo de Videojuegos', '2017-12-22', '2019-04-26', 1);
 
 -- --------------------------------------------------------
 
@@ -528,13 +549,25 @@ INSERT INTO `universidad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) V
 
 CREATE TABLE `usuario` (
   `codigo` int(11) NOT NULL,
-  `codigoPersonal` int(11) NOT NULL,
+  `codigoPersonal` int(11) DEFAULT NULL,
   `nombre` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `clave` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `tipo` char(1) COLLATE utf8_unicode_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL,
-  `codigoPersona` int(11) NOT NULL
+  `codigoPersona` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`codigo`, `codigoPersonal`, `nombre`, `clave`, `tipo`, `vigencia`, `codigoPersona`) VALUES
+(4, 1, 'Pocarr', '123', 'A', 1, NULL),
+(5, NULL, 'Javcho', '456', 'E', 1, 169025),
+(6, 2, 'EspCor1', '987', 'A', 1, NULL),
+(7, 4, 'AlaRioja', '741', 'A', 1, NULL),
+(8, NULL, 'DavidR', '258', 'E', 1, 165032),
+(9, NULL, 'Marcktone', '369', 'E', 1, 165058);
 
 --
 -- Índices para tablas volcadas
@@ -724,7 +757,7 @@ ALTER TABLE `colegiatura`
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `departamento`
@@ -754,7 +787,7 @@ ALTER TABLE `escuelaprofesional`
 -- AUTO_INCREMENT de la tabla `estudiospostgrados`
 --
 ALTER TABLE `estudiospostgrados`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `facultad`
@@ -814,7 +847,7 @@ ALTER TABLE `universidad`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
