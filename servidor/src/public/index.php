@@ -30,5 +30,24 @@ $container['db'] = function ($c) {
 
 require '../routes/facultad.php';
 require '../routes/departamento.php';
+require '../routes/actividadEconomica.php';
+require '../routes/admision.php';
+require '../routes/centroEstudios.php';
+require '../routes/centroLaboral.php';
+require '../routes/colegiatura.php';
+require '../routes/contrato.php';
+require '../routes/distrito.php';
+require '../routes/egresado.php';
+require '../routes/escuelaProfesional.php';
+require '../routes/estudiosPostgrado.php';
+require '../routes/modalidadAdmision.php';
+require '../routes/modalidadTitulacion.php';
+require '../routes/persona.php';
+require '../routes/personal.php';
+require '../routes/provincia.php';
+require '../routes/titulacion.php';
+require '../routes/universidad.php';
+require '../routes/usuario.php';
+require '../routes/tipoEstudioPostgrado.php';
 
 $app->run();
