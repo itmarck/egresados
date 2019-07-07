@@ -33,7 +33,7 @@ $app->post('/api/contratos/add',function(Request $request){
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoCentroLaboral = $request->getParam('codigoCentroLaboral');
   $cargo = $request->getParam('cargo');
-  $sfechaInicio = $request->getParam('sfechaInicio');
+  $fechaInicio = $request->getParam('sfechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');  
   $detalleFunciones = $request->getParam('detalleFunciones');  
  try {
