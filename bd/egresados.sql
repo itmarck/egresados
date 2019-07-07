@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-07-2019 a las 05:12:49
+-- Tiempo de generación: 07-07-2019 a las 06:30:27
 -- Versión del servidor: 10.1.40-MariaDB
 -- Versión de PHP: 7.3.5
 
@@ -40,12 +40,12 @@ CREATE TABLE `actividadeconomica` (
 --
 
 INSERT INTO `actividadeconomica` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Mineria', 'Actividad economica del sector primario representada por la explotación o extracción de los minerales que se han acumulado en el suelo y subsuelo en forma de yacimientos.', 0),
-(2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o marítimas.', 0),
-(3, 'Ganaderia', 'Actividad economica de origen muy antiguo que consiste en el manejo y explotación de animales domesticables con fines de producción, para su aprovechamiento.', 0),
-(4, 'Industria', 'Actividad que tiene como finalidad de transformar las materias primas en productos elaborados o semielaborados utilizando una fuente de energía.', 0),
+(1, 'Mineria', 'Actividad economica del sector primario representada por la explotacion o extraccion de los minerales que se han acumulado en el suelo y subsuelo en forma de yacimientos.', 0),
+(2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o maritimas.', 0),
+(3, 'Ganaderia', 'Actividad economica de origen muy antiguo que consiste en el manejo y explotacion de animales domesticables con fines de produccion, para su aprovechamiento.', 0),
+(4, 'Industria', 'Actividad que tiene como finalidad de transformar las materias primas en productos elaborados o semielaborados utilizando una fuente de energia.', 0),
 (5, 'Agricultura', 'Conjunto de tecnicas, conocimientos y saberes para cultivar la tierra y la parte del sector primario que se dedica a ello. En ella se engloban los diferentes trabajos de tratamiento del suelo y los cultivos de vegetales.', 0),
-(6, 'Turismo', 'Actividad que realizan las personas durante sus viajes y estancias en lugares distintos a su entorno habitual durante un período de tiempo inferior a un año, con fines de ocio, negocios u otros', 0);
+(6, 'Turismo', 'Actividad que realizan las personas durante sus viajes y estancias en lugares distintos a su entorno habitual durante un periodo de tiempo inferior a un ano, con fines de ocio, negocios u otros', 0);
 
 -- --------------------------------------------------------
 
@@ -90,11 +90,11 @@ CREATE TABLE `centroestudios` (
 --
 
 INSERT INTO `centroestudios` (`codigo`, `razonSocial`, `vigencia`) VALUES
-(1, 'Universidad Nacional Pedro Ruiz Gallo', 1),
-(2, 'Universidad San Martin de Porres', 1),
-(3, 'Universidad Santo Toribio de Mogrovejo', 1),
-(4, 'Universidad de Piura', 1),
-(5, 'Universidad Nacional de Trujillo', 1);
+(1, 'CETI', 1),
+(2, 'SENATI', 1),
+(3, 'EIGER', 1),
+(4, 'CERTUS', 1),
+(5, 'EDUSOL', 1);
 
 -- --------------------------------------------------------
 
@@ -169,11 +169,11 @@ CREATE TABLE `contrato` (
 --
 
 INSERT INTO `contrato` (`codigo`, `codigoEgresado`, `codigoCentroLaboral`, `cargo`, `fechaInicio`, `fechaTermino`, `detalleFunciones`, `vigencia`) VALUES
-(1, 2, 1, 'Jefe de Gestión', '2018-04-02', '2019-01-31', 'Gestionaba...', 1),
-(2, 4, 4, 'Jefe de Diseño ', '2018-01-01', '2019-06-30', 'Responsable de definir el enfoque estratégico, de precisar el planteamiento táctico y operativo del diseño del producto, servicio o sistema, y de definir la ventaja competitiva para la organización gracias a las aportaciones del diseño.', 1),
+(1, 2, 1, 'Jefe de Gestion', '2018-04-02', '2019-01-31', 'Gestiona que todos los departamentos realicen sus actividades de manera correcta y eficientemente.', 1),
+(2, 4, 4, 'Jefe de Diseno ', '2018-01-01', '2019-06-30', 'Responsable de definir el enfoque estrategico, de precisar el planteamiento tactico y operativo del diseno del producto, servicio o sistema, y de definir la ventaja competitiva para la organizacion gracias a las aportaciones del diseno.', 1),
 (4, 3, 6, 'Programador Web', '2018-12-03', '2019-12-31', 'Programador independiente. Desarrollador de software, crea y realiza mantenimiento a paginas y aplicaciones web.', 1),
-(5, 5, 5, 'Network Marketing', '2019-01-01', '2020-01-01', 'Distribuidor de productos y servicios a través de una Red de comercialización. Ayuda a personas sobre el apalancamiento en redes de mercadeo.', 1),
-(6, 1, 3, 'Creador de videojueg', '2018-10-15', '2020-02-14', 'Desarrollador de software (ya sea un individuo o una empresa) que crea videojuegos para diversas plataformas (videoconsola o computadora personal). Algunos desarrolladores también se especializan en ciertos tipos de juegos, como los RPG o los FPS.', 1);
+(5, 5, 5, 'Network Marketing', '2019-01-01', '2020-01-01', 'Distribuidor de productos y servicios a traves de una Red de comercializacion. Ayuda a personas sobre el apalancamiento en redes de mercadeo.', 1),
+(6, 1, 3, 'Creador de videojueg', '2018-10-15', '2020-02-14', 'Desarrollador de software (ya sea un individuo o una empresa) que crea videojuegos para diversas plataformas (videoconsola o computadora personal). Algunos desarrolladores tambien se especializan en ciertos tipos de juegos, como los RPG o los FPS.', 1);
 
 -- --------------------------------------------------------
 
@@ -265,11 +265,11 @@ INSERT INTO `egresado` (`codigo`, `codigoEscuela`, `codigoPersona`, `codigoAdmis
 
 CREATE TABLE `escuelaprofesional` (
   `codigo` int(11) NOT NULL,
-  `codigoFacultad` int(11) NOT NULL,
+  `codigoFacultad` int(11) DEFAULT NULL,
   `nombre` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `siglas` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `estado` tinyint(1) NOT NULL,
-  `codigoUniversidad` int(11) NOT NULL,
+  `codigoUniversidad` int(11) DEFAULT NULL,
   `vigencia` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -278,19 +278,19 @@ CREATE TABLE `escuelaprofesional` (
 --
 
 INSERT INTO `escuelaprofesional` (`codigo`, `codigoFacultad`, `nombre`, `siglas`, `estado`, `codigoUniversidad`, `vigencia`) VALUES
-(1, 1, 'Escuela de Ingenieria en Computacion e Informatica', 'EPICI', 1, 5, 1),
-(2, 1, 'Escuela Profesional de Estadistica', 'EPE', 1, 5, 1),
-(3, 2, 'Escuela Profesional de Mecanica Electrica', 'FIME', 1, 5, 1),
-(4, 3, 'Escuela Profesional de Enfermeria', 'EPEN', 1, 4, 1),
-(5, 5, 'Escuela Profesional de Ingenieria Agricola', 'EPIA', 1, 5, 1);
+(1, 1, 'Escuela de Ingenieria en Computacion e Informatica', 'EPICI', 1, 1, 1),
+(2, NULL, 'Escuela Profesional de Estadistica', 'EPE', 1, 4, 1),
+(3, NULL, 'Escuela Profesional de Mecanica Electrica', 'FIME', 1, 5, 1),
+(4, 3, 'Escuela Profesional de Enfermeria', 'EPEN', 1, 1, 1),
+(5, NULL, 'Escuela Profesional de Ingenieria Agricola', 'EPIA', 1, 5, 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estudiospostgrados`
+-- Estructura de tabla para la tabla `estudiospostgrado`
 --
 
-CREATE TABLE `estudiospostgrados` (
+CREATE TABLE `estudiospostgrado` (
   `codigo` int(11) NOT NULL,
   `codigoEgresado` int(11) NOT NULL,
   `codigoTipo` int(11) NOT NULL,
@@ -303,14 +303,14 @@ CREATE TABLE `estudiospostgrados` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Volcado de datos para la tabla `estudiospostgrados`
+-- Volcado de datos para la tabla `estudiospostgrado`
 --
 
-INSERT INTO `estudiospostgrados` (`codigo`, `codigoEgresado`, `codigoTipo`, `codigoUniversidad`, `codigoCentroEstudios`, `nombre`, `fechaInicio`, `fechaTermino`, `vigencia`) VALUES
-(1, 1, 3, 1, NULL, 'Implementacion de drones acuat', '2015-04-06', '2018-12-21', 1),
-(2, 4, 4, NULL, 2, 'Seguridad Informatica', '2018-04-02', '2018-12-14', 1),
-(3, 5, 1, 2, NULL, 'Cloud Computing ', '2017-08-07', '2018-08-31', 1),
-(4, 2, 2, NULL, 5, 'Diseño y Desarrollo de Videojuegos', '2017-12-22', '2019-04-26', 1);
+INSERT INTO `estudiospostgrado` (`codigo`, `codigoEgresado`, `codigoTipo`, `codigoUniversidad`, `codigoCentroEstudios`, `nombre`, `fechaInicio`, `fechaTermino`, `vigencia`) VALUES
+(1, 1, 3, 1, 4, 'Implementacion de drones', '2015-04-06', '2018-12-21', 1),
+(2, 4, 4, 2, 2, 'Seguridad Informatica', '2018-04-02', '2018-12-14', 1),
+(3, 5, 1, 2, 5, 'Cloud Computing ', '2017-08-07', '2018-08-31', 1),
+(4, 2, 2, 3, 1, 'Diseno y Desarrollo de Videojuegos', '2017-12-22', '2019-04-26', 1);
 
 -- --------------------------------------------------------
 
@@ -355,12 +355,12 @@ CREATE TABLE `modalidadadmision` (
 --
 
 INSERT INTO `modalidadadmision` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Ordinario', 'Examen de Admision para cualquier postulante con un solo requisito, haber terminado el colegio.', 1),
-(2, 'Extraordinario', 'Examen de Admision para alumnos de quinto que aun no terminan el colegio.', 1),
+(1, 'Ordinario', 'Examen de Admision para cualquier postulante que haya culminado el colegio.', 1),
+(2, 'Extraordinario', 'Examen de Admision para alumnos de quinto anhyo del colegio.', 1),
 (3, 'Centro PRE', 'Examen de Admision para chicos que ya han culminado el colegio y estan en la academia de la universidad.', 1),
 (4, 'Exonerados', 'Examen de Admision para chicos que ocuparon los primeros puestos en su etapa academica.', 1),
 (5, 'Casos Especiales', 'Examen de Admision para chicos con alguna discapacidad.', 1),
-(6, 'Deportista Calificado', 'Examen de Admision para chicos que destacan en algún deporte. ', 1);
+(6, 'Deportista Calificado', 'Examen de Admision para chicos que destacan en algun deporte. ', 1);
 
 -- --------------------------------------------------------
 
@@ -380,7 +380,7 @@ CREATE TABLE `modalidadtitulacion` (
 --
 
 INSERT INTO `modalidadtitulacion` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Sistematización EXP', 'Esta modalidad es valida para aquellos egresados que estan o hayan desarrollado\r\nactividad profesional en el campo educativo preferentemente en un periodo no\r\nmenor de cinco anhos. ', 0),
+(1, 'Sistematizacion EXP', 'Esta modalidad es valida para aquellos egresados que estan o hayan desarrollado\r\nactividad profesional en el campo educativo preferentemente en un periodo no\r\nmenor de cinco anhos. ', 0),
 (2, 'Tesis', 'Esta modalidad es valida para los estudiantes y egresados sin restriccion del\r\ntiempo de egreso. ', 0);
 
 -- --------------------------------------------------------
@@ -486,11 +486,11 @@ CREATE TABLE `tipoestudiopostgrado` (
 --
 
 INSERT INTO `tipoestudiopostgrado` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Master Oficial', 'Son los masteres con los que se obtiene una titulación oficial y reconocida, que permite acceder al doctorado y para la que es necesario poseer una titulación universitaria.', 1),
-(2, 'Master Titulo Propio', 'Son unos masteres no oficiales ni homologados, ofertados y disenados por las propias universidades, donde también fijan los requisitos de acceso y el plan de estudios.', 1),
-(3, 'Doctorado', 'Es la maxima formacion academica a la que se puede optar, tras realizar un master y realizar una tesis de investigación, ya sea si tu objetivo es la docencia o ser un referente en tu ámbito profesional.', 1),
+(1, 'Master Oficial', 'Son los masteres con los que se obtiene una titulacion oficial y reconocida, que permite acceder al doctorado y para la que es necesario poseer una titulacion universitaria.', 1),
+(2, 'Master Titulo Propio', 'Son unos masteres no oficiales ni homologados, ofertados y disenados por las propias universidades, donde tambien fijan los requisitos de acceso y el plan de estudios.', 1),
+(3, 'Doctorado', 'Es la maxima formacion academica a la que se puede optar, tras realizar un master y realizar una tesis de investigacion, ya sea si tu objetivo es la docencia o ser un referente en tu ambito profesional.', 1),
 (4, 'Curso de Esp', 'Se tratan de cursos de corta duracion ofertados para aquellos que quieren conocer mejor un nuevo ambito de su trabajo, dominar una nueva competencia o reciclar su perfil.', 1),
-(5, 'MBA', 'Master of Business Administration (o Maestría en Administración de Empresas), es un tipo de posgrado muy específico dirigido a los profesionales del mundo de los negocios con cargos de responsabilidad o que quieren optar a un ascenso laboral. Se trata de una formación muy orientada a su aplicación practica en sus puestos de trabajo.', 1);
+(5, 'MBA', 'Master of Business Administration (o Maestria en Administracion de Empresas), es un tipo de posgrado muy especifico dirigido a los profesionales del mundo de los negocios con cargos de responsabilidad o que quieren optar a un ascenso laboral. Se trata de una formacion muy orientada a su aplicacion practica en sus puestos de trabajo.', 1);
 
 -- --------------------------------------------------------
 
@@ -538,8 +538,8 @@ INSERT INTO `universidad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) V
 (1, 'Universidad Nacional de Trujillo', 'UNT', 1, 1),
 (2, 'Universidad de Piura', 'UDEP', 1, 1),
 (3, 'Universidad Santo Toribio de Mogrovejo', 'USAT', 1, 1),
-(4, 'Universidad San Martín de Porres', 'USMP', 1, 1),
-(5, 'Universidad Nacional Pedro Ruíz Gallo', 'UNPRG', 1, 1);
+(4, 'Universidad San Martin de Porres', 'USMP', 1, 1),
+(5, 'Universidad Nacional Pedro Ruiz Gallo', 'UNPRG', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -646,9 +646,9 @@ ALTER TABLE `escuelaprofesional`
   ADD KEY `codigoUniversidad` (`codigoUniversidad`);
 
 --
--- Indices de la tabla `estudiospostgrados`
+-- Indices de la tabla `estudiospostgrado`
 --
-ALTER TABLE `estudiospostgrados`
+ALTER TABLE `estudiospostgrado`
   ADD PRIMARY KEY (`codigo`),
   ADD KEY `codigoEgresado` (`codigoEgresado`),
   ADD KEY `codigoTipo` (`codigoTipo`),
@@ -784,9 +784,9 @@ ALTER TABLE `escuelaprofesional`
   MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `estudiospostgrados`
+-- AUTO_INCREMENT de la tabla `estudiospostgrado`
 --
-ALTER TABLE `estudiospostgrados`
+ALTER TABLE `estudiospostgrado`
   MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
@@ -902,13 +902,13 @@ ALTER TABLE `escuelaprofesional`
   ADD CONSTRAINT `escuelaprofesional_ibfk_2` FOREIGN KEY (`codigoUniversidad`) REFERENCES `universidad` (`codigo`);
 
 --
--- Filtros para la tabla `estudiospostgrados`
+-- Filtros para la tabla `estudiospostgrado`
 --
-ALTER TABLE `estudiospostgrados`
-  ADD CONSTRAINT `estudiospostgrados_ibfk_1` FOREIGN KEY (`codigoEgresado`) REFERENCES `egresado` (`codigo`),
-  ADD CONSTRAINT `estudiospostgrados_ibfk_2` FOREIGN KEY (`codigoTipo`) REFERENCES `tipoestudiopostgrado` (`codigo`),
-  ADD CONSTRAINT `estudiospostgrados_ibfk_3` FOREIGN KEY (`codigoUniversidad`) REFERENCES `universidad` (`codigo`),
-  ADD CONSTRAINT `estudiospostgrados_ibfk_4` FOREIGN KEY (`codigoCentroEstudios`) REFERENCES `centroestudios` (`codigo`);
+ALTER TABLE `estudiospostgrado`
+  ADD CONSTRAINT `estudiospostgrado_ibfk_1` FOREIGN KEY (`codigoEgresado`) REFERENCES `egresado` (`codigo`),
+  ADD CONSTRAINT `estudiospostgrado_ibfk_2` FOREIGN KEY (`codigoTipo`) REFERENCES `tipoestudiopostgrado` (`codigo`),
+  ADD CONSTRAINT `estudiospostgrado_ibfk_3` FOREIGN KEY (`codigoUniversidad`) REFERENCES `universidad` (`codigo`),
+  ADD CONSTRAINT `estudiospostgrado_ibfk_4` FOREIGN KEY (`codigoCentroEstudios`) REFERENCES `centroestudios` (`codigo`);
 
 --
 -- Filtros para la tabla `provincia`
