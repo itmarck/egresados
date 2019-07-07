@@ -2,23 +2,23 @@
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-$app->get('/api/facultades', function () {
+$app->get('/api/universidades', function () {
  try {
-  $data = $this->db->query("SELECT * FROM facultad")->fetchAll();
+  $data = $this->db->query("SELECT * FROM universidad")->fetchAll();
   if ($data) {
       echo json_encode($data);
   }else {
-    echo json_encode("No existen Facultades en la DB");
+    echo json_encode("No existen Universidades en la DB");
   }
  } catch (PDOException $e) {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
 });
 
-$app->get('/api/facultades/{codigo}',function(Request $request){
+$app->get('/api/universidades/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT * FROM facultad WHERE codigo = $codigo")->fetchAll();;
+    $data = $this->db->query("SELECT * FROM universidad WHERE codigo = $codigo")->fetchAll();;
     if ($data) {
       echo json_encode($data);
     } else {
@@ -29,15 +29,15 @@ $app->get('/api/facultades/{codigo}',function(Request $request){
   }
 });
 
-$app->post('/api/facultades/add',function(Request $request){
+$app->post('/api/universidades/add',function(Request $request){
   $nombre = $request->getParam('nombre');
   $siglas = $request->getParam('siglas');
   $estado = $request->getParam('estado');
  try {
-   $cantidad = $this->db->exec("INSERT INTO facultad(nombre,siglas,estado,vigencia) 
+   $cantidad = $this->db->exec("INSERT INTO universidad(nombre,siglas,estado,vigencia) 
                             Values('$nombre','$siglas',$estado,1)");
    if ($cantidad > 0) {
-     echo json_encode("Facultad Registrada");
+     echo json_encode("Universidad Registrada");
    } else {
      echo json_encode("No se ha agregado");
    }
@@ -46,19 +46,19 @@ $app->post('/api/facultades/add',function(Request $request){
  }
 });
 
-$app->put('/api/facultades/update/{codigo}',function(Request $request){
+$app->put('/api/universidades/update/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');
   $siglas = $request->getParam('siglas');
   $estado = $request->getParam('estado');
  try {
-   $cantidad = $this->db->exec("UPDATE facultad set
+   $cantidad = $this->db->exec("UPDATE universidad set
                                 nombre ='$nombre',
                                 siglas = '$siglas',
                                 estado = '$estado' 
                                 WHERE codigo = $codigo");
    if ($cantidad > 0) {
-     echo json_encode("Facultad Actualizada");
+     echo json_encode("Universidad Actualizada");
    } else {
      echo json_encode("No se ha actualizado");
    }
@@ -67,13 +67,13 @@ $app->put('/api/facultades/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/facultades/delete/{codigo}',function(Request $request){
+$app->delete('/api/universidades/delete/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
-   $cantidad = $this->db->exec("DELETE FROM facultad 
+   $cantidad = $this->db->exec("DELETE FROM universidad 
                                 WHERE codigo = $codigo");
    if ($cantidad > 0) {
-     echo json_encode("Facultad Eliminada");
+     echo json_encode("Universidad Eliminada");
    } else {
      echo json_encode("No se ha Eliminado");
    }
