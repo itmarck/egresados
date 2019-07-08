@@ -15,7 +15,31 @@ export default new Router({
     },
     {
       path: '/personal',
-      component: () => import('./views/Personal/Inicio.vue')
+      component: () => import('./views/Personal/View.vue'),
+      children: [
+        {
+          path: '',
+          redirect: 'inicio'
+        },
+        {
+          path: 'inicio',
+          component: () => import('./views/Personal/Inicio.vue')
+        }
+      ]
+    },
+    {
+      path: '/egresado',
+      component: () => import('./views/Egresado/View.vue'),
+      children: [
+        {
+          path: '',
+          redirect: 'inicio'
+        },
+        {
+          path: 'inicio',
+          component: () => import('./views/Egresado/Inicio.vue')
+        }
+      ]
     }
   ]
 });
