@@ -15,12 +15,26 @@ $app->get('/api/usuarios', function () {
   }
 });
 
-$app->get('/api/usuarios/tipo/{codigo}',function(Request $request){
-  $codigo = $request->getAttribute('codigo');
+$app->post('/api/usuarios/tipo',function(Request $request){
+  $clave = $request->getParam('clave');
+  $nombre = $request->getParam('nombre');
  try {
-   $data = $this->db->query("SELECT tipo FROM usuario WHERE codigo = $codigo and vigencia=1")->fetchAll();;
-   if ($data) {
-     echo json_encode($data);
+   $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre' and clave = '$clave' and vigencia=1")->fetchAll();
+   if ($user) { 
+    $codigoPersona = $user[0]->codigoPersona;
+    if (!$codigoPersona) {
+      $sql = $this->db->query("SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno 
+      FROM usuario 
+      INNER JOIN personal P on personal.codigo = usuario.codigoPersonal
+      WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia = 1")->fetchAll();
+    }else {
+      $sql = $this->db->query("SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno 
+      FROM usuario 
+      INNER JOIN persona P on P.codigo = usuario.codigoPersona
+      WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia=1")->fetchAll();
+    }
+   
+     echo json_encode($sql);
    } else {
      echo json_encode("No existe en la DB");
    }
@@ -34,6 +48,7 @@ $app->get('/api/usuarios/{codigo}',function(Request $request){
   try {
     $data = $this->db->query("SELECT codigo,codigoPersonal,nombre,clave,tipo,codigoPersona FROM usuario WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
+     
       echo json_encode($data);
     } else {
       echo json_encode("No existe en la DB");
