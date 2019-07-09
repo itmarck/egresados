@@ -10,6 +10,7 @@
           class="hidden-sm-and-down"
           v-for="link of links"
           :key="link.text"
+          :to="link.to"
         >
           {{ link.text }}
         </v-btn>
@@ -19,6 +20,9 @@
           <v-btn icon v-on="on"> <v-icon>more_vert</v-icon> </v-btn>
         </template>
         <v-list>
+          <v-list-tile to="perfil">
+            <v-list-tile-title>Perfil</v-list-tile-title>
+          </v-list-tile>
           <v-list-tile to="seguridad">
             <v-list-tile-title>Cambiar contraseña</v-list-tile-title>
           </v-list-tile>
@@ -40,7 +44,6 @@
             ></v-progress-circular>
           </v-layout>
         </v-img>
-        <p class="google-font mt-2" style="font-size:130%">Hola</p>
       </v-flex>
       <v-list>
         <v-list-tile
@@ -69,7 +72,13 @@
 export default {
   data: () => ({
     drawer: false,
-    links: [{ text: "Inicio", to: "/", icon: "home" }]
+    links: [
+      { text: "Inicio", to: "inicio", icon: "home" },
+      { text: "Mantenimiento", to: "mantenimiento", icon: "public" },
+      { text: "Egresados", to: "egresados", icon: "group" },
+      { text: "Reportes", to: "reportes", icon: "file_copy" },
+      { text: "Admin", to: "admin", icon: "vpn_key" }
+    ]
   }),
   methods: {
     cerrarSesion() {
