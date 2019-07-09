@@ -18,25 +18,36 @@ $app->get('/api/usuarios', function () {
 $app->post('/api/usuarios/tipo',function(Request $request){
   $clave = $request->getParam('clave');
   $nombre = $request->getParam('nombre');
+  $result = [];
  try {
-   $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre' and clave = '$clave' and vigencia=1")->fetchAll();
-   if ($user) { 
-    $codigoPersona = $user[0]->codigoPersona;
-    if (!$codigoPersona) {
-      $sql = $this->db->query("SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno 
-      FROM usuario 
-      INNER JOIN personal P on personal.codigo = usuario.codigoPersonal
-      WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia = 1")->fetchAll();
-    }else {
-      $sql = $this->db->query("SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno 
-      FROM usuario 
-      INNER JOIN persona P on P.codigo = usuario.codigoPersona
-      WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia=1")->fetchAll();
-    }
-   
-     echo json_encode($sql);
+  $usuario = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$nombre' and vigencia=1")->fetchAll();
+   if ($usuario) {
+            $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre' and clave = '$clave' and vigencia=1")->fetchAll();
+            if ($user) {
+              $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno FROM usuario ";
+              $codigoPersona = $user[0]->codigoPersona;
+              if (!$codigoPersona) {
+                $sql = $sql . "INNER JOIN personal P on P.codigo = usuario.codigoPersonal
+                WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia=1";
+                $data = $this->db->query($sql)->fetchAll();
+              }else {
+                $sql = $sql . "INNER JOIN persona P on P.codigo = usuario.codigoPersona
+                WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia=1";
+                $data = $this->db->query($sql)->fetchAll();
+              }
+                $result = array('estado' => true);
+                array_push($result,$data);
+                echo json_encode($result);
+            }
+         else {
+        $result = array('estado' => false);
+        array_push($result,"Clave Inconrrecta");
+        echo json_encode($result);
+      }
    } else {
-     echo json_encode("No existe en la DB");
+    $result = array('estado' => false);
+    array_push($result,"Usuario incorrecto");
+     echo json_encode($result);
    }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
