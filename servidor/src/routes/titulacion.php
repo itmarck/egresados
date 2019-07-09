@@ -4,7 +4,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/titulaciones', function () {
  try {
-  $data = $this->db->query("SELECT * FROM titulacion")->fetchAll();
+  $data = $this->db->query("SELECT codigo,codigoEgresado,codigoModalidad,fecha FROM titulacion WHERE vigencia=1")->fetchAll();
   if ($data) {
       echo json_encode($data);
   }else {
@@ -18,7 +18,7 @@ $app->get('/api/titulaciones', function () {
 $app->get('/api/titulaciones/{codigoEgresado}',function(Request $request){
    $codigoEgresado = $request->getAttribute('codigoEgresado');
   try {
-    $data = $this->db->query("SELECT * FROM titulacion WHERE codigoEgresado = $codigoEgresado")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,codigoEgresado,codigoModalidad,fecha FROM titulacion WHERE codigoEgresado = $codigoEgresado and vigencia=1")->fetchAll();;
     if ($data) {
       echo json_encode($data);
     } else {

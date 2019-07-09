@@ -4,7 +4,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/estudiosPostgrado', function () {
  try {
-  $data = $this->db->query("SELECT * FROM estudiospostgrado")->fetchAll();
+  $data = $this->db->query("SELECT codigo,codigoEgresado,codigoTipo,codigoUniversidad,codigoCentroEstudios,nombre,fechaInicio,fechaTermino FROM estudiospostgrado WHERE vigencia=1")->fetchAll();
   if ($data) {
       echo json_encode($data);
   }else {
@@ -18,7 +18,7 @@ $app->get('/api/estudiosPostgrado', function () {
 $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT * FROM estudiospostgrado WHERE codigo = $codigo")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,codigoEgresado,codigoTipo,codigoUniversidad,codigoCentroEstudios,nombre,fechaInicio,fechaTermino FROM estudiospostgrado WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
       echo json_encode($data);
     } else {
