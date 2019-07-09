@@ -18,7 +18,7 @@ $app->get('/api/facultades', function () {
 $app->get('/api/facultades/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT codigo,nombre,siglas,estado FROM facultad WHERE codigo = $codigo and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,nombre,siglas,estado FROM facultad WHERE codigo = $codigo and vigencia = 1 ")->fetchAll();;
     if ($data) {
       echo json_encode($data);
     } else {

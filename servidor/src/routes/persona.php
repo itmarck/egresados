@@ -18,8 +18,7 @@ $app->get('/api/personas', function () {
 $app->get('/api/personas/{DNI}',function(Request $request){
    $DNI = $request->getAttribute('DNI');
   try {
-    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil
-    FROM persona WHERE DNI = $DNI and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil FROM persona WHERE DNI = $DNI and vigencia=1")->fetchAll();;
     if ($data) {
       echo json_encode($data);
     } else {
@@ -32,6 +31,7 @@ $app->get('/api/personas/{DNI}',function(Request $request){
 
 $app->post('/api/personas/add',function(Request $request){
   $nombres = $request->getParam('nombres');
+  $DNI = $request->getParam('DNI');
   $apellidoPaterno = $request->getParam('apellidoPaterno');
   $apellidoMaterno = $request->getParam('apellidoMaterno');
   $genero = $request->getParam('genero');
@@ -40,8 +40,8 @@ $app->post('/api/personas/add',function(Request $request){
   $correo = $request->getParam('correo');
   $estadoCivil = $request->getParam('estadoCivil');
  try {
-   $cantidad = $this->db->exec("INSERT INTO persona(nombres,apellidoPaterno,apellidoMaterno,genero,fechaNacimiento,celular,correo,estadoCivil,vigencia) 
-                            Values('$nombres','$apellidoPaterno',$apellidoMaterno,$genero,$fechaNacimiento,$celular,$correo,$estadoCivil,1)");
+   $cantidad = $this->db->exec("INSERT INTO persona(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,fechaNacimiento,celular,correo,estadoCivil,vigencia) 
+                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,$fechaNacimiento,'$celular','$correo',$estadoCivil,1)");
    if ($cantidad > 0) {
      echo json_encode("Persona Registrada");
    } else {
