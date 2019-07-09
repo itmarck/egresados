@@ -14,10 +14,10 @@ $app->get('/api/escuelasProfesionales', function () {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
 });
-$app->get('/api/escuelasProfesionales/facultad/{codigofacultad}', function () {
-  $codigoFacultad = $request->getAttribute('codigoFacultad');
+$app->get('/api/escuelasProfesionales/uni/{codigoUniversidad}', function (Request $request) {
+  $codigo = $request->getAttribute('codigoUniversidad');
   try {
-   $data = $this->db->query("SELECT codigo,codigoFacultad,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE vigencia=1 and codigoFacultad = $codigoFacultad")->fetchAll();
+   $data = $this->db->query("SELECT codigo,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE codigoUniversidad = $codigo and vigencia=1")->fetchAll();
    if ($data) {
        echo json_encode($data);
    }else {
