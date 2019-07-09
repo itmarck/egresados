@@ -21,7 +21,7 @@ $app->get('/api/escuelasProfesionales/uni/{codigoUniversidad}', function (Reques
    if ($data) {
        echo json_encode($data);
    }else {
-     echo json_encode("No existen Escuelas en la DB");
+     echo json_encode( array('estado' => false ));
    }
   } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
