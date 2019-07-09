@@ -14,7 +14,7 @@ $app->get('/api/escuelasProfesionales', function () {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
 });
-$app->get('/api/escuelasProfesionales/{codigofacultad}', function () {
+$app->get('/api/escuelasProfesionales/facultad/{codigofacultad}', function () {
   $codigoFacultad = $request->getAttribute('codigoFacultad');
   try {
    $data = $this->db->query("SELECT codigo,codigoFacultad,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE vigencia=1 and codigoFacultad = $codigoFacultad")->fetchAll();
