@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-07-2019 a las 06:30:27
+-- Tiempo de generación: 09-07-2019 a las 21:53:57
 -- Versión del servidor: 10.1.40-MariaDB
 -- Versión de PHP: 7.3.5
 
@@ -370,7 +370,7 @@ INSERT INTO `modalidadadmision` (`codigo`, `nombre`, `descripcion`, `vigencia`) 
 
 CREATE TABLE `modalidadtitulacion` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `descripcion` text COLLATE utf8_unicode_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -380,8 +380,10 @@ CREATE TABLE `modalidadtitulacion` (
 --
 
 INSERT INTO `modalidadtitulacion` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Sistematizacion EXP', 'Esta modalidad es valida para aquellos egresados que estan o hayan desarrollado\r\nactividad profesional en el campo educativo preferentemente en un periodo no\r\nmenor de cinco anhos. ', 0),
-(2, 'Tesis', 'Esta modalidad es valida para los estudiantes y egresados sin restriccion del\r\ntiempo de egreso. ', 0);
+(1, 'Experiencia Profesional', 'Esta modalidad es valida para aquellos egresados que estan o hayan desarrollado\r\nactividad profesional en el campo educativo preferentemente en un periodo no\r\nmenor de cinco anhos. ', 1),
+(2, 'Tesis', 'Esta modalidad es valida para los estudiantes y egresados sin restriccion del\r\ntiempo de egreso. ', 1),
+(3, 'Clase Modelo', 'Es una plantilla para la creacion de objetos de datos según un modelo predefinido.', 1),
+(4, 'Curso', 'Proceso o serie de estados por los que pasa una accion, un asunto, etc.', 1);
 
 -- --------------------------------------------------------
 
@@ -486,11 +488,16 @@ CREATE TABLE `tipoestudiopostgrado` (
 --
 
 INSERT INTO `tipoestudiopostgrado` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Master Oficial', 'Son los masteres con los que se obtiene una titulacion oficial y reconocida, que permite acceder al doctorado y para la que es necesario poseer una titulacion universitaria.', 1),
-(2, 'Master Titulo Propio', 'Son unos masteres no oficiales ni homologados, ofertados y disenados por las propias universidades, donde tambien fijan los requisitos de acceso y el plan de estudios.', 1),
+(1, 'Curso', 'Se tratan de cursos de corta duracion ofertados para aquellos que quieren conocer mejor un nuevo ambito de su trabajo, dominar una nueva competencia o reciclar su perfil.', 1),
+(2, 'Diplomado', 'Curso de corta o mediana duracion, generalmente dictado por una universidad o institucion de educacion superior, que tiene el proposito de ensenhyar, complementar o actualizar algun conocimiento o habilidad especifica.', 1),
 (3, 'Doctorado', 'Es la maxima formacion academica a la que se puede optar, tras realizar un master y realizar una tesis de investigacion, ya sea si tu objetivo es la docencia o ser un referente en tu ambito profesional.', 1),
-(4, 'Curso de Esp', 'Se tratan de cursos de corta duracion ofertados para aquellos que quieren conocer mejor un nuevo ambito de su trabajo, dominar una nueva competencia o reciclar su perfil.', 1),
-(5, 'MBA', 'Master of Business Administration (o Maestria en Administracion de Empresas), es un tipo de posgrado muy especifico dirigido a los profesionales del mundo de los negocios con cargos de responsabilidad o que quieren optar a un ascenso laboral. Se trata de una formacion muy orientada a su aplicacion practica en sus puestos de trabajo.', 1);
+(4, 'Segunda Especialidad', 'Los estudios de posgrado tienen como objetivo la formacion de investigadores, docentes universitarios y especialistas, asi como tambien la actualizacion y ampliacion de conocimientos.', 1),
+(5, 'Maestria', 'Es un grado academico de posgrado. Una maestria oficial de posgrado se consigue al completar un programa de uno a dos años.', 1),
+(6, 'Idioma', 'Un idioma o lengua es un sistema de comunicacion verbal o gestual, propia de una sociedad humana. ', 1),
+(7, 'Certificacion', 'La certificacion es un procedimiento destinado a que un organismo independiente y autorizado, valide o dictamine la calidad del sistema aplicado por una organizacion, partiendo y verificando si la misma cumple o no lo dispuesto por un determinado referencial o modelo de calidad, reconocido y oficial.', 1),
+(8, 'Taller', 'Taller es el espacio en el que se realiza un trabajo, manual en su origen, bien de tipo artesanal o fabril.​', 1),
+(9, 'Ponencia', 'Una ponencia es la exposicion por parte de alguien de unas ideas. Es una practica muy habitual en el entorno academico.', 1),
+(10, 'Congreso', 'Reunion o conferencia, generalmente periodica, donde los miembros de un cuerpo u organismo se reunen para debatir cuestiones de diversa indole, aunque generalmente con fines politicos, asociativos, divulgativos o de investigacion.', 1);
 
 -- --------------------------------------------------------
 
@@ -805,7 +812,7 @@ ALTER TABLE `modalidadadmision`
 -- AUTO_INCREMENT de la tabla `modalidadtitulacion`
 --
 ALTER TABLE `modalidadtitulacion`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `persona`
@@ -829,7 +836,7 @@ ALTER TABLE `provincia`
 -- AUTO_INCREMENT de la tabla `tipoestudiopostgrado`
 --
 ALTER TABLE `tipoestudiopostgrado`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `titulacion`
