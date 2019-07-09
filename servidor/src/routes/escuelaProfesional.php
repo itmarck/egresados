@@ -14,6 +14,19 @@ $app->get('/api/escuelasProfesionales', function () {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
 });
+$app->get('/api/escuelasProfesionales/uni/{codigoUniversidad}', function (Request $request) {
+  $codigo = $request->getAttribute('codigoUniversidad');
+  try {
+   $data = $this->db->query("SELECT codigo,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE codigoUniversidad = $codigo and vigencia=1")->fetchAll();
+   if ($data) {
+       echo json_encode($data);
+   }else {
+     echo json_encode("No existen Escuelas en la DB");
+   }
+  } catch (PDOException $e) {
+   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+   }
+ });
 
 $app->get('/api/escuelasProfesionales/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
