@@ -8,11 +8,25 @@ $app->get('/api/usuarios', function () {
   if ($data) {
       echo json_encode($data);
   }else {
-    echo json_encode("No existen Facultades en la DB");
+    echo json_encode("No existen Usuarios en la DB");
   }
  } catch (PDOException $e) {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
+});
+
+$app->get('/api/usuarios/tipo/{codigo}',function(Request $request){
+  $codigo = $request->getAttribute('codigo');
+ try {
+   $data = $this->db->query("SELECT tipo FROM usuario WHERE codigo = $codigo and vigencia=1")->fetchAll();;
+   if ($data) {
+     echo json_encode($data);
+   } else {
+     echo json_encode("No existe en la DB");
+   }
+ } catch (PDOException $e) {
+   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+ }
 });
 
 $app->get('/api/usuarios/{codigo}',function(Request $request){
@@ -64,7 +78,7 @@ $app->put('/api/usuarios/update/{codigo}',function(Request $request){
                                 tipo = '$tipo'  
                                 WHERE codigo = $codigo");
    if ($cantidad > 0) {
-     echo json_encode("Usuario Actualizada");
+     echo json_encode("Usuario Actualizado");
    } else {
      echo json_encode("No se ha actualizado");
    }
@@ -79,7 +93,7 @@ $app->delete('/api/usuarios/delete/{codigo}',function(Request $request){
    $cantidad = $this->db->exec("DELETE FROM usuario 
                                 WHERE codigo = $codigo");
    if ($cantidad > 0) {
-     echo json_encode("Usuario Eliminada");
+     echo json_encode("Usuario Eliminado");
    } else {
      echo json_encode("No se ha Eliminado");
    }
