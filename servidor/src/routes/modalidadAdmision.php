@@ -1,6 +1,6 @@
 <?php
 
 $app->get('/api/modalidadesAdmision', function () {
-  $data = $this->db->query("SELECT * FROM modalidadadmision")->fetchAll();
-  echo json_encode($data,JSON_PARTIAL_OUTPUT_ON_ERROR);
+  $data = $this->db->query("SELECT codigo,nombre,descripcion FROM modalidadadmision WHERE vigencia=1")->fetchAll();
+  echo json_encode($data);
 });

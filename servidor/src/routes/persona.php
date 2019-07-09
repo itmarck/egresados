@@ -4,7 +4,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/personas', function () {
  try {
-  $data = $this->db->query("SELECT * FROM persona")->fetchAll();
+  $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil FROM persona WHERE vigencia=1")->fetchAll();
   if ($data) {
       echo json_encode($data);
   }else {
@@ -15,10 +15,10 @@ $app->get('/api/personas', function () {
   }
 });
 
-$app->get('/api/personas/{codigo}',function(Request $request){
-   $codigo = $request->getAttribute('codigo');
+$app->get('/api/personas/{DNI}',function(Request $request){
+   $DNI = $request->getAttribute('DNI');
   try {
-    $data = $this->db->query("SELECT * FROM persona WHERE codigo = $codigo")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil FROM persona WHERE DNI = $DNI and vigencia=1")->fetchAll();;
     if ($data) {
       echo json_encode($data);
     } else {
@@ -31,6 +31,7 @@ $app->get('/api/personas/{codigo}',function(Request $request){
 
 $app->post('/api/personas/add',function(Request $request){
   $nombres = $request->getParam('nombres');
+  $DNI = $request->getParam('DNI');
   $apellidoPaterno = $request->getParam('apellidoPaterno');
   $apellidoMaterno = $request->getParam('apellidoMaterno');
   $genero = $request->getParam('genero');
@@ -39,8 +40,8 @@ $app->post('/api/personas/add',function(Request $request){
   $correo = $request->getParam('correo');
   $estadoCivil = $request->getParam('estadoCivil');
  try {
-   $cantidad = $this->db->exec("INSERT INTO persona(nombres,apellidoPaterno,apellidoMaterno,genero,fechaNacimiento,celular,correo,estadoCivil,vigencia) 
-                            Values('$nombres','$apellidoPaterno',$apellidoMaterno,$genero,$fechaNacimiento,$celular,$correo,$estadoCivil,1)");
+   $cantidad = $this->db->exec("INSERT INTO persona(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,fechaNacimiento,celular,correo,estadoCivil,vigencia) 
+                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,$fechaNacimiento,'$celular','$correo',$estadoCivil,1)");
    if ($cantidad > 0) {
      echo json_encode("Persona Registrada");
    } else {
@@ -51,8 +52,8 @@ $app->post('/api/personas/add',function(Request $request){
  }
 });
 
-$app->put('/api/personas/update/{codigo}',function(Request $request){
-  $codigo = $request->getAttribute('codigo');
+$app->put('/api/personas/update/{DNI}',function(Request $request){
+  $DNI = $request->getAttribute('DNI');
   $nombres = $request->getParam('nombres');
   $apellidoPaterno = $request->getParam('apellidoPaterno');
   $apellidoMaterno = $request->getParam('apellidoMaterno');
@@ -71,7 +72,7 @@ $app->put('/api/personas/update/{codigo}',function(Request $request){
                                 celular = '$celular',
                                 correo = '$correo',
                                 estadoCivil = '$estadoCivil'  
-                                WHERE codigo = $codigo");
+                                WHERE DNI = $DNI");
    if ($cantidad > 0) {
      echo json_encode("Persona Actualizada");
    } else {
@@ -82,11 +83,11 @@ $app->put('/api/personas/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/personas/delete/{codigo}',function(Request $request){
-  $codigo = $request->getAttribute('codigo');
+$app->delete('/api/personas/delete/{DNI}',function(Request $request){
+  $DNI = $request->getAttribute('DNI');
  try {
    $cantidad = $this->db->exec("DELETE FROM persona 
-                                WHERE codigo = $codigo");
+                                WHERE dni = '$DNI'");
    if ($cantidad > 0) {
      echo json_encode("Persona Eliminada");
    } else {

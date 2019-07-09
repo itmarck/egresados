@@ -4,7 +4,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/universidades', function () {
  try {
-  $data = $this->db->query("SELECT * FROM universidad")->fetchAll();
+  $data = $this->db->query("SELECT codigo,nombre,siglas,estado FROM universidad WHERE vigencia=1")->fetchAll();
   if ($data) {
       echo json_encode($data);
   }else {
@@ -18,7 +18,7 @@ $app->get('/api/universidades', function () {
 $app->get('/api/universidades/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT * FROM universidad WHERE codigo = $codigo")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,nombre,siglas,estado FROM universidad WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
       echo json_encode($data);
     } else {
