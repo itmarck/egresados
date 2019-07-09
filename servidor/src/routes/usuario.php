@@ -35,9 +35,8 @@ $app->post('/api/usuarios/tipo',function(Request $request){
                 WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia=1";
                 $data = $this->db->query($sql)->fetchAll();
               }
-                $result = array('estado' => true);
-                array_push($result,$data);
-                echo json_encode($result);
+              $result = array('estado' => true, 'data' => $data);
+              echo json_encode($result);
             }
          else {
         $result = array('estado' => false);

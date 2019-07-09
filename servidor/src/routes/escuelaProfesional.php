@@ -19,7 +19,7 @@ $app->get('/api/escuelasProfesionales/uni/{codigoUniversidad}', function (Reques
   try {
    $data = $this->db->query("SELECT codigo,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE codigoUniversidad = $codigo and vigencia=1")->fetchAll();
    if ($data) {
-      $result = array('estado' => true, 'data' -> $data);
+      $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
    }else {
      echo json_encode( array('estado' => false ));
