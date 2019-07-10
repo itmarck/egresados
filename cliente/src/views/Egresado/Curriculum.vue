@@ -4,11 +4,11 @@
       <v-flex>
         <v-card>
           <v-card-text>
-            Lista de opciones disponibles para generar curriculum
+            Opciones de curriculum
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn>Generar Curriculum</v-btn>
+            <v-btn color="primary">Generar Curriculum</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
