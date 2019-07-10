@@ -31,6 +31,22 @@ $app->get('/api/personas/{DNI}',function(Request $request){
   }
 });
 
+$app->get('/api/personas/codigo/{codigo}',function(Request $request){
+  $codigo = $request->getAttribute('codigo');
+ try {
+   $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo,YEAR(fechaTermino) ,E.nombre,A.fechaAdmision , A.nombre, C.codigo,C.vigencia,
+   FROM persona WHERE (DNI = $codigo or codigo = $codigo) and vigencia=1")->fetchAll();;
+   if ($data) {
+     $result = array('estado' => true, 'data' => $data);
+     echo json_encode($result);
+  }else {
+    echo json_encode( array('estado' => false ));
+  }
+ } catch (PDOException $e) {
+   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+ }
+});
+
 $app->post('/api/personas/add',function(Request $request){
   $nombres = $request->getParam('nombres');
   $DNI = $request->getParam('DNI');
