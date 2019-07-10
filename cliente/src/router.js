@@ -64,8 +64,8 @@ export default new Router({
           component: () => import('./views/Egresado/Inicio.vue')
         },
         {
-          path: 'pregrado',
-          component: () => import('./views/Egresado/Pregrado.vue')
+          path: 'carreras',
+          component: () => import('./views/Egresado/Carreras.vue')
         },
         {
           path: 'postgrado',
