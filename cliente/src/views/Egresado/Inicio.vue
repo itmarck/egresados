@@ -2,16 +2,9 @@
   <v-container grid-list-lg>
     <v-layout row wrap>
       <v-flex>
-        <v-card> <!-- Datos de egresado -->
+        <v-card> <!-- Noticias -->
           <v-card-text>
-            Datos de egresado
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex>
-        <v-card> <!-- Datos de egresado -->
-          <v-card-text>
-            Datos de egresado
+            Datos de egresados públicos
           </v-card-text>
         </v-card>
       </v-flex>

@@ -2,9 +2,9 @@
   <v-container grid-list-lg>
     <v-layout row wrap>
       <v-flex>
-        <v-card> <!-- Postgrado -->
+        <v-card> <!-- Datos de egresado -->
           <v-card-text>
-            Postgrado
+            Perfil del egresado
           </v-card-text>
         </v-card>
       </v-flex>

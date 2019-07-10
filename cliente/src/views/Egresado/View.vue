@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-xs>
-    <v-toolbar app>
+    <v-toolbar app dark color="primary">
       <v-toolbar-side-icon @click="drawer = !drawer" class="hidden-md-and-up" />
       <v-toolbar-title>Egresado</v-toolbar-title>
       <v-spacer />
@@ -10,6 +10,7 @@
           class="hidden-sm-and-down"
           v-for="link of links"
           :key="link.text"
+          :to="link.to"
         >
           {{ link.text }}
         </v-btn>
@@ -19,6 +20,9 @@
           <v-btn icon v-on="on"> <v-icon>more_vert</v-icon> </v-btn>
         </template>
         <v-list>
+          <v-list-tile to="perfil">
+            <v-list-tile-title>Perfil</v-list-tile-title>
+          </v-list-tile>
           <v-list-tile to="seguridad">
             <v-list-tile-title>Cambiar contraseña</v-list-tile-title>
           </v-list-tile>
@@ -28,19 +32,16 @@
         </v-list>
       </v-menu>
     </v-toolbar>
-    <v-navigation-drawer app v-model="drawer" temporary>
+    <v-navigation-drawer app v-model="drawer" hide-overlay temporary>
       <v-flex xs12 class="px-4 grey lighten-5">
         <v-img :src="require('@/assets/epici.svg')">
-          <v-layout
-            slot="placeholder"
-          >
+          <v-layout slot="placeholder">
             <v-progress-circular
               indeterminate
               color="grey lighten-5"
             ></v-progress-circular>
           </v-layout>
         </v-img>
-        <p class="google-font mt-2" style="font-size:130%">Hola</p>
       </v-flex>
       <v-list>
         <v-list-tile
@@ -49,6 +50,18 @@
           :to="link.to"
           class="google-font"
         >
+          <v-list-group v-if="link.children">
+            <v-list-tile>
+              <v-list-tile-action>
+                <v-icon>{{ link.icon }}</v-icon>
+              </v-list-tile-action>
+
+              <v-list-tile-content>
+                <v-list-tile-title v-text="link.text" />
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+
           <v-list-tile-action>
             <v-icon>{{ link.icon }}</v-icon>
           </v-list-tile-action>
@@ -69,12 +82,16 @@
 export default {
   data: () => ({
     drawer: false,
-    links: [{ text: "Inicio", to: "/", icon: "home" }]
+    links: [
+      { text: "Inicio", to: "inicio", icon: "home" },
+      { text: "Carreras", to: "carreras", icon: "person" },
+      { text: "Postgrado", to: "postgrado", icon: "account_balance" },
+      { text: "Experiencia", to: "experiencia", icon: "list_alt" },
+      { text: "Curriculum", to: "curriculum", icon: "library_books" }
+    ]
   }),
   methods: {
-    cerrarSesion() {
-      
-    }
+    cerrarSesion() {}
   }
 };
 </script>

@@ -24,6 +24,30 @@ export default new Router({
         {
           path: 'inicio',
           component: () => import('./views/Personal/Inicio.vue')
+        },
+        {
+          path: 'mantenimiento',
+          component: () => import('./views/Personal/Mantenimiento.vue')
+        },
+        {
+          path: 'egresados',
+          component: () => import('./views/Personal/Egresados.vue')
+        },
+        {
+          path: 'reportes',
+          component: () => import('./views/Personal/Reportes.vue')
+        },
+        {
+          path: 'admin',
+          component: () => import('./views/Personal/Admin.vue')
+        },
+        {
+          path: 'perfil',
+          component: () => import('./views/Perfil.vue')
+        },
+        {
+          path: 'seguridad',
+          component: () => import('./views/Seguridad.vue')
         }
       ]
     },
@@ -38,6 +62,30 @@ export default new Router({
         {
           path: 'inicio',
           component: () => import('./views/Egresado/Inicio.vue')
+        },
+        {
+          path: 'carreras',
+          component: () => import('./views/Egresado/Carreras.vue')
+        },
+        {
+          path: 'postgrado',
+          component: () => import('./views/Egresado/Postgrado.vue')
+        },
+        {
+          path: 'experiencia',
+          component: () => import('./views/Egresado/Experiencia.vue')
+        },
+        {
+          path: 'curriculum',
+          component: () => import('./views/Egresado/Curriculum.vue')
+        },
+        {
+          path: 'perfil',
+          component: () => import('./views/Perfil.vue')
+        },
+        {
+          path: 'seguridad',
+          component: () => import('./views/Seguridad.vue')
         }
       ]
     }
