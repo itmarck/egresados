@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-xs>
-    <v-toolbar app>
+    <v-toolbar app dark color="primary">
       <v-toolbar-side-icon @click="drawer = !drawer" class="hidden-md-and-up" />
       <v-toolbar-title>Egresado</v-toolbar-title>
       <v-spacer />
@@ -32,7 +32,7 @@
         </v-list>
       </v-menu>
     </v-toolbar>
-    <v-navigation-drawer app v-model="drawer" hide-overlay>
+    <v-navigation-drawer app v-model="drawer" hide-overlay temporary>
       <v-flex xs12 class="px-4 grey lighten-5">
         <v-img :src="require('@/assets/epici.svg')">
           <v-layout slot="placeholder">
@@ -84,7 +84,7 @@ export default {
     drawer: false,
     links: [
       { text: "Inicio", to: "inicio", icon: "home" },
-      { text: "Pregrado", to: "pregrado", icon: "person" },
+      { text: "Carreras", to: "carreras", icon: "person" },
       { text: "Postgrado", to: "postgrado", icon: "account_balance" },
       { text: "Experiencia", to: "experiencia", icon: "list_alt" },
       { text: "Curriculum", to: "curriculum", icon: "library_books" }
