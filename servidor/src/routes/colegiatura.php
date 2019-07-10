@@ -6,10 +6,11 @@ $app->get('/api/colegiaturas', function () {
  try {
   $data = $this->db->query("SELECT codigo,codigoEgresado,codigo,fecha FROM colegiatura WHERE vigencia=1")->fetchAll();
   if ($data) {
-      echo json_encode($data);
-  }else {
-    echo json_encode("No existen Colegiaturas registradas");
-  }
+    $result = array('estado' => true, 'data' => $data);
+    echo json_encode($result);
+ }else {
+   echo json_encode( array('estado' => false ));
+ }
  } catch (PDOException $e) {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -20,10 +21,11 @@ $app->get('/api/colegiaturas/{codigoEgresado}',function(Request $request){
   try {
     $data = $this->db->query("SELECT codigo,codigoEgresado,codigo,fecha FROM colegiatura WHERE codigoEgresado = $codigoEgresado and vigencia=1")->fetchAll();;
     if ($data) {
-      echo json_encode($data);
-    } else {
-      echo json_encode("No existe en la DB");
-    }
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+   }else {
+     echo json_encode( array('estado' => false ));
+   }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -35,11 +37,11 @@ $app->post('/api/colegiaturas/add',function(Request $request){
  try {
    $cantidad = $this->db->exec("INSERT INTO colegiatura(codigoEgresado,fecha,vigencia) 
                             Values('$codigoEgresado','$fecha',1)");
-   if ($cantidad > 0) {
-     echo json_encode("Colegiatura Registrada");
-   } else {
-     echo json_encode("No se ha agregado");
-   }
+  if ($cantidad > 0) {
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
@@ -53,10 +55,10 @@ $app->put('/api/colegiaturas/update/{codigoEgresado}',function(Request $request)
                                 fecha = '$fecha'
                                 WHERE codigo = $codigo");
    if ($cantidad > 0) {
-     echo json_encode("Colegiatura Actualizada");
-   } else {
-     echo json_encode("No se ha actualizado");
-   }
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
@@ -68,10 +70,10 @@ $app->delete('/api/colegiaturas/delete/{codigoEgresado}',function(Request $reque
    $cantidad = $this->db->exec("DELETE FROM colegiatura 
                                 WHERE codigoEgresado = $codigoEgresado");
    if ($cantidad > 0) {
-     echo json_encode("Colegiatura Eliminada");
-   } else {
-     echo json_encode("No se ha Eliminado");
-   }
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }

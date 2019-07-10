@@ -6,10 +6,11 @@ $app->get('/api/facultades', function () {
  try {
   $data = $this->db->query("SELECT codigo,nombre,siglas,estado  FROM facultad WHERE vigencia=1")->fetchAll();
   if ($data) {
-      echo json_encode($data);
-  }else {
-    echo json_encode("No existen Facultades en la DB");
-  }
+    $result = array('estado' => true, 'data' => $data);
+    echo json_encode($result);
+ }else {
+   echo json_encode( array('estado' => false ));
+ }
  } catch (PDOException $e) {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -20,10 +21,11 @@ $app->get('/api/facultades/{codigo}',function(Request $request){
   try {
     $data = $this->db->query("SELECT codigo,nombre,siglas,estado FROM facultad WHERE codigo = $codigo and vigencia = 1 ")->fetchAll();;
     if ($data) {
-      echo json_encode($data);
-    } else {
-      echo json_encode("No existe en la DB");
-    }
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+   }else {
+     echo json_encode( array('estado' => false ));
+   }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -37,10 +39,10 @@ $app->post('/api/facultades/add',function(Request $request){
    $cantidad = $this->db->exec("INSERT INTO facultad(nombre,siglas,estado,vigencia) 
                             Values('$nombre','$siglas',$estado,1)");
    if ($cantidad > 0) {
-     echo json_encode("Facultad Registrada");
-   } else {
-     echo json_encode("No se ha agregado");
-   }
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
@@ -58,10 +60,10 @@ $app->put('/api/facultades/update/{codigo}',function(Request $request){
                                 estado = '$estado' 
                                 WHERE codigo = $codigo");
    if ($cantidad > 0) {
-     echo json_encode("Facultad Actualizada");
-   } else {
-     echo json_encode("No se ha actualizado");
-   }
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
@@ -72,11 +74,11 @@ $app->delete('/api/facultades/delete/{codigo}',function(Request $request){
  try {
    $cantidad = $this->db->exec("DELETE FROM facultad 
                                 WHERE codigo = $codigo");
-   if ($cantidad > 0) {
-     echo json_encode("Facultad Eliminada");
-   } else {
-     echo json_encode("No se ha Eliminado");
-   }
+  if ($cantidad > 0) {
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }

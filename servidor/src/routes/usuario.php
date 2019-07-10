@@ -6,10 +6,11 @@ $app->get('/api/usuarios', function () {
  try {
   $data = $this->db->query("SELECT codigo,codigoPersonal,nombre,clave,tipo,codigoPersona FROM usuario WHERE vigencia=1")->fetchAll();
   if ($data) {
-      echo json_encode($data);
-  }else {
-    echo json_encode("No existen Usuarios en la DB");
-  }
+    $result = array('estado' => true, 'data' => $data);
+    echo json_encode($result);
+ }else {
+   echo json_encode( array('estado' => false ));
+ }
  } catch (PDOException $e) {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -57,11 +58,11 @@ $app->get('/api/usuarios/{codigo}',function(Request $request){
   try {
     $data = $this->db->query("SELECT codigo,codigoPersonal,nombre,clave,tipo,codigoPersona FROM usuario WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
-     
-      echo json_encode($data);
-    } else {
-      echo json_encode("No existe en la DB");
-    }
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+   }else {
+     echo json_encode( array('estado' => false ));
+   }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -77,11 +78,11 @@ $app->post('/api/usuarios/add',function(Request $request){
    $hash = password_hash($clave,PASSWORD_DEFAULT);
    $cantidad = $this->db->exec("INSERT INTO usuario(nombre,codigoPersonal,clave,tipo,codigoPersona,vigencia) 
                             Values('$nombre','$codigoPersonal',$hash,$tipo,$codigoPersona,1)");
-   if ($cantidad > 0) {
-     echo json_encode("Usuario Registrado");
-   } else {
-     echo json_encode("No se ha agregado");
-   }
+  if ($cantidad > 0) {
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
@@ -117,9 +118,9 @@ $app->put('/api/usuarios/update/{codigo}',function(Request $request){
     }
     
     if ($cantidad > 0) {
-      echo json_encode("Usuario Actualizado");
+      echo json_encode(array('estado' => true));
     } else {
-      echo json_encode("No se ha actualizado");
+      echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
@@ -132,10 +133,10 @@ $app->delete('/api/usuarios/delete/{codigo}',function(Request $request){
    $cantidad = $this->db->exec("DELETE FROM usuario 
                                 WHERE codigo = $codigo");
    if ($cantidad > 0) {
-     echo json_encode("Usuario Eliminado");
-   } else {
-     echo json_encode("No se ha Eliminado");
-   }
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }

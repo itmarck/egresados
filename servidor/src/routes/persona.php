@@ -6,10 +6,11 @@ $app->get('/api/personas', function () {
  try {
   $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil FROM persona WHERE vigencia=1")->fetchAll();
   if ($data) {
-      echo json_encode($data);
-  }else {
-    echo json_encode("No existen Personas en la DB");
-  }
+    $result = array('estado' => true, 'data' => $data);
+    echo json_encode($result);
+ }else {
+   echo json_encode( array('estado' => false ));
+ }
  } catch (PDOException $e) {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -20,10 +21,11 @@ $app->get('/api/personas/{DNI}',function(Request $request){
   try {
     $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil FROM persona WHERE DNI = $DNI and vigencia=1")->fetchAll();;
     if ($data) {
-      echo json_encode($data);
-    } else {
-      echo json_encode("No existe en la DB");
-    }
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+   }else {
+     echo json_encode( array('estado' => false ));
+   }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }

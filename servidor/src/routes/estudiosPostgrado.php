@@ -6,10 +6,11 @@ $app->get('/api/estudiosPostgrado', function () {
  try {
   $data = $this->db->query("SELECT codigo,codigoEgresado,codigoTipo,codigoUniversidad,codigoCentroEstudios,nombre,fechaInicio,fechaTermino FROM estudiospostgrado WHERE vigencia=1")->fetchAll();
   if ($data) {
-      echo json_encode($data);
-  }else {
-    echo json_encode("No existen Estudios Postgrado registrados");
-  }
+    $result = array('estado' => true, 'data' => $data);
+    echo json_encode($result);
+ }else {
+   echo json_encode( array('estado' => false ));
+ }
  } catch (PDOException $e) {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -20,10 +21,11 @@ $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
   try {
     $data = $this->db->query("SELECT codigo,codigoEgresado,codigoTipo,codigoUniversidad,codigoCentroEstudios,nombre,fechaInicio,fechaTermino FROM estudiospostgrado WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
-      echo json_encode($data);
-    } else {
-      echo json_encode("No existe en la DB");
-    }
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+   }else {
+     echo json_encode( array('estado' => false ));
+   }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
@@ -38,13 +40,20 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
  try {
-   $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,codigoUniversidad,fechaInicio,fechaTermino,vigencia) 
-                            Values('$codigoEgresado','$codigoTipo',$nombre,$codigoCentroEstudios,$codigoUniversidad,$fechaInicio,$fechaTermino,1)");
-   if ($cantidad > 0) {
-     echo json_encode("Escuela Registrada");
-   } else {
-     echo json_encode("No se ha agregado");
+   if ($codigoCentroEstudios) {
+    $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,fechaInicio,fechaTermino,vigencia) 
+                                  Values('$codigoEgresado','$codigoTipo',$nombre,$codigoCentroEstudios,$fechaInicio,$fechaTermino,1)");
+   } else { 
+     $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoUniversidad,fechaInicio,fechaTermino,vigencia) 
+                                  Values('$codigoEgresado','$codigoTipo',$nombre,$codigoUniversidad,$fechaInicio,$fechaTermino,1)");
    }
+   
+  
+  if ($cantidad > 0) {
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
@@ -60,7 +69,17 @@ $app->put('/api/estudiosPostgrado/update/{codigo}',function(Request $request){
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
  try {
-   $cantidad = $this->db->exec("UPDATE estudiospostgrado set
+   if ($codigoCentroEstudios) {
+    $cantidad = $this->db->exec("UPDATE estudiospostgrado set
+                                codigoEgresado ='$codigoEgresado',
+                                codigoTipo = '$codigoTipo',
+                                nombre = '$nombre',
+                                codigoCentroEstudios = '$codigoCentroEstudios',
+                                fechaInicio = '$fechaInicio',
+                                fechaTermino = '$fechaTermino'  
+                                WHERE codigo = $codigo");
+   } else {
+    $cantidad = $this->db->exec("UPDATE estudiospostgrado set
                                 codigoEgresado ='$codigoEgresado',
                                 codigoTipo = '$codigoTipo',
                                 nombre = '$nombre',
@@ -69,11 +88,12 @@ $app->put('/api/estudiosPostgrado/update/{codigo}',function(Request $request){
                                 fechaInicio = '$fechaInicio',
                                 fechaTermino = '$fechaTermino'  
                                 WHERE codigo = $codigo");
-   if ($cantidad > 0) {
-     echo json_encode("Escuela Actualizada");
-   } else {
-     echo json_encode("No se ha actualizado");
    }
+  if ($cantidad > 0) {
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
@@ -85,10 +105,10 @@ $app->delete('/api/estudiosPostgrado/delete/{codigo}',function(Request $request)
    $cantidad = $this->db->exec("DELETE FROM estudiospostgrado 
                                 WHERE codigo = $codigo");
    if ($cantidad > 0) {
-     echo json_encode("Escuela Eliminada");
-   } else {
-     echo json_encode("No se ha actualizado");
-   }
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
