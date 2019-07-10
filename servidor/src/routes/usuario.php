@@ -76,8 +76,14 @@ $app->post('/api/usuarios/add',function(Request $request){
   $codigoPersona = $request->getParam('codigoPersona');
  try {
    $hash = password_hash($clave,PASSWORD_DEFAULT);
-   $cantidad = $this->db->exec("INSERT INTO usuario(nombre,codigoPersonal,clave,tipo,codigoPersona,vigencia) 
-                            Values('$nombre','$codigoPersonal',$hash,$tipo,$codigoPersona,1)");
+  if ($codigoPersona) {
+    $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia) 
+    Values('$nombre','$hash','$tipo',$codigoPersona,1)");
+  } else {
+    $cantidad = $this->db->exec("INSERT INTO usuario(nombre,codigoPersonal,clave,tipo,vigencia) 
+    Values('$nombre','$codigoPersonal','$hash','$tipo',1)");
+  }
+  
   if ($cantidad > 0) {
     echo json_encode(array('estado' => true));
   } else {
@@ -88,7 +94,7 @@ $app->post('/api/usuarios/add',function(Request $request){
  }
 });
 
-$app->put('/api/usuarios/update/{codigo}',function(Request $request){
+$app->put('/api/usuarios/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');
   $codigoPersonal = $request->getParam('codigoPersonal');
@@ -127,7 +133,7 @@ $app->put('/api/usuarios/update/{codigo}',function(Request $request){
   }
 });
 
-$app->delete('/api/usuarios/delete/{codigo}',function(Request $request){
+$app->delete('/api/usuarios/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM usuario 

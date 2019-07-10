@@ -89,3 +89,42 @@ $app->delete('/api/egresados/delete/{codigo}',function(Request $request){
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
 });
+
+$app->get('/api/egresados/{admision}/{escuelaProfesional}', function(Request $request){
+  $codigoEscuela = $request->getAttribute('escuelaProfesional');
+  $codigoAdmision = $request->getAttribute('admision');
+  try {
+    $data = $this->db->query("SELECT nombres, YEAR(fechaTermino) as Termino, T.codigoEgresado as Titulacion, C.codigoEgresado as Colegiatura
+                              FROM egresado INNER JOIN persona on persona.codigo = codigoPersona
+                              INNER JOIN titulacion T on egresado.codigo= T.codigoEgresado
+                              INNER JOIN colegiatura C on egresado.codigo = C.codigoEgresado
+                              WHERE egresado.codigoEscuela = $codigoEscuela and egresado.codigoAdmision = $codigoAdmision")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+   }else {
+     echo json_encode( array('estado' => false ));
+   }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  }
+});
+$app->get('/api/egresados/actividadEconomica/{codigo}', function(Request $request){
+  $codigo = $request->getAttribute('codigo');
+  try {
+    $data = $this->db->query("SELECT nombres,celular,correo, Centro.razonSocial, C.cargo,C.detalleFunciones, A.nombre
+                              FROM egresado INNER JOIN persona on persona.codigo = codigoPersona
+                              INNER JOIN contrato C on egresado.codigo= C.codigoEgresado
+                              INNER JOIN centroLaboral Centro on C.codigoCentroLaboral = Centro.codigo
+                              INNER JOIN actividadEconomica A on Centro.codigoActividad = A.codigo
+                              WHERE actividadEconomica.codigo = $codigo")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+   }else {
+     echo json_encode( array('estado' => false ));
+   }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  }
+});
