@@ -15,30 +15,29 @@ $app->get('/api/usuarios', function () {
   }
 });
 
-$app->post('/api/usuarios/tipo',function(Request $request){
+$app->post('/api/usuarios/ingresar',function(Request $request){
   $clave = $request->getParam('clave');
   $nombre = $request->getParam('nombre');
   $result = [];
  try {
-  $usuario = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$nombre' and vigencia=1")->fetchAll();
+  $usuario = $this->db->query("SELECT nombre , clave FROM usuario WHERE nombre = '$nombre' and vigencia=1")->fetchAll();
    if ($usuario) {
-            $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre' and clave = '$clave' and vigencia=1")->fetchAll();
-            if ($user) {
+        if (password_verify($clave,$usuario[0]->clave)) {
+              $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre'  and vigencia=1")->fetchAll();
               $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno FROM usuario ";
               $codigoPersona = $user[0]->codigoPersona;
               if (!$codigoPersona) {
                 $sql = $sql . "INNER JOIN personal P on P.codigo = usuario.codigoPersonal
-                WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia=1";
-                $data = $this->db->query($sql)->fetchAll();
+                WHERE nombre = '$nombre'  and usuario.vigencia=1";
               }else {
                 $sql = $sql . "INNER JOIN persona P on P.codigo = usuario.codigoPersona
-                WHERE nombre = '$nombre' and clave = '$clave' and usuario.vigencia=1";
-                $data = $this->db->query($sql)->fetchAll();
+                WHERE nombre = '$nombre'  and usuario.vigencia=1";
+                
               }
+              $data = $this->db->query($sql)->fetchAll();
               $result = array('estado' => true, 'data' => $data);
               echo json_encode($result);
-            }
-         else {
+            }else {
         $result = array('estado' => false);
         array_push($result,"Clave Inconrrecta");
         echo json_encode($result);
@@ -46,7 +45,7 @@ $app->post('/api/usuarios/tipo',function(Request $request){
    } else {
     $result = array('estado' => false);
     array_push($result,"Usuario incorrecto");
-     echo json_encode($result);
+    echo json_encode($result);
    }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
@@ -75,10 +74,11 @@ $app->post('/api/usuarios/add',function(Request $request){
   $tipo = $request->getParam('tipo');
   $codigoPersona = $request->getParam('codigoPersona');
  try {
+   $hash = password_hash($clave,PASSWORD_DEFAULT);
    $cantidad = $this->db->exec("INSERT INTO usuario(nombre,codigoPersonal,clave,tipo,codigoPersona,vigencia) 
-                            Values('$nombre','$codigoPersonal',$clave,$tipo,$codigoPersona,1)");
+                            Values('$nombre','$codigoPersonal',$hash,$tipo,$codigoPersona,1)");
    if ($cantidad > 0) {
-     echo json_encode("Usuario Registrada");
+     echo json_encode("Usuario Registrado");
    } else {
      echo json_encode("No se ha agregado");
    }
@@ -95,21 +95,35 @@ $app->put('/api/usuarios/update/{codigo}',function(Request $request){
   $tipo = $request->getParam('tipo');
   $codigoPersona = $request->getParam('codigoPersona');
  try {
-   $cantidad = $this->db->exec("UPDATE usuario set
-                                nombre ='$nombre',
-                                codigoPersonal = '$codigoPersonal',
-                                clave = '$clave',
-                                codigoPersona = '$codigoPersona',
-                                tipo = '$tipo'  
-                                WHERE codigo = $codigo");
-   if ($cantidad > 0) {
-     echo json_encode("Usuario Actualizado");
-   } else {
-     echo json_encode("No se ha actualizado");
-   }
- } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
- }
+    $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre' and vigencia=1")->fetchAll();
+    $hash = password_hash($clave,PASSWORD_DEFAULT);
+    $codigoPersona = $user[0]->codigoPersona;
+    if (!$codigoPersona) {
+      $cantidad = $this->db->exec("UPDATE usuario set
+                                  nombre ='$nombre',
+                                  codigoPersonal = '$codigoPersonal',
+                                  clave = '$hash',
+                                  codigoPersona = null,
+                                  tipo = '$tipo'  
+                                  WHERE codigo = $codigo");
+    }else {
+      $cantidad = $this->db->exec("UPDATE usuario set
+                                  nombre ='$nombre',
+                                  codigoPersonal = null,
+                                  clave = '$hash',
+                                  codigoPersona = '$codigoPersona',
+                                  tipo = '$tipo'  
+                                  WHERE codigo = $codigo");
+    }
+    
+    if ($cantidad > 0) {
+      echo json_encode("Usuario Actualizado");
+    } else {
+      echo json_encode("No se ha actualizado");
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  }
 });
 
 $app->delete('/api/usuarios/delete/{codigo}',function(Request $request){
