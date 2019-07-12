@@ -46,7 +46,7 @@ $app->post('/api/centroEstudios/add',function(Request $request){
  }
 });
 
-$app->put('/api/centroEstudios/update/{codigo}',function(Request $request){
+$app->put('/api/centroEstudios/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $razonSocial = $request->getParam('razonSocial');
  try {
@@ -63,7 +63,7 @@ $app->put('/api/centroEstudios/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/centroEstudios/delete/{codigo}',function(Request $request){
+$app->delete('/api/centroEstudios/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM centroestudios 

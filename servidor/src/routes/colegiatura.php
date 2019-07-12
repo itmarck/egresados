@@ -47,7 +47,7 @@ $app->post('/api/colegiaturas/add',function(Request $request){
  }
 });
 
-$app->put('/api/colegiaturas/update/{codigoEgresado}',function(Request $request){
+$app->put('/api/colegiaturas/{codigoEgresado}',function(Request $request){
   $codigoEgresado = $request->getAttribute('codigoEgresado');
   $fecha = $request->getParam('fecha');
  try {
@@ -64,7 +64,7 @@ $app->put('/api/colegiaturas/update/{codigoEgresado}',function(Request $request)
  }
 });
 
-$app->delete('/api/colegiaturas/delete/{codigoEgresado}',function(Request $request){
+$app->delete('/api/colegiaturas/{codigoEgresado}',function(Request $request){
   $codigoEgresado = $request->getAttribute('codigoEgresado');
  try {
    $cantidad = $this->db->exec("DELETE FROM colegiatura 

@@ -105,24 +105,17 @@ $app->put('/api/usuarios/{codigo}',function(Request $request){
     $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre' and vigencia=1")->fetchAll();
     $hash = password_hash($clave,PASSWORD_DEFAULT);
     $codigoPersona = $user[0]->codigoPersona;
+    $sql = "UPDATE usuario set
+            nombre ='$nombre',
+            clave = '$hash',
+            tipo = '$tipo'  ";
     if (!$codigoPersona) {
-      $cantidad = $this->db->exec("UPDATE usuario set
-                                  nombre ='$nombre',
-                                  codigoPersonal = '$codigoPersonal',
-                                  clave = '$hash',
-                                  codigoPersona = null,
-                                  tipo = '$tipo'  
-                                  WHERE codigo = $codigo");
+     $sql = $sql . "codigoPersonal = '$codigoPersonal', codigoPersona = null "
     }else {
-      $cantidad = $this->db->exec("UPDATE usuario set
-                                  nombre ='$nombre',
-                                  codigoPersonal = null,
-                                  clave = '$hash',
-                                  codigoPersona = '$codigoPersona',
-                                  tipo = '$tipo'  
-                                  WHERE codigo = $codigo");
+      $sql = $sql . "codigoPersonal = null, codigoPersona = '$codigoPersona' "                         
     }
-    
+    $sql = $sql . "WHERE codigo=$codigo";
+    $cantidad = $this->db->exec($sql);
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true));
     } else {

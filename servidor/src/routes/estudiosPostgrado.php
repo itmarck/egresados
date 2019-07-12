@@ -59,7 +59,7 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
  }
 });
 
-$app->put('/api/estudiosPostgrado/update/{codigo}',function(Request $request){
+$app->put('/api/estudiosPostgrado/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoTipo = $request->getParam('codigoTipo');
@@ -99,7 +99,7 @@ $app->put('/api/estudiosPostgrado/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/estudiosPostgrado/delete/{codigo}',function(Request $request){
+$app->delete('/api/estudiosPostgrado/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM estudiospostgrado 

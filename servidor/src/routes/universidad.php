@@ -48,7 +48,7 @@ $app->post('/api/universidades/add',function(Request $request){
  }
 });
 
-$app->put('/api/universidades/update/{codigo}',function(Request $request){
+$app->put('/api/universidades/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');
   $siglas = $request->getParam('siglas');
@@ -69,7 +69,7 @@ $app->put('/api/universidades/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/universidades/delete/{codigo}',function(Request $request){
+$app->delete('/api/universidades/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM universidad 

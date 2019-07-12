@@ -50,7 +50,7 @@ $app->post('/api/egresados/add',function(Request $request){
  }
 });
 
-$app->put('/api/egresados/update/{codigo}',function(Request $request){
+$app->put('/api/egresados/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $codigoEscuela = $request->getParam('codigoEscuela');
   $codigoPersona = $request->getParam('codigoPersona');

@@ -36,24 +36,22 @@ $app->post('/api/personal/add',function(Request $request){
   $apellidoPaterno = $request->getParam('apellidoPaterno');
   $apellidoMaterno = $request->getParam('apellidoMaterno');
   $genero = $request->getParam('genero');
-  
   $celular = $request->getParam('celular');
   $correo = $request->getParam('correo');
- 
- try {
-   $cantidad = $this->db->exec("INSERT INTO personal(nombres,apellidoPaterno,apellidoMaterno,genero,celular,correo,vigencia) 
-                            Values('$nombres','$apellidoPaterno',$apellidoMaterno,$genero,$celular,$correo,1)");
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
+  try {
+    $cantidad = $this->db->exec("INSERT INTO personal(nombres,apellidoPaterno,apellidoMaterno,genero,celular,correo,vigencia) 
+                              Values('$nombres','$apellidoPaterno',$apellidoMaterno,$genero,$celular,$correo,1)");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true));
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
- } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
- }
 });
 
-$app->put('/api/personal/update/{codigo}',function(Request $request){
+$app->put('/api/personal/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $nombres = $request->getParam('nombres');
   $apellidoPaterno = $request->getParam('apellidoPaterno');
@@ -82,7 +80,7 @@ $app->put('/api/personal/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/personal/delete/{codigo}',function(Request $request){
+$app->delete('/api/personal/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM personal 

@@ -51,7 +51,7 @@ $app->post('/api/contratos/add',function(Request $request){
  }
 });
 
-$app->put('/api/contratos/update/{codigo}',function(Request $request){
+$app->put('/api/contratos/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoCentroLaboral = $request->getParam('codigoCentroLaboral');
@@ -78,7 +78,7 @@ $app->put('/api/contratos/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/contratos/delete/{codigo}',function(Request $request){
+$app->delete('/api/contratos/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM contrato 

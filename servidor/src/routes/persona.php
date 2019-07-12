@@ -16,22 +16,7 @@ $app->get('/api/personas', function () {
   }
 });
 
-$app->get('/api/personas/{DNI}',function(Request $request){
-   $DNI = $request->getAttribute('DNI');
-  try {
-    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil FROM persona WHERE DNI = $DNI and vigencia=1")->fetchAll();;
-    if ($data) {
-      $result = array('estado' => true, 'data' => $data);
-      echo json_encode($result);
-   }else {
-     echo json_encode( array('estado' => false ));
-   }
-  } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
-  }
-});
-
-$app->get('/api/personas/codigo/{codigo}',function(Request $request){
+$app->get('/api/personas/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo,YEAR(fechaTermino) ,E.nombre,A.fechaAdmision , A.nombre, C.codigo,C.vigencia,
@@ -70,7 +55,7 @@ $app->post('/api/personas/add',function(Request $request){
  }
 });
 
-$app->put('/api/personas/update/{DNI}',function(Request $request){
+$app->put('/api/personas/{DNI}',function(Request $request){
   $DNI = $request->getAttribute('DNI');
   $nombres = $request->getParam('nombres');
   $apellidoPaterno = $request->getParam('apellidoPaterno');
@@ -101,7 +86,7 @@ $app->put('/api/personas/update/{DNI}',function(Request $request){
  }
 });
 
-$app->delete('/api/personas/delete/{DNI}',function(Request $request){
+$app->delete('/api/personas/{DNI}',function(Request $request){
   $DNI = $request->getAttribute('DNI');
  try {
    $cantidad = $this->db->exec("DELETE FROM persona 

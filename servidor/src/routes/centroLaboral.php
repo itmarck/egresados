@@ -49,7 +49,7 @@ $app->post('/api/centroLaboral/add',function(Request $request){
  }
 });
 
-$app->put('/api/centroLaboral/update/{codigo}',function(Request $request){
+$app->put('/api/centroLaboral/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $codigoActividad = $request->getParam('codigoActividad');
   $codigoDistrito = $request->getParam('codigoDistrito');
@@ -72,7 +72,7 @@ $app->put('/api/centroLaboral/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/centroLaboral/delete/{codigo}',function(Request $request){
+$app->delete('/api/centroLaboral/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM centrolaboral 

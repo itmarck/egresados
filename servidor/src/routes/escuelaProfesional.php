@@ -69,7 +69,7 @@ $app->post('/api/escuelasProfesionales/add',function(Request $request){
  }
 });
 
-$app->put('/api/escuelasProfesionales/update/{codigo}',function(Request $request){
+$app->put('/api/escuelasProfesionales/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');
   $siglas = $request->getParam('siglas');
@@ -105,7 +105,7 @@ $app->put('/api/escuelasProfesionales/update/{codigo}',function(Request $request
  }
 });
 
-$app->delete('/api/escuelasProfesionales/delete/{codigo}',function(Request $request){
+$app->delete('/api/escuelasProfesionales/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM escuelaprofesional 

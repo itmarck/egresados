@@ -49,7 +49,7 @@ $app->post('/api/admisiones/add',function(Request $request){
  }
 });
 
-$app->put('/api/admisiones/update/{codigo}',function(Request $request){
+$app->put('/api/admisiones/{codigo}',function(Request $request){
     $codigo = $request->getAttribute('codigo');  
     $nombre = $request->getParam('nombre');
     $codigoEscuela = $request->getParam('codigoEscuela');
@@ -72,7 +72,7 @@ $app->put('/api/admisiones/update/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/admisiones/delete/{codigo}',function(Request $request){
+$app->delete('/api/admisiones/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM admision 

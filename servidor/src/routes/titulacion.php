@@ -48,7 +48,7 @@ $app->post('/api/titulaciones/add',function(Request $request){
  }
 });
 
-$app->put('/api/titulaciones/update/{codigoEgresado}',function(Request $request){
+$app->put('/api/titulaciones/{codigoEgresado}',function(Request $request){
   $codigoEgresado = $request->getAttribute('codigoEgresado');
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoModalidad = $request->getParam('codigoModalidad');
@@ -69,7 +69,7 @@ $app->put('/api/titulaciones/update/{codigoEgresado}',function(Request $request)
  }
 });
 
-$app->delete('/api/titulaciones/delete/{codigoEgresado}',function(Request $request){
+$app->delete('/api/titulaciones/{codigoEgresado}',function(Request $request){
   $codigoEgresado = $request->getAttribute('codigoEgresado');
  try {
    $cantidad = $this->db->exec("DELETE FROM titulacion 
