@@ -69,26 +69,19 @@ $app->put('/api/estudiosPostgrado/{codigo}',function(Request $request){
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
  try {
+   $sql = "UPDATE estudiospostgrado set
+            codigoEgresado ='$codigoEgresado',
+            codigoTipo = '$codigoTipo',
+            nombre = '$nombre',
+            fechaInicio = '$fechaInicio',
+            fechaTermino = '$fechaTermino' ";
    if ($codigoCentroEstudios) {
-    $cantidad = $this->db->exec("UPDATE estudiospostgrado set
-                                codigoEgresado ='$codigoEgresado',
-                                codigoTipo = '$codigoTipo',
-                                nombre = '$nombre',
-                                codigoCentroEstudios = '$codigoCentroEstudios',
-                                fechaInicio = '$fechaInicio',
-                                fechaTermino = '$fechaTermino'  
-                                WHERE codigo = $codigo");
+    $sql = $sql .  "codigoCentroEstudios = '$codigoCentroEstudios' ";
    } else {
-    $cantidad = $this->db->exec("UPDATE estudiospostgrado set
-                                codigoEgresado ='$codigoEgresado',
-                                codigoTipo = '$codigoTipo',
-                                nombre = '$nombre',
-                                codigoUniversidad = '$codigoUniversidad',
-                                codigoCentroEstudios = '$codigoCentroEstudios',
-                                fechaInicio = '$fechaInicio',
-                                fechaTermino = '$fechaTermino'  
-                                WHERE codigo = $codigo");
+    $sql = $sql . " codigoUniversidad = '$codigoUniversidad' ";
    }
+   $sql = $sql . "WHERE codigo = $codigo";
+   $cantidad = $this->db->exec($sql);
   if ($cantidad > 0) {
     echo json_encode(array('estado' => true));
   } else {
