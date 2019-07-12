@@ -47,6 +47,20 @@ $app->post('/api/universidades/add',function(Request $request){
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
 });
+$app->post('/api/universidades/{nombre}',function(Request $request){
+  $nombre = $request->getAttribute('nombre');
+ try {
+   $cantidad = $this->db->exec("INSERT INTO universidad(nombre,vigencia) 
+                            Values('$nombre',1)");
+   if ($cantidad > 0) {
+    echo json_encode(array('estado' => true));
+  } else {
+    echo json_encode(array('estado' => false));
+  }
+ } catch (PDOException $e) {
+   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+ }
+});
 
 $app->put('/api/universidades/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
