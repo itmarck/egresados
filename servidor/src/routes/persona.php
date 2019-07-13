@@ -40,13 +40,13 @@ try {
             FROM egresado Eg INNER JOIN escuelaProfesional E ON Eg.codigoEscuela = E.codigo
             INNER JOIN admision A ON Eg.codigoAdmision = A.codigo 
             INNER JOIN colegiatura C ON C.codigoEgresado = Eg.codigo
-            INNER JOIN persona P on Eg.codigoPersona = persona.codigo
-            WHERE (DNI = $codigo or codigo = $codigo) ")->fetchAll();
+            INNER JOIN persona P on Eg.codigoPersona = P.codigo
+            WHERE (DNI = $codigo or P.codigo = $codigo) ")->fetchAll();
   $estudiosPost = $this->db->query("SELECT Pt.nombre, Pt.fechaTermino
-                                    FROM estudioPostgrado Pt
+                                    FROM estudiosPostgrado Pt
                                     INNER JOIN egresado E on E.codigo =  Pt.codigoEgresado
-                                    INNER JOIN persona on E.codigoPersona = persona.codigo
-                                    WHERE (DNI = $codigo or codigo = $codigo)")->fetchAll();
+                                    INNER JOIN persona P on E.codigoPersona = P.codigo
+                                    WHERE (DNI = $codigo or P.codigo = $codigo)")->fetchAll();
   if ($egresado || $carreras || $estudiosPost) {
     $data = array( 'egresado' => $egresado, 'carreras' => $carreras, 'estudiosPost' => $estudiosPost );
     $result = array('estado' => true, 'data' => $data);
