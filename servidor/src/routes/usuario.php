@@ -110,9 +110,9 @@ $app->put('/api/usuarios/{codigo}',function(Request $request){
             clave = '$hash',
             tipo = '$tipo'  ";
     if (!$codigoPersona) {
-     $sql = $sql . "codigoPersonal = '$codigoPersonal', codigoPersona = null "
-    }else {
-      $sql = $sql . "codigoPersonal = null, codigoPersona = '$codigoPersona' "                         
+     $sql = $sql . "codigoPersonal = '$codigoPersonal', codigoPersona = null ";
+    } else {
+      $sql = $sql . "codigoPersonal = null, codigoPersona = '$codigoPersona' ";                         
     }
     $sql = $sql . "WHERE codigo=$codigo";
     $cantidad = $this->db->exec($sql);

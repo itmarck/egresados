@@ -16,11 +16,10 @@ $app->get('/api/personas', function () {
   }
 });
 
-$app->get('/api/personas/{codigo}',function(Request $request){
-  $codigo = $request->getAttribute('codigo');
+$app->get('/api/personas/{DNI}',function(Request $request){
+  $DNI = $request->getAttribute('DNI');
  try {
-   $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo,YEAR(fechaTermino) ,E.nombre,A.fechaAdmision , A.nombre, C.codigo,C.vigencia,
-   FROM persona WHERE (DNI = $codigo or codigo = $codigo) and vigencia=1")->fetchAll();;
+   $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil FROM persona WHERE DNI = $DNI and vigencia=1")->fetchAll();;
    if ($data) {
      $result = array('estado' => true, 'data' => $data);
      echo json_encode($result);
@@ -30,6 +29,34 @@ $app->get('/api/personas/{codigo}',function(Request $request){
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
+});
+
+$app->get('/api/personas/codigo/{codigo}',function(Request $request){
+ $codigo = $request->getAttribute('codigo');
+try {
+  $egresado = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo
+  FROM persona WHERE (DNI = $codigo or codigo = $codigo) and vigencia=1")->fetchAll();
+  $carreras = $this->db->query("SELECT E.nombre, A.nombre as admision, YEAR(Eg.fechaTermino) as FechaEgreso, C.codigo as colegiatura 
+            FROM egresado Eg INNER JOIN escuelaProfesional E ON Eg.codigoEscuela = E.codigo
+            INNER JOIN admision A ON Eg.codigoAdmision = A.codigo 
+            INNER JOIN colegiatura C ON C.codigoEgresado = Eg.codigo
+            INNER JOIN persona P on Eg.codigoPersona = persona.codigo
+            WHERE (DNI = $codigo or codigo = $codigo) ")->fetchAll();
+  $estudiosPost = $this->db->query("SELECT Pt.nombre, Pt.fechaTermino
+                                    FROM estudioPostgrado Pt
+                                    INNER JOIN egresado E on E.codigo =  Pt.codigoEgresado
+                                    INNER JOIN persona on E.codigoPersona = persona.codigo
+                                    WHERE (DNI = $codigo or codigo = $codigo)")->fetchAll();
+  if ($egresado || $carreras || $estudiosPost) {
+    $data = array( 'egresado' => $egresado, 'carreras' => $carreras, 'estudiosPost' => $estudiosPost );
+    $result = array('estado' => true, 'data' => $data);
+    echo json_encode($result);
+ }else {
+   echo json_encode( array('estado' => false ));
+ }
+} catch (PDOException $e) {
+  echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+}
 });
 
 $app->post('/api/personas/add',function(Request $request){
