@@ -76,19 +76,24 @@ $app->post('/api/usuarios/add',function(Request $request){
   $codigoPersona = $request->getParam('codigoPersona');
  try {
    $hash = password_hash($clave,PASSWORD_DEFAULT);
-  if ($codigoPersona) {
-    $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia) 
-    Values('$nombre','$hash','$tipo',$codigoPersona,1)");
-  } else {
-    $cantidad = $this->db->exec("INSERT INTO usuario(nombre,codigoPersonal,clave,tipo,vigencia) 
-    Values('$nombre','$codigoPersonal','$hash','$tipo',1)");
+  $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = $nombre")->fetchAll();
+   if (!$nombre) {
+    if ($codigoPersona) {
+      $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia) 
+      Values('$nombre','$hash','$tipo',$codigoPersona,1)");
+    } else {
+      $cantidad = $this->db->exec("INSERT INTO usuario(nombre,codigoPersonal,clave,tipo,vigencia) 
+      Values('$nombre','$codigoPersonal','$hash','$tipo',1)");  
   }
-  
-  if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
-  }
+      if ($cantidad > 0) {
+        echo json_encode(array('estado' => true));
+      } else {
+        echo json_encode(array('estado' => false));
+      }
+   } else {
+    echo json_encode(array('estado' => false,'mensaje'=> 'Nombre de usuario ya existe'));
+   }
+   
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
