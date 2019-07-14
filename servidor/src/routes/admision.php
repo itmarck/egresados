@@ -4,7 +4,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/admisiones', function () {
  try {
-  $data = $this->db->query("SELECT codigo,codigoEscuela,fechaAdmision,nombre,codigoModalidad FROM admision WHERE vigencia=1")->fetchAll();
+  $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre,codigoModalidad, M.nombre as modalidad 
+                            FROM admision A
+                            INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo  
+                            WHERE A.vigencia=1")->fetchAll();
   if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
@@ -19,7 +22,10 @@ $app->get('/api/admisiones', function () {
 $app->get('/api/admisiones/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT codigo,codigoEscuela,fechaAdmision,nombre,codigoModalidad FROM admision WHERE codigo = $codigo and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre,codigoModalidad, M.nombre as modalidad 
+                              FROM admision A
+                              INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo 
+                              WHERE A.codigo = $codigo and A.vigencia=1")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);

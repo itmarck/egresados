@@ -4,7 +4,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/colegiaturas', function () {
  try {
-  $data = $this->db->query("SELECT codigo,codigoEgresado,codigo,fecha FROM colegiatura WHERE vigencia=1")->fetchAll();
+  $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno)as Nombre,C.codigo,codigoEgresado,EP.nombre,fecha 
+                            FROM colegiatura C
+                            INNER JOIN egresado E on E.codigo = C.codigoEgresado
+                            INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
+                            INNER JOIN persona P on P.codigo = E.codigoPersona
+                            WHERE C.vigencia=1")->fetchAll();
   if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
@@ -19,7 +24,12 @@ $app->get('/api/colegiaturas', function () {
 $app->get('/api/colegiaturas/{codigoEgresado}',function(Request $request){
    $codigoEgresado = $request->getAttribute('codigoEgresado');
   try {
-    $data = $this->db->query("SELECT codigo,codigoEgresado,codigo,fecha FROM colegiatura WHERE codigoEgresado = $codigoEgresado and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno)as Nombre,C.codigo,codigoEgresado,EP.nombre,fecha 
+                              FROM colegiatura C
+                              INNER JOIN egresado E on E.codigo = C.codigoEgresado
+                              INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
+                              INNER JOIN persona P on P.codigo = E.codigoPersona
+                              WHERE C.codigoEgresado = $codigoEgresado and C.vigencia=1")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);

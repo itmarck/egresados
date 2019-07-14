@@ -76,7 +76,7 @@ $app->post('/api/usuarios/add',function(Request $request){
   $codigoPersona = $request->getParam('codigoPersona');
  try {
    $hash = password_hash($clave,PASSWORD_DEFAULT);
-  $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = $nombre")->fetchAll();
+  $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$nombre'")->fetchAll();
    if (!$nombre) {
     if ($codigoPersona) {
       $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia) 
@@ -107,14 +107,14 @@ $app->put('/api/usuarios/{codigo}',function(Request $request){
   $tipo = $request->getParam('tipo');
   $codigoPersona = $request->getParam('codigoPersona');
  try {
-    $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre' and vigencia=1")->fetchAll();
+    $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE codigo = '$codigo' and vigencia=1")->fetchAll();
     $hash = password_hash($clave,PASSWORD_DEFAULT);
-    $codigoPersona = $user[0]->codigoPersona;
+    $Persona = $user[0]->codigoPersona;
     $sql = "UPDATE usuario set
             nombre ='$nombre',
             clave = '$hash',
-            tipo = '$tipo'  ";
-    if (!$codigoPersona) {
+            tipo = '$tipo',  ";
+    if (!$Persona) {
      $sql = $sql . "codigoPersonal = '$codigoPersonal', codigoPersona = null ";
     } else {
       $sql = $sql . "codigoPersonal = null, codigoPersona = '$codigoPersona' ";                         

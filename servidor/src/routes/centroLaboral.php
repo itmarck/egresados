@@ -4,7 +4,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/centroLaboral', function () {
  try {
-  $data = $this->db->query("SELECT codigoActividad,codigoDistrito,RUC,razonSocial FROM centrolaboral WHERE vigencia=1")->fetchAll();
+  $data = $this->db->query("SELECT codigoActividad,A.nombre as Actividad,codigoDistrito,D.nombre as Distrito,RUC,razonSocial 
+                            FROM centrolaboral C
+                            INNER JOIN actividadeconomica A on A.codigo=C.codigoActividad 
+                            INNER JOIN distrito D on D.codigo = C.codigoDistrito  
+                            WHERE C.vigencia=1")->fetchAll();
   if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
@@ -19,7 +23,11 @@ $app->get('/api/centroLaboral', function () {
 $app->get('/api/centroLaboral/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT codigo,codigoActividad,codigoDistrito,RUC,razonSocial FROM centrolaboral WHERE codigo = $codigo and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT codigoActividad,A.nombre as Actividad,codigoDistrito,D.nombre as Distrito,RUC,razonSocial 
+                              FROM centrolaboral C
+                              INNER JOIN actividadeconomica A on A.codigo=C.codigoActividad 
+                              INNER JOIN distrito D on D.codigo = C.codigoDistrito  
+                              WHERE C.codigo = $codigo and C.vigencia=1")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
