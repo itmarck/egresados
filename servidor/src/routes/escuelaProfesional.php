@@ -15,10 +15,12 @@ $app->get('/api/escuelasProfesionales', function () {
   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
 });
-$app->get('/api/escuelasProfesionales/uni/{codigoUniversidad}', function (Request $request) {
-  $codigo = $request->getAttribute('codigoUniversidad');
+$app->get('/api/escuelasProfesionales/uni/{Nombre}', function (Request $request) {
+  $codigo = $request->getAttribute('Nombre');
   try {
-   $data = $this->db->query("SELECT nombre FROM escuelaprofesional WHERE codigoUniversidad = $codigo and vigencia=1")->fetchAll();
+   $data = $this->db->query("SELECT E.nombre FROM escuelaprofesional E
+                            INNER JOIN universidad U on U.codigo =  E.codigoUniversidad
+                            WHERE U.nombre = '$codigo' and E.vigencia=1")->fetchAll();
    if ($data) {
     $nombres = [];
     foreach ($data as $key => $value) {
