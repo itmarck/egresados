@@ -21,7 +21,7 @@ $app->get('/api/carreras/{codigo}',function(Request $request){
   try {
     $data = $this->db->query("SELECT egresado.codigo,codigoEscuela,codigoPersona,codigoAdmision,fechaInicio,fechaTermino FROM egresado 
                              INNER JOIN persona on Persona.codigo = codigoPersona   
-                             WHERE P.DNI = $codigo and vigencia=1")->fetchAll();;
+                             WHERE P.dni = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
