@@ -18,7 +18,7 @@ $app->get('/api/escuelasProfesionales', function () {
 $app->get('/api/escuelasProfesionales/uni/{codigoUniversidad}', function (Request $request) {
   $codigo = $request->getAttribute('codigoUniversidad');
   try {
-   $data = $this->db->query("SELECT codigo,nombre,siglas,estado, codigoFacultad ,codigoUniversidad FROM escuelaprofesional WHERE codigoUniversidad = $codigo and vigencia=1")->fetchAll();
+   $data = $this->db->query("SELECT nombre FROM escuelaprofesional WHERE codigoUniversidad = $codigo and vigencia=1")->fetchAll();
    if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -33,7 +33,7 @@ $app->get('/api/escuelasProfesionales/uni/{codigoUniversidad}', function (Reques
 $app->get('/api/escuelasProfesionales/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT codigo, codigoFacultad ,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE codigo = $codigo and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT nombre FROM escuelaprofesional WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);

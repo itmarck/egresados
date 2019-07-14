@@ -4,7 +4,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/universidades', function () {
  try {
-  $data = $this->db->query("SELECT codigo,nombre,siglas,estado FROM universidad WHERE vigencia=1")->fetchAll();
+  $data = $this->db->query("SELECT nombre FROM universidad WHERE vigencia=1")->fetchAll();
   if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
