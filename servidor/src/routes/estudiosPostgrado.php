@@ -26,7 +26,7 @@ $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
                             INNER JOIN persona P on P.codigo = E.codigoPersona
                             WHERE P.dni = $codigo and P.vigencia = 1")->fetchAll();
       if($uni[0]->codigoUniversidad) {
-        $sql = "SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,T.nombre as tipo,Es.codigoUniversidad,U.nombre,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
+        $sql = "SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,T.nombre as tipo,Es.codigoUniversidad,U.nombre as universidad,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
         FROM estudiospostgrado Es
         INNER JOIN universidad U on U.codigo = Es.codigoUniversidad ";
        $lugar = "U";
