@@ -22,7 +22,7 @@ $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
     $data = $this->db->query("SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,Es.codigoUniversidad,Es.codigoCentroEstudios,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion FROM estudiospostgrado Es
                               INNER JOIN egresado E on E.codigo = codigoEgresado
                               INNER JOIN persona P on E.codigoPersona = P.codigo
-                              WHERE P.DNI = $codigo and vigencia=1")->fetchAll();;
+                              WHERE P.dni = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
