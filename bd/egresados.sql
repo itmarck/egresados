@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-07-2019 a las 21:53:57
+-- Tiempo de generación: 14-07-2019 a las 02:43:40
 -- Versión del servidor: 10.1.40-MariaDB
 -- Versión de PHP: 7.3.5
 
@@ -299,6 +299,7 @@ CREATE TABLE `estudiospostgrado` (
   `nombre` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `fechaInicio` date NOT NULL,
   `fechaTermino` date NOT NULL,
+  `anioCertificacion` year(4) DEFAULT NULL,
   `vigencia` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -306,11 +307,11 @@ CREATE TABLE `estudiospostgrado` (
 -- Volcado de datos para la tabla `estudiospostgrado`
 --
 
-INSERT INTO `estudiospostgrado` (`codigo`, `codigoEgresado`, `codigoTipo`, `codigoUniversidad`, `codigoCentroEstudios`, `nombre`, `fechaInicio`, `fechaTermino`, `vigencia`) VALUES
-(1, 1, 3, 1, 4, 'Implementacion de drones', '2015-04-06', '2018-12-21', 1),
-(2, 4, 4, 2, 2, 'Seguridad Informatica', '2018-04-02', '2018-12-14', 1),
-(3, 5, 1, 2, 5, 'Cloud Computing ', '2017-08-07', '2018-08-31', 1),
-(4, 2, 2, 3, 1, 'Diseno y Desarrollo de Videojuegos', '2017-12-22', '2019-04-26', 1);
+INSERT INTO `estudiospostgrado` (`codigo`, `codigoEgresado`, `codigoTipo`, `codigoUniversidad`, `codigoCentroEstudios`, `nombre`, `fechaInicio`, `fechaTermino`, `anioCertificacion`, `vigencia`) VALUES
+(1, 1, 3, 1, 4, 'Implementacion de drones', '2015-04-06', '2018-12-21', NULL, 1),
+(2, 4, 4, 2, 2, 'Seguridad Informatica', '2018-04-02', '2018-12-14', NULL, 1),
+(3, 5, 1, 2, 5, 'Cloud Computing ', '2017-08-07', '2018-08-31', NULL, 1),
+(4, 2, 2, 3, 1, 'Diseno y Desarrollo de Videojuegos', '2017-12-22', '2019-04-26', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -382,7 +383,7 @@ CREATE TABLE `modalidadtitulacion` (
 INSERT INTO `modalidadtitulacion` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
 (1, 'Experiencia Profesional', 'Esta modalidad es valida para aquellos egresados que estan o hayan desarrollado\r\nactividad profesional en el campo educativo preferentemente en un periodo no\r\nmenor de cinco anhos. ', 1),
 (2, 'Tesis', 'Esta modalidad es valida para los estudiantes y egresados sin restriccion del\r\ntiempo de egreso. ', 1),
-(3, 'Clase Modelo', 'Es una plantilla para la creacion de objetos de datos según un modelo predefinido.', 1),
+(3, 'Clase Modelo', 'Es una plantilla para la creacion de objetos de datos segun un modelo predefinido.', 1),
 (4, 'Curso', 'Proceso o serie de estados por los que pasa una accion, un asunto, etc.', 1);
 
 -- --------------------------------------------------------
@@ -402,19 +403,20 @@ CREATE TABLE `persona` (
   `correo` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `dni` char(8) COLLATE utf8_unicode_ci NOT NULL,
   `estadoCivil` char(1) COLLATE utf8_unicode_ci NOT NULL,
-  `vigencia` tinyint(1) NOT NULL
+  `vigencia` tinyint(1) NOT NULL,
+  `urlFoto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `persona`
 --
 
-INSERT INTO `persona` (`codigo`, `nombres`, `apellidoMaterno`, `apellidoPaterno`, `genero`, `fechaNacimiento`, `celular`, `correo`, `dni`, `estadoCivil`, `vigencia`) VALUES
-(160012, 'Christian Robert', 'Flores', 'Torres', 1, '1998-12-10', '98534656', 'cflores@unprg.edu.pe', '65734654', '1', 1),
-(165032, 'David', 'Paz', 'Rioja', 1, '1999-07-13', '93523622', 'drioja@unprg.edu.pe', '74575683', '1', 1),
-(165058, 'Marcelo', 'Villar', 'Velasquez', 1, '1999-02-18', '974657567', 'mvelasquez@unprg.edu.pe', '56845346', '1', 1),
-(169025, 'Javier Arturo', 'Sialer', 'Chavez', 1, '1999-06-12', '90348543', 'achavez@unprg.edu.pe', '67723032', '1', 1),
-(169027, 'Fabian Andres', 'Bautista', 'Pacherres', 1, '1998-12-13', '953172725', 'fpacherres@gmail.com', '73860228', '1', 1);
+INSERT INTO `persona` (`codigo`, `nombres`, `apellidoMaterno`, `apellidoPaterno`, `genero`, `fechaNacimiento`, `celular`, `correo`, `dni`, `estadoCivil`, `vigencia`, `urlFoto`) VALUES
+(160012, 'Christian Robert', 'Flores', 'Torres', 1, '1998-12-10', '98534656', 'cflores@unprg.edu.pe', '65734654', '1', 1, 0),
+(165032, 'David', 'Paz', 'Rioja', 1, '1999-07-13', '93523622', 'drioja@unprg.edu.pe', '74575683', '1', 1, 0),
+(165058, 'Marcelo', 'Villar', 'Velasquez', 1, '1999-02-18', '974657567', 'mvelasquez@unprg.edu.pe', '56845346', '1', 1, 0),
+(169025, 'Javier Arturo', 'Sialer', 'Chavez', 1, '1999-06-12', '90348543', 'achavez@unprg.edu.pe', '67723032', '1', 1, 0),
+(169027, 'Fabian Andres', 'Bautista', 'Pacherres', 1, '1998-12-13', '953172725', 'fpacherres@gmail.com', '73860228', '1', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -431,19 +433,20 @@ CREATE TABLE `personal` (
   `correo` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `celular` char(9) COLLATE utf8_unicode_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL,
-  `nombres` varchar(40) COLLATE utf8_unicode_ci NOT NULL
+  `nombres` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `urlFoto` varchar(50) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `personal`
 --
 
-INSERT INTO `personal` (`codigo`, `apellidoPaterno`, `apellidoMaterno`, `dni`, `genero`, `correo`, `celular`, `vigencia`, `nombres`) VALUES
-(1, 'Portocarrero', 'Rojas', '76867943', 1, 'portocarrero_rojas@unprg.edu.pe', '983297423', 1, 'Jose Eduardo'),
-(2, 'Espejo', 'Cornejo', '78453245', 1, 'espejo_cornejo@unprg.edu.pe', '989345346', 1, 'Alejandro Miguel'),
-(3, 'Montes', 'Eslava', '97942442', 1, 'montes_eslava@unprg.edu.pe', '973435645', 1, 'Oscar'),
-(4, 'Alamo', 'Rioja', '56235222', 1, 'alamo_rioja@unprg.edu.pe', '934151121', 1, 'Jordi Erick'),
-(5, 'Supo', 'Chumpen', '84523132', 1, 'supo_chumpen@unprg.edu.pe', '983423512', 1, 'Marco Antonio');
+INSERT INTO `personal` (`codigo`, `apellidoPaterno`, `apellidoMaterno`, `dni`, `genero`, `correo`, `celular`, `vigencia`, `nombres`, `urlFoto`) VALUES
+(1, 'Portocarrero', 'Rojas', '76867943', 1, 'portocarrero_rojas@unprg.edu.pe', '983297423', 1, 'Jose Eduardo', ''),
+(2, 'Espejo', 'Cornejo', '78453245', 1, 'espejo_cornejo@unprg.edu.pe', '989345346', 1, 'Alejandro Miguel', ''),
+(3, 'Montes', 'Eslava', '97942442', 1, 'montes_eslava@unprg.edu.pe', '973435645', 1, 'Oscar', ''),
+(4, 'Alamo', 'Rioja', '56235222', 1, 'alamo_rioja@unprg.edu.pe', '934151121', 1, 'Jordi Erick', ''),
+(5, 'Supo', 'Chumpen', '84523132', 1, 'supo_chumpen@unprg.edu.pe', '983423512', 1, 'Marco Antonio', '');
 
 -- --------------------------------------------------------
 
@@ -558,7 +561,7 @@ CREATE TABLE `usuario` (
   `codigo` int(11) NOT NULL,
   `codigoPersonal` int(11) DEFAULT NULL,
   `nombre` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `clave` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `clave` varchar(90) COLLATE utf8_unicode_ci NOT NULL,
   `tipo` char(1) COLLATE utf8_unicode_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL,
   `codigoPersona` int(11) DEFAULT NULL
@@ -570,7 +573,7 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`codigo`, `codigoPersonal`, `nombre`, `clave`, `tipo`, `vigencia`, `codigoPersona`) VALUES
 (4, 1, 'Pocarr', '123', 'A', 1, NULL),
-(5, NULL, 'Javcho', '456', 'E', 1, 169025),
+(5, NULL, 'Javcho', '$2y$10$xlweEJXuWsyhyZyTW8Ow4.pemBIA9xmXH741XuDv9T531uSgYt6re', 'E', 1, 169025),
 (6, 2, 'EspCor1', '987', 'A', 1, NULL),
 (7, 4, 'AlaRioja', '741', 'A', 1, NULL),
 (8, NULL, 'DavidR', '258', 'E', 1, 165032),
