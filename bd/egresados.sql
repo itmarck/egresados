@@ -41,7 +41,7 @@ CREATE TABLE `actividadeconomica` (
 
 INSERT INTO `actividadeconomica` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
 (1, 'Mineria', 'Actividad econÃ³mica del sector primario representada por la explotaciÃ³n o extracciÃ³n de los minerales.', 1),
-(2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o marÃtimas.', 1),
+(2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o marÂ®timas.', 1),
 (3, 'Ganaderia', 'Actividad econÃ³mica que consiste en el manejo y explotaciÃ³n de animales domesticables.', 1),
 (4, 'Industria', 'Actividad que tiene como finalidad transformar las materias primas en productos elaborados o semielaborados.', 1),
 (5, 'Agricultura', 'Conjunto de tÃ©cnicas, conocimientos y saberes para cultivar la tierra y la parte del sector primario que se dedica a ello.', 1),
@@ -280,11 +280,11 @@ CREATE TABLE `escuelaprofesional` (
 --
 
 INSERT INTO `escuelaprofesional` (`codigo`, `codigoFacultad`, `nombre`, `siglas`, `estado`, `codigoUniversidad`, `vigencia`) VALUES
-(1, 1, 'Escuela Profesional de IngenierÃa en ComputaciÃ³n e InformÃ¡tica', 'EPICI', 1, 1, 1),
-(2, NULL, 'Escuela Profesional de EstadÃstica', 'EPE', 1, 4, 1),
+(1, 1, 'Escuela Profesional de IngenierÂ®a en ComputaciÃ³n e InformÃ¡tica', 'EPICI', 1, 1, 1),
+(2, NULL, 'Escuela Profesional de EstadÂ®stica', 'EPE', 1, 4, 1),
 (3, NULL, 'Escuela Profesional de MecÃ¡nica ElÃ©ctrica', 'FIME', 1, 5, 1),
-(4, 3, 'Escuela Profesional de EnfermerÃa', 'EPEN', 1, 1, 1),
-(5, NULL, 'Escuela Profesional de IngenierÃa AgrÃcola', 'EPIA', 1, 5, 1);
+(4, 3, 'Escuela Profesional de EnfermerÂ®a', 'EPEN', 1, 1, 1),
+(5, NULL, 'Escuela Profesional de IngenierÂ®a AgrÂ®cola', 'EPIA', 1, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -335,11 +335,11 @@ CREATE TABLE `facultad` (
 --
 
 INSERT INTO `facultad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) VALUES
-(1, 'Facultad de Ciencias FÃsicas y MatemÃ¡ticas', 'FACFYM', 1, 1),
+(1, 'Facultad de Ciencias FÂ®sicas y MatemÃ¡ticas', 'FACFYM', 1, 1),
 (2, 'Facultad de MecÃ¡nica ElÃ©ctrica', 'FIME', 1, 1),
-(3, 'Facultad de EnfermerÃa', 'FE', 1, 1),
-(4, 'Facultad de AgronomÃa', 'FAG', 1, 1),
-(5, 'Facultad de IngenierÃa AgrÃcola', 'FIA', 1, 1);
+(3, 'Facultad de EnfermerÂ®a', 'FE', 1, 1),
+(4, 'Facultad de AgronomÂ®a', 'FAG', 1, 1),
+(5, 'Facultad de IngenierÂ®a AgrÂ®cola', 'FIA', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -386,7 +386,7 @@ CREATE TABLE `modalidadtitulacion` (
 INSERT INTO `modalidadtitulacion` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
 (1, 'Experiencia Profesional', 'Esta modalidad es vÃ¡lida para aquellos egresados que estan o hayan desarrollado actividad profesional. ', 1),
 (2, 'Tesis', 'Esta modalidad es vÃ¡lida para los estudiantes y egresados sin restricciÃ³n del tiempo de egreso. ', 1),
-(3, 'Clase Modelo', 'Es una plantilla para la creaciÃ³n de objetos de datos segÃº n un modelo predefinido.', 1),
+(3, 'Clase Modelo', 'Es una plantilla para la creaciÃ³n de objetos de datos segÃºn un modelo predefinido.', 1),
 (4, 'Curso', 'Proceso o serie de estados por los que pasa una acciÃ³n, un asunto, etc.', 1);
 
 -- --------------------------------------------------------
@@ -494,7 +494,7 @@ CREATE TABLE `tipoestudiopostgrado` (
 --
 
 INSERT INTO `tipoestudiopostgrado` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Curso', 'Cursos de corta duraciÃ³n para conocer mejor un nuevo Ã¡mbito especÃfico.', 1),
+(1, 'Curso', 'Cursos de corta duraciÃ³n para conocer mejor un nuevo Ã¡mbito especÂ®fico.', 1),
 (2, 'Diplomado', 'Curso de corta o mediana duraciÃ³n.', 1),
 (3, 'Doctorado', 'Es la mÃ¡xima formaciÃ³n acadÃ©mica a la que se puede optar.', 1),
 (4, 'Segunda Especialidad', 'FormaciÃ³n de investigadores, docentes universitarios y especialistas.', 1),
@@ -551,7 +551,7 @@ INSERT INTO `universidad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) V
 (1, 'Universidad Nacional de Trujillo', 'UNT', 1, 1),
 (2, 'Universidad de Piura', 'UDEP', 1, 1),
 (3, 'Universidad Santo Toribio de Mogrovejo', 'USAT', 1, 1),
-(4, 'Universidad San MartÃn de Porres', 'USMP', 1, 1),
+(4, 'Universidad San MartÂ®n de Porres', 'USMP', 1, 1),
 (5, 'Universidad Nacional Pedro Ruiz Gallo', 'UNPRG', 1, 1);
 
 -- --------------------------------------------------------
