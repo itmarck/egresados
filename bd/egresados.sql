@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-07-2019 a las 10:45:32
--- Versión del servidor: 10.1.40-MariaDB
--- Versión de PHP: 7.3.5
+-- Tiempo de generación: 14-07-2019 a las 10:57:45
+-- Versión del servidor: 10.1.38-MariaDB
+-- Versión de PHP: 7.3.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -40,12 +40,12 @@ CREATE TABLE `actividadeconomica` (
 --
 
 INSERT INTO `actividadeconomica` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Mineria', 'Actividad economica del sector primario representada por la explotacion o extraccion de los minerales que se han acumulado en el suelo y subsuelo en forma de yacimientos.', 0),
-(2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o maritimas.', 0),
-(3, 'Ganaderia', 'Actividad economica de origen muy antiguo que consiste en el manejo y explotacion de animales domesticables con fines de produccion, para su aprovechamiento.', 0),
-(4, 'Industria', 'Actividad que tiene como finalidad de transformar las materias primas en productos elaborados o semielaborados utilizando una fuente de energia.', 0),
-(5, 'Agricultura', 'Conjunto de tecnicas, conocimientos y saberes para cultivar la tierra y la parte del sector primario que se dedica a ello. En ella se engloban los diferentes trabajos de tratamiento del suelo y los cultivos de vegetales.', 0),
-(6, 'Turismo', 'Actividad que realizan las personas durante sus viajes y estancias en lugares distintos a su entorno habitual durante un periodo de tiempo inferior a un ano, con fines de ocio, negocios u otros', 0);
+(1, 'Mineria', 'Actividad econÃ³mica del sector primario representada por la explotaciÃ³n o extracciÃ³n de los minerales.', 1),
+(2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o marÃtimas.', 1),
+(3, 'Ganaderia', 'Actividad econÃ³mica que consiste en el manejo y explotaciÃ³n de animales domesticables.', 1),
+(4, 'Industria', 'Actividad que tiene como finalidad transformar las materias primas en productos elaborados o semielaborados.', 1),
+(5, 'Agricultura', 'Conjunto de tÃ©cnicas, conocimientos y saberes para cultivar la tierra y la parte del sector primario que se dedica a ello.', 1),
+(6, 'Turismo', 'Actividad que realizan las personas durante sus viajes y estancias en lugares distintos a su entorno habitual durante un periodo de tiempo inferior a un ano, con fines de ocio, negocios u otros', 1);
 
 -- --------------------------------------------------------
 
@@ -120,7 +120,7 @@ INSERT INTO `centrolaboral` (`codigo`, `codigoActividad`, `codigoDistrito`, `RUC
 (2, 3, 3, '24343657654756867867', 'Gloria', 1),
 (3, 2, 2, '97239423524654456743', 'El Muelle', 1),
 (4, 6, 8, '28974982365237469342', 'AirTour', 1),
-(5, 4, 1, '3534645745671235346', 'Coobox', 1),
+(5, 4, 1, '3534645745671235346', 'Coolbox', 1),
 (6, 5, 11, '24365869543534564572', 'Natura', 1);
 
 -- --------------------------------------------------------
@@ -157,7 +157,7 @@ CREATE TABLE `contrato` (
   `codigo` int(11) NOT NULL,
   `codigoEgresado` int(11) NOT NULL,
   `codigoCentroLaboral` int(11) NOT NULL,
-  `cargo` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `cargo` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `fechaInicio` date NOT NULL,
   `fechaTermino` date NOT NULL,
   `detalleFunciones` text COLLATE utf8_unicode_ci NOT NULL,
@@ -169,11 +169,11 @@ CREATE TABLE `contrato` (
 --
 
 INSERT INTO `contrato` (`codigo`, `codigoEgresado`, `codigoCentroLaboral`, `cargo`, `fechaInicio`, `fechaTermino`, `detalleFunciones`, `vigencia`) VALUES
-(1, 1, 1, 'Jefe de Gestion', '2018-04-02', '2019-01-31', 'Gestiona que todos los departamentos realicen sus actividades de manera correcta y eficientemente.', 1),
-(2, 7, 4, 'Jefe de Diseno ', '2018-01-01', '2019-06-30', 'Responsable de definir el enfoque estrategico, de precisar el planteamiento tactico y operativo del diseno del producto, servicio o sistema, y de definir la ventaja competitiva para la organizacion gracias a las aportaciones del diseno.', 1),
-(4, 3, 6, 'Programador Web', '2018-12-03', '2019-12-31', 'Programador independiente. Desarrollador de software, crea y realiza mantenimiento a paginas y aplicaciones web.', 1),
-(5, 1, 5, 'Network Marketing', '2019-01-01', '2020-01-01', 'Distribuidor de productos y servicios a traves de una Red de comercializacion. Ayuda a personas sobre el apalancamiento en redes de mercadeo.', 1),
-(6, 1, 3, 'Creador de videojueg', '2018-10-15', '2020-02-14', 'Desarrollador de software (ya sea un individuo o una empresa) que crea videojuegos para diversas plataformas (videoconsola o computadora personal). Algunos desarrolladores tambien se especializan en ciertos tipos de juegos, como los RPG o los FPS.', 1);
+(1, 1, 1, 'Jefe de GestiÃ³n', '2018-04-02', '2019-01-31', 'Gestiona que todos los departamentos realicen sus actividades de manera correcta y eficiente.', 1),
+(2, 7, 4, 'Jefe de DiseÃ±o ', '2018-01-01', '2019-06-30', 'Responsable de definir el enfoque estratÃ©gico, de precisar el planteamiento tÃ¡ctico y operativo del diseÃ±o del producto, servicio o sistema.', 1),
+(4, 3, 6, 'Programador Web', '2018-12-03', '2019-12-31', 'Desarrollador de software, crea y realiza mantenimiento a pÃ¡ginas y aplicaciones web.', 1),
+(5, 1, 5, 'Network Marketing', '2019-01-01', '2020-01-01', 'Distribuidor de productos y servicios a traves de una Red de comercializaciÃ³n.', 1),
+(6, 1, 3, 'Creador de videojuegos', '2018-10-15', '2020-02-14', 'Desarrollador de software que crea exclusivamente videojuegos, como los RPG, FPS, etc.', 1);
 
 -- --------------------------------------------------------
 
@@ -217,16 +217,16 @@ CREATE TABLE `distrito` (
 INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUES
 (1, 1, 'Chiclayo', 1),
 (2, 1, 'Pimentel', 1),
-(3, 2, 'Ferrenafe', 1),
-(4, 3, 'Morrope', 1),
+(3, 2, 'FerreÃ±afe', 1),
+(4, 3, 'MÃ³rrope', 1),
 (5, 3, 'Lambayeque', 1),
-(6, 6, 'Miraflores', 1),
+(6, 6, 'Rioja', 1),
 (7, 6, 'Miraflores', 1),
 (8, 6, 'Surco', 1),
 (9, 6, 'La Victoria', 1),
 (10, 4, 'Talara', 1),
-(11, 4, 'Suyana', 1),
-(12, 5, 'Chepen', 1),
+(11, 4, 'Sullana', 1),
+(12, 5, 'ChepÃ©n', 1),
 (13, 5, 'Pacasmayo', 1),
 (14, 2, 'Incahuasi', 1);
 
@@ -254,10 +254,10 @@ INSERT INTO `egresado` (`codigo`, `codigoEscuela`, `codigoPersona`, `codigoAdmis
 (1, 1, 169027, 4, '2016-04-25', '2020-12-20', 1),
 (2, 1, 169025, 4, '2016-04-25', '2020-12-20', 1),
 (3, 1, 165058, 3, '2016-04-25', '2020-12-20', 1),
-(4, 1, 169027, 2, '2016-04-25', '2020-12-20', 1),
+(4, 2, 169027, 2, '2016-04-25', '2020-12-20', 1),
 (5, 1, 160012, 3, '2016-04-25', '2020-12-20', 1),
 (6, 3, 169027, 1, '2019-07-01', '2019-07-04', 1),
-(7, 4, 169027, 4, '2019-07-01', '2019-07-08', 1);
+(7, 4, 169025, 4, '2019-07-01', '2019-07-08', 1);
 
 -- --------------------------------------------------------
 
@@ -268,7 +268,7 @@ INSERT INTO `egresado` (`codigo`, `codigoEscuela`, `codigoPersona`, `codigoAdmis
 CREATE TABLE `escuelaprofesional` (
   `codigo` int(11) NOT NULL,
   `codigoFacultad` int(11) DEFAULT NULL,
-  `nombre` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `siglas` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `estado` tinyint(1) NOT NULL,
   `codigoUniversidad` int(11) DEFAULT NULL,
@@ -280,11 +280,11 @@ CREATE TABLE `escuelaprofesional` (
 --
 
 INSERT INTO `escuelaprofesional` (`codigo`, `codigoFacultad`, `nombre`, `siglas`, `estado`, `codigoUniversidad`, `vigencia`) VALUES
-(1, 1, 'Escuela de Ingenieria en Computacion e Informatica', 'EPICI', 1, 1, 1),
-(2, NULL, 'Escuela Profesional de Estadistica', 'EPE', 1, 4, 1),
-(3, NULL, 'Escuela Profesional de Mecanica Electrica', 'FIME', 1, 5, 1),
-(4, 3, 'Escuela Profesional de Enfermeria', 'EPEN', 1, 1, 1),
-(5, NULL, 'Escuela Profesional de Ingenieria Agricola', 'EPIA', 1, 5, 1);
+(1, 1, 'Escuela Profesional de IngenierÃa en ComputaciÃ³n e InformÃ¡tica', 'EPICI', 1, 1, 1),
+(2, NULL, 'Escuela Profesional de EstadÃstica', 'EPE', 1, 4, 1),
+(3, NULL, 'Escuela Profesional de MecÃ¡nica ElÃ©ctrica', 'FIME', 1, 5, 1),
+(4, 3, 'Escuela Profesional de EnfermerÃa', 'EPEN', 1, 1, 1),
+(5, NULL, 'Escuela Profesional de IngenierÃa AgrÃcola', 'EPIA', 1, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -310,10 +310,10 @@ CREATE TABLE `estudiospostgrado` (
 --
 
 INSERT INTO `estudiospostgrado` (`codigo`, `codigoEgresado`, `codigoTipo`, `codigoUniversidad`, `codigoCentroEstudios`, `nombre`, `fechaInicio`, `fechaTermino`, `anioCertificacion`, `vigencia`) VALUES
-(1, 1, 3, 1, NULL, 'Implementacion de drones', '2015-04-06', '2018-12-21', NULL, 1),
-(2, 4, 4, NULL, 2, 'Seguridad Informatica', '2018-04-02', '2018-12-14', NULL, 1),
+(1, 1, 3, 1, NULL, 'ImplementaciÃ³n de drones', '2015-04-06', '2018-12-21', NULL, 1),
+(2, 4, 4, NULL, 2, 'Seguridad InformÃ¡tica', '2018-04-02', '2018-12-14', NULL, 1),
 (3, 5, 1, NULL, 5, 'Cloud Computing ', '2017-08-07', '2018-08-31', NULL, 1),
-(4, 7, 2, NULL, 1, 'Diseno y Desarrollo de Videojuegos', '2017-12-22', '2019-04-26', NULL, 1),
+(4, 7, 2, NULL, 1, 'DiseÃ±o y Desarrollo de Videojuegos', '2017-12-22', '2019-04-26', NULL, 1),
 (6, 7, 2, NULL, 4, 'Inyectables 2', '2019-07-01', '2019-07-09', 2019, 1);
 
 -- --------------------------------------------------------
@@ -335,11 +335,11 @@ CREATE TABLE `facultad` (
 --
 
 INSERT INTO `facultad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) VALUES
-(1, 'Facultad de Ciencias Fisicas y Matematicas', 'FACFYM', 1, 1),
-(2, 'Facultad de Mecanica Electrica', 'FIME', 1, 1),
-(3, 'Facultad de Enfermeria', 'FE', 1, 1),
-(4, 'Facultad de Agronomia', 'FAG', 1, 1),
-(5, 'Facultad de Ingenieria Agricola', 'FIA', 1, 1);
+(1, 'Facultad de Ciencias FÃsicas y MatemÃ¡ticas', 'FACFYM', 1, 1),
+(2, 'Facultad de MecÃ¡nica ElÃ©ctrica', 'FIME', 1, 1),
+(3, 'Facultad de EnfermerÃa', 'FE', 1, 1),
+(4, 'Facultad de AgronomÃa', 'FAG', 1, 1),
+(5, 'Facultad de IngenierÃa AgrÃcola', 'FIA', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -359,12 +359,12 @@ CREATE TABLE `modalidadadmision` (
 --
 
 INSERT INTO `modalidadadmision` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Ordinario', 'Examen de AdmisiÃ³n para cualquier postulante que haya culminado el colegio.', 1),
-(2, 'Extraordinario', 'Examen de AdmisiÃ³n para alumnos de quinto aÃ±o del colegio.', 1),
-(3, 'Centro PRE', 'Examen de AdmisiÃ³n para chicos que ya han culminado el colegio y estan en la academia de la universidad.', 1),
-(4, 'Exonerados', 'Examen de AdmisiÃ³n para chicos que ocuparon los primeros puestos en su etapa acadÃ©mica.', 1),
-(5, 'Casos Especiales', 'Examen de AdmisiÃ³n para chicos con alguna discapacidad.', 1),
-(6, 'Deportista Calificado', 'Examen de AdmisiÃ³n para chicos que destacan en algun deporte. ', 1);
+(1, 'Ordinario', 'Examen de admisiÃ³n para cualquier postulante que haya culminado el colegio.', 1),
+(2, 'Extraordinario', 'Examen de admisiÃ³n para alumnos de quinto aÃ±o del colegio.', 1),
+(3, 'Centro PRE', 'Examen de admisiÃ³n para chicos que ya han culminado el colegio y estan en academia.', 1),
+(4, 'Exonerados', 'Examen de admisiÃ³n para chicos que ocuparon los primeros puestos en su etapa acadÃ©mica.', 1),
+(5, 'Casos Especiales', 'Examen de admisiÃ³n para chicos con alguna discapacidad.', 1),
+(6, 'Deportista Calificado', 'Examen de admisiÃ³n para chicos que destacan en algun deporte.', 1);
 
 -- --------------------------------------------------------
 
@@ -384,8 +384,8 @@ CREATE TABLE `modalidadtitulacion` (
 --
 
 INSERT INTO `modalidadtitulacion` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Experiencia Profesional', 'Esta modalidad es vÃ¡lida para aquellos egresados que estan o hayan desarrollado\r\nactividad profesional en el campo educativo preferentemente en un periodo no\r\nmenor de cinco aÃ±os. ', 1),
-(2, 'Tesis', 'Esta modalidad es valida para los estudiantes y egresados sin restricciÃ³n del\r\ntiempo de egreso. ', 1),
+(1, 'Experiencia Profesional', 'Esta modalidad es vÃ¡lida para aquellos egresados que estan o hayan desarrollado actividad profesional. ', 1),
+(2, 'Tesis', 'Esta modalidad es vÃ¡lida para los estudiantes y egresados sin restricciÃ³n del tiempo de egreso. ', 1),
 (3, 'Clase Modelo', 'Es una plantilla para la creaciÃ³n de objetos de datos segÃº n un modelo predefinido.', 1),
 (4, 'Curso', 'Proceso o serie de estados por los que pasa una acciÃ³n, un asunto, etc.', 1);
 
@@ -417,7 +417,7 @@ CREATE TABLE `persona` (
 INSERT INTO `persona` (`codigo`, `nombres`, `apellidoMaterno`, `apellidoPaterno`, `genero`, `fechaNacimiento`, `celular`, `correo`, `dni`, `estadoCivil`, `vigencia`, `urlFoto`) VALUES
 (160012, 'Christian Robert', 'Flores', 'Torres', 1, '1998-12-10', '98534656', 'cflores@unprg.edu.pe', '65734654', '1', 1, 0),
 (165032, 'David', 'Paz', 'Rioja', 1, '1999-07-13', '93523622', 'drioja@unprg.edu.pe', '74575683', '1', 1, 0),
-(165058, 'Marcelo', 'Villar', 'Velasquez', 1, '1999-02-18', '974657567', 'mvelasquez@unprg.edu.pe', '56845346', '1', 1, 0),
+(165058, 'Marcelo', 'Villar', 'VelÃ¡squez', 1, '1999-02-18', '974657567', 'mvelasquez@unprg.edu.pe', '56845346', '1', 1, 0),
 (169025, 'Javier Arturo', 'Sialer', 'ChÃ¡vez', 1, '1999-06-12', '90348543', 'achavez@unprg.edu.pe', '67723032', '1', 1, 0),
 (169027, 'Fabian Andres', 'Bautista', 'Pacherres', 1, '1998-12-13', '953172725', 'fpacherres@gmail.com', '73860228', '1', 1, 0);
 
@@ -470,7 +470,7 @@ CREATE TABLE `provincia` (
 
 INSERT INTO `provincia` (`codigo`, `codigoDepartamento`, `nombre`, `vigencia`) VALUES
 (1, 1, 'Chiclayo', 0),
-(2, 1, 'Ferrenafe', 0),
+(2, 1, 'FerreÃ±afe', 0),
 (3, 1, 'Lambayeque', 0),
 (4, 2, 'Piura', 0),
 (5, 3, 'Trujillo', 0),
@@ -494,15 +494,15 @@ CREATE TABLE `tipoestudiopostgrado` (
 --
 
 INSERT INTO `tipoestudiopostgrado` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Curso', 'Cursos de corta duraciÃ³n para conocer mejor un nuevo Ã¡mbito de su trabajo, dominar una nueva competencia.', 1),
-(2, 'Diplomado', 'Curso de corta o mediana duraciÃ³n, generalmente dictado por una universidad o instituciÃ³n de educaci Ã³n superior.', 1),
-(3, 'Doctorado', 'Es la mÃ¡xima formaciÃ³n acadÃ©mica a la que se puede optar, tras realizar un master y realizar una tesis de investigaciÃ³n.', 1),
-(4, 'Segunda Especialidad', 'Los estudios de posgrado tienen como objetivo la formaciÃ³n de investigadores, docentes universitarios y especialistas.', 1),
-(5, 'Maestria', 'Es un grado acadÃ©mico de postgrado. Una maestrÃ­a oficial de posgrado se consigue al completar un programa de uno a dos aÃ±os.', 1),
+(1, 'Curso', 'Cursos de corta duraciÃ³n para conocer mejor un nuevo Ã¡mbito especÃfico.', 1),
+(2, 'Diplomado', 'Curso de corta o mediana duraciÃ³n.', 1),
+(3, 'Doctorado', 'Es la mÃ¡xima formaciÃ³n acadÃ©mica a la que se puede optar.', 1),
+(4, 'Segunda Especialidad', 'FormaciÃ³n de investigadores, docentes universitarios y especialistas.', 1),
+(5, 'Maestria', 'Grado acadÃ©mico de postgrado que se consigue al completar un programa de uno a dos aÃ±os.', 1),
 (6, 'Idioma', 'Dominio de un idioma extranjero. ', 1),
-(7, 'Certificacion', 'Procedimiento destinado a que un organismo independiente y autorizado, valide o dictamine la calidad del sistema aplicado.', 1),
-(8, 'Taller', 'Taller es el espacio en el que se realiza un trabajo.​', 1),
-(9, 'Ponencia', 'Una ponencia es la exposicion por parte de alguien de unas ideas.', 1),
+(7, 'Certificacion', 'Procedimiento destinado a que un organismo dictamine la calidad del sistema aplicado.', 1),
+(8, 'Taller', 'Espacio en el que se realiza un trabajo.​', 1),
+(9, 'Ponencia', 'ExposiciÃ³n por parte de alguien que da algunas ideas.', 1),
 (10, 'Congreso', 'Reunion o conferencia, generalmente periÃ³dica en donde se comparte conocimiento.', 1);
 
 -- --------------------------------------------------------
@@ -551,7 +551,7 @@ INSERT INTO `universidad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) V
 (1, 'Universidad Nacional de Trujillo', 'UNT', 1, 1),
 (2, 'Universidad de Piura', 'UDEP', 1, 1),
 (3, 'Universidad Santo Toribio de Mogrovejo', 'USAT', 1, 1),
-(4, 'Universidad San Martin de Porres', 'USMP', 1, 1),
+(4, 'Universidad San MartÃn de Porres', 'USMP', 1, 1),
 (5, 'Universidad Nacional Pedro Ruiz Gallo', 'UNPRG', 1, 1);
 
 -- --------------------------------------------------------
@@ -580,7 +580,7 @@ INSERT INTO `usuario` (`codigo`, `codigoPersonal`, `nombre`, `clave`, `tipo`, `v
 (6, 2, 'EspCor1', '987', 'A', 1, NULL),
 (7, 4, 'AlaRioja', '741', 'A', 1, NULL),
 (8, NULL, 'DavidR', '258', 'E', 1, 165032),
-(9, NULL, 'Marcktone', '369', 'E', 1, 165058),
+(9, NULL, 'MarckTone', '369', 'E', 1, 165058),
 (10, NULL, 'Ã¡.Ã©.Ã­.Ã³.Ãº.Ã±', '$2y$10$umM71ecDNki3gc6d6zi8teXnzl8QEliCYSPYeZYWv7NAzjq2xgHVy', 'E', 1, 169027);
 
 --
