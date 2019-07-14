@@ -41,7 +41,7 @@ CREATE TABLE `actividadeconomica` (
 
 INSERT INTO `actividadeconomica` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
 (1, 'Mineria', 'Actividad econÃ³mica del sector primario representada por la explotaciÃ³n o extracciÃ³n de los minerales.', 1),
-(2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o marÂ®timas.', 1),
+(2, 'Pesca', 'Actividad que se realiza para extraer peces. Puede realizarse en aguas continentales o mar&iacute;timas.', 1),
 (3, 'Ganaderia', 'Actividad econÃ³mica que consiste en el manejo y explotaciÃ³n de animales domesticables.', 1),
 (4, 'Industria', 'Actividad que tiene como finalidad transformar las materias primas en productos elaborados o semielaborados.', 1),
 (5, 'Agricultura', 'Conjunto de tÃ©cnicas, conocimientos y saberes para cultivar la tierra y la parte del sector primario que se dedica a ello.', 1),
@@ -280,11 +280,11 @@ CREATE TABLE `escuelaprofesional` (
 --
 
 INSERT INTO `escuelaprofesional` (`codigo`, `codigoFacultad`, `nombre`, `siglas`, `estado`, `codigoUniversidad`, `vigencia`) VALUES
-(1, 1, 'Escuela Profesional de IngenierÂ®a en ComputaciÃ³n e InformÃ¡tica', 'EPICI', 1, 1, 1),
-(2, NULL, 'Escuela Profesional de EstadÂ®stica', 'EPE', 1, 4, 1),
+(1, 1, 'Escuela Profesional de Ingenier&iacute;a en ComputaciÃ³n e InformÃ¡tica', 'EPICI', 1, 1, 1),
+(2, NULL, 'Escuela Profesional de Estad&iacute;stica', 'EPE', 1, 4, 1),
 (3, NULL, 'Escuela Profesional de MecÃ¡nica ElÃ©ctrica', 'FIME', 1, 5, 1),
-(4, 3, 'Escuela Profesional de EnfermerÂ®a', 'EPEN', 1, 1, 1),
-(5, NULL, 'Escuela Profesional de IngenierÂ®a AgrÂ®cola', 'EPIA', 1, 5, 1);
+(4, 3, 'Escuela Profesional de Enfermer&iacute;a', 'EPEN', 1, 1, 1),
+(5, NULL, 'Escuela Profesional de Ingenier&iacute;a Agr&iacute;cola', 'EPIA', 1, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -335,11 +335,11 @@ CREATE TABLE `facultad` (
 --
 
 INSERT INTO `facultad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) VALUES
-(1, 'Facultad de Ciencias FÂ®sicas y MatemÃ¡ticas', 'FACFYM', 1, 1),
+(1, 'Facultad de Ciencias F&iacute;sicas y MatemÃ¡ticas', 'FACFYM', 1, 1),
 (2, 'Facultad de MecÃ¡nica ElÃ©ctrica', 'FIME', 1, 1),
-(3, 'Facultad de EnfermerÂ®a', 'FE', 1, 1),
-(4, 'Facultad de AgronomÂ®a', 'FAG', 1, 1),
-(5, 'Facultad de IngenierÂ®a AgrÂ®cola', 'FIA', 1, 1);
+(3, 'Facultad de Enfermer&iacute;a', 'FE', 1, 1),
+(4, 'Facultad de Agronom&iacute;a', 'FAG', 1, 1),
+(5, 'Facultad de Ingenier&iacute;a Agr&iacute;cola', 'FIA', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -494,7 +494,7 @@ CREATE TABLE `tipoestudiopostgrado` (
 --
 
 INSERT INTO `tipoestudiopostgrado` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Curso', 'Cursos de corta duraciÃ³n para conocer mejor un nuevo Ã¡mbito especÂ®fico.', 1),
+(1, 'Curso', 'Cursos de corta duraciÃ³n para conocer mejor un nuevo Ã¡mbito espec&iacute;fico.', 1),
 (2, 'Diplomado', 'Curso de corta o mediana duraciÃ³n.', 1),
 (3, 'Doctorado', 'Es la mÃ¡xima formaciÃ³n acadÃ©mica a la que se puede optar.', 1),
 (4, 'Segunda Especialidad', 'FormaciÃ³n de investigadores, docentes universitarios y especialistas.', 1),
@@ -551,7 +551,7 @@ INSERT INTO `universidad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) V
 (1, 'Universidad Nacional de Trujillo', 'UNT', 1, 1),
 (2, 'Universidad de Piura', 'UDEP', 1, 1),
 (3, 'Universidad Santo Toribio de Mogrovejo', 'USAT', 1, 1),
-(4, 'Universidad San MartÂ®n de Porres', 'USMP', 1, 1),
+(4, 'Universidad San Mart&iacute;n de Porres', 'USMP', 1, 1),
 (5, 'Universidad Nacional Pedro Ruiz Gallo', 'UNPRG', 1, 1);
 
 -- --------------------------------------------------------
