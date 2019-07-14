@@ -4,7 +4,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/estudiosPostgrado', function () {
  try {
-  $data = $this->db->query("SELECT codigo,codigoEgresado,codigoTipo,codigoUniversidad,codigoCentroEstudios,nombre,fechaInicio,fechaTermino,anioCertificacion FROM estudiospostgrado WHERE vigencia=1")->fetchAll();
+  $data = $this->db->query("SELECT codigo,codigoEgresado,codigoTipo,codigoUniversidad,codigoCentroEstudios,nombre,fechaInicio,fechaTermino,anioCertificacion 
+            FROM estudiospostgrado WHERE vigencia=1")->fetchAll();
   if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
@@ -18,12 +19,33 @@ $app->get('/api/estudiosPostgrado', function () {
 
 $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
-  try {
-    $data = $this->db->query("SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,Es.codigoUniversidad,Es.codigoCentroEstudios,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion FROM estudiospostgrado Es
-                              INNER JOIN egresado E on E.codigo = codigoEgresado
-                              INNER JOIN persona P on E.codigoPersona = P.codigo
-                              WHERE P.dni = $codigo and Es.vigencia=1")->fetchAll();;
-    if ($data) {
+   
+   try {
+    $uni = $this->db->query("SELECT codigoUniversidad FROM estudiospostgrado Es
+                            INNER JOIN egresado E on E.codigo = Es.codigoEgresado
+                            INNER JOIN persona P on P.codigo = E.codigoPersona
+                            WHERE P.dni = $codigo and P.vigencia = 1")->fetchAll();
+      if ($uni==null) {
+        $sql = "SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,Es.codigoUniversidad,U.nombre,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
+        FROM estudiospostgrado Es
+        INNER JOIN universidad U on U.codigo = Es.codigoUniversidad
+       ";
+       $lugar = "U";
+      }else {
+        $sql = "SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,Es.codigoCentroEstudios,C.razonSocial,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
+        FROM estudiospostgrado Es
+        INNER JOIN centroEstudios C on C.codigo= Es.codigoCentroEstudios 
+       ";
+       $lugar = "C";
+      }
+      $sql = $sql . " INNER JOIN egresado E on E.codigo = Es.codigoEgresado
+                     INNER JOIN persona P on P.codigo = E.codigoPersona
+                     WHERE P.dni = $codigo and P.vigencia = 1";
+    $data = $this->db->query($sql)->fetchAll();;
+  if ($data) {
+     foreach ($data as $key => $value) {
+       $value->lugar = $lugar;
+     }
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
    }else {
