@@ -19,12 +19,13 @@ $app->get('/api/carreras', function () {
 $app->get('/api/carreras/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT E.codigo,E.codigoEscuela,EP.nombre as nombreEscuela,U.codigo as CodigoUni,U.nombre as universidad,codigoPersona,A.codigoModalidad,codigoAdmision,A.nombre as Admision,A.fechaAdmision as fechaAdmision,fechaInicio,fechaTermino FROM egresado E 
+    $data = $this->db->query("SELECT E.codigo,E.codigoEscuela,EP.nombre as nombreEscuela,U.codigo as CodigoUni,U.nombre as universidad,codigoPersona,A.codigoModalidad,codigoAdmision,A.nombre as Admision,A.fechaAdmision as fechaAdmision,fechaInicio,fechaTermino 
+                                FROM egresado E 
                                 INNER JOIN persona P on P.codigo = codigoPersona 
                                 INNER JOIN escuelaProfesional EP on E.codigoEscuela = EP.codigo 
                                 INNER JOIN universidad U on EP.codigoUniversidad = U.codigo 
                                 INNER JOIN admision A on A.codigo = E.codigoAdmision 
-                                WHERE P.dni = 67723032 and E.vigencia=1")->fetchAll();
+                                WHERE P.dni = $codigo and E.vigencia=1")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -80,7 +81,7 @@ $app->put('/api/carreras/{codigo}',function(Request $request){
  }
 });
 
-$app->delete('/api/carreras/delete/{codigo}',function(Request $request){
+$app->delete('/api/carreras/{codigo}',function(Request $request){
   $codigo = $request->getAttribute('codigo');
  try {
    $cantidad = $this->db->exec("DELETE FROM egresado 
