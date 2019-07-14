@@ -25,21 +25,20 @@ $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
                             INNER JOIN egresado E on E.codigo = Es.codigoEgresado
                             INNER JOIN persona P on P.codigo = E.codigoPersona
                             WHERE P.dni = $codigo and P.vigencia = 1")->fetchAll();
-      if ($uni==null) {
-        $sql = "SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,Es.codigoUniversidad,U.nombre,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
+      if($uni[0]->codigoUniversidad) {
+        $sql = "SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,T.nombre as tipo,Es.codigoUniversidad,U.nombre,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
         FROM estudiospostgrado Es
-        INNER JOIN universidad U on U.codigo = Es.codigoUniversidad
-       ";
+        INNER JOIN universidad U on U.codigo = Es.codigoUniversidad ";
        $lugar = "U";
-      }else {
-        $sql = "SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,Es.codigoCentroEstudios,C.razonSocial,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
+      }else{
+        $sql = "SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,T.nombre as tipo,Es.codigoCentroEstudios,C.razonSocial,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
         FROM estudiospostgrado Es
-        INNER JOIN centroEstudios C on C.codigo= Es.codigoCentroEstudios 
-       ";
+        INNER JOIN centroEstudios C on C.codigo= Es.codigoCentroEstudios  ";
        $lugar = "C";
       }
       $sql = $sql . " INNER JOIN egresado E on E.codigo = Es.codigoEgresado
                      INNER JOIN persona P on P.codigo = E.codigoPersona
+                     INNER JOIN tipoestudiopostgrado T on T.codigo = Es.codigoTipo 
                      WHERE P.dni = $codigo and P.vigencia = 1";
     $data = $this->db->query($sql)->fetchAll();;
   if ($data) {
