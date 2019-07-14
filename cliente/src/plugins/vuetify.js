@@ -12,3 +12,12 @@ Vue.use(Vuetify, {
     error: '#aa1515'
   }
 })
+
+/* 
+
+#FAFAFA Blanco
+#F4BE1D Amarillo
+#0D47A1 Azul
+#181818 Negro 
+
+*/
