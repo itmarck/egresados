@@ -4,9 +4,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/centroEstudios', function () {
  try {
-  $data = $this->db->query("SELECT codigo,razonSocial FROM centroestudios WHERE vigencia=1")->fetchAll();
+  $data = $this->db->query("SELECT razonSocial FROM centroestudios WHERE vigencia=1")->fetchAll();
   if ($data) {
-    $result = array('estado' => true, 'data' => $data);
+    $nombres = [];
+    foreach ($data as $key => $value) {
+      array_push($nombres,$value->razonSocial);
+    }
+
+    $result = array('estado' => true, 'data' => $nombres);
     echo json_encode($result);
  }else {
    echo json_encode( array('estado' => false ));
