@@ -21,6 +21,21 @@ $app->get('/api/universidades', function () {
   }
 });
 
+$app->get('/api/universidades-objeto', function () {
+  try {
+   $data = $this->db->query("SELECT codigo, nombre, siglas, estado FROM universidad WHERE vigencia=1")->fetchAll();
+   if ($data) {
+ 
+     $result = array('estado' => true, 'data' => $data);
+     echo json_encode($result);
+  }else {
+    echo json_encode( array('estado' => false ));
+  }
+  } catch (PDOException $e) {
+   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+   }
+ });
+
 $app->get('/api/universidades/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
