@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-07-2019 a las 10:57:45
--- Versión del servidor: 10.1.38-MariaDB
--- Versión de PHP: 7.3.3
+-- Tiempo de generación: 16-07-2019 a las 00:08:33
+-- Versión del servidor: 10.1.40-MariaDB
+-- Versión de PHP: 7.3.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -280,11 +280,11 @@ CREATE TABLE `escuelaprofesional` (
 --
 
 INSERT INTO `escuelaprofesional` (`codigo`, `codigoFacultad`, `nombre`, `siglas`, `estado`, `codigoUniversidad`, `vigencia`) VALUES
-(1, 1, 'Escuela Profesional de Ingenier&iacute;a en ComputaciÃ³n e InformÃ¡tica', 'EPICI', 1, 1, 1),
-(2, NULL, 'Escuela Profesional de Estad&iacute;stica', 'EPE', 1, 4, 1),
+(1, 1, 'Escuela Profesional de IngenierÃ­a en ComputaciÃ³n e InformÃ¡tica', 'EPICI', 1, 1, 1),
+(2, NULL, 'Escuela Profesional de EstadÃ­stica', 'EPE', 1, 4, 1),
 (3, NULL, 'Escuela Profesional de MecÃ¡nica ElÃ©ctrica', 'FIME', 1, 5, 1),
-(4, 3, 'Escuela Profesional de Enfermer&iacute;a', 'EPEN', 1, 1, 1),
-(5, NULL, 'Escuela Profesional de Ingenier&iacute;a Agr&iacute;cola', 'EPIA', 1, 5, 1);
+(4, 3, 'Escuela Profesional de Enfermeru00eda', 'EPEN', 1, 1, 1),
+(5, NULL, 'Escuela Profesional de Ingenieru00eda Agru00edcola', 'EPIA', 1, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -551,7 +551,7 @@ INSERT INTO `universidad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) V
 (1, 'Universidad Nacional de Trujillo', 'UNT', 1, 1),
 (2, 'Universidad de Piura', 'UDEP', 1, 1),
 (3, 'Universidad Santo Toribio de Mogrovejo', 'USAT', 1, 1),
-(4, 'Universidad San Mart&iacute;n de Porres', 'USMP', 1, 1),
+(4, 'Universidad San MartÃ­n de Porres', 'USMP', 1, 1),
 (5, 'Universidad Nacional Pedro Ruiz Gallo', 'UNPRG', 1, 1);
 
 -- --------------------------------------------------------
@@ -581,7 +581,7 @@ INSERT INTO `usuario` (`codigo`, `codigoPersonal`, `nombre`, `clave`, `tipo`, `v
 (7, 4, 'AlaRioja', '741', 'A', 1, NULL),
 (8, NULL, 'DavidR', '258', 'E', 1, 165032),
 (9, NULL, 'MarckTone', '369', 'E', 1, 165058),
-(10, NULL, 'Ã¡.Ã©.Ã­.Ã³.Ãº.Ã±', '$2y$10$umM71ecDNki3gc6d6zi8teXnzl8QEliCYSPYeZYWv7NAzjq2xgHVy', 'E', 1, 169027);
+(10, NULL, 'Ã¡Ã©Ã­Ã³ÃºÃ±', '$2y$10$w7C77s.G1NskkvAIAWa4Fusre9iK6QFKgnPydd7AN265rI22YNaxq', 'E', 1, 169027);
 
 --
 -- Índices para tablas volcadas
