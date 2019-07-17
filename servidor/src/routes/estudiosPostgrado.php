@@ -32,6 +32,7 @@ $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
        $lugar = "U";
        foreach ($universidades as $key => $value) {
          $value->lugar = $lugar;
+         $value->select = true;
        }
         $centros = $this->db->query("SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,T.nombre as tipo,Es.codigoCentroEstudios,C.razonSocial,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
                               FROM estudiospostgrado Es
@@ -43,6 +44,7 @@ $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
         $lugar = "C";
         foreach ($centros as $key => $value) {
           $value->lugar = $lugar;
+          $value->select = true;
         }
         
         $data = array_merge($universidades,$centros);
