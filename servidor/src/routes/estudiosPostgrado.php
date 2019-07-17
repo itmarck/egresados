@@ -72,10 +72,10 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
  try {
    if ($codigoCentroEstudios) {
     $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,fechaInicio,fechaTermino,vigencia) 
-                                  Values('$codigoEgresado','$codigoTipo',$nombre,$codigoCentroEstudios,$fechaInicio,$fechaTermino,1)");
+                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigoCentroEstudios,'$fechaInicio','$fechaTermino',1)");
    } else { 
      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoUniversidad,fechaInicio,fechaTermino,vigencia) 
-                                  Values('$codigoEgresado','$codigoTipo',$nombre,$codigoUniversidad,$fechaInicio,$fechaTermino,1)");
+                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigoUniversidad,'$fechaInicio','$fechaTermino',1)");
    }
    
   
