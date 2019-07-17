@@ -4,7 +4,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/centroLaboral', function () {
  try {
-  $data = $this->db->query("SELECT codigoActividad,A.nombre as Actividad,codigoDistrito,D.nombre as Distrito,RUC,razonSocial 
+  $data = $this->db->query("SELECT C.codigo,codigoActividad,A.nombre as Actividad,codigoDistrito,D.nombre as Distrito,RUC,razonSocial 
                             FROM centrolaboral C
                             INNER JOIN actividadeconomica A on A.codigo=C.codigoActividad 
                             INNER JOIN distrito D on D.codigo = C.codigoDistrito  
@@ -21,7 +21,7 @@ $app->get('/api/centroLaboral', function () {
 });
 
 $app->get('/api/centroLaboral/{codigo}',function(Request $request){
-   $codigo = $request->getAttribute('codigo');
+  $codigo = $request->getAttribute('codigo');
   try {
     $data = $this->db->query("SELECT codigoActividad,A.nombre as Actividad,codigoDistrito,D.nombre as Distrito,RUC,razonSocial 
                               FROM centrolaboral C
@@ -31,9 +31,9 @@ $app->get('/api/centroLaboral/{codigo}',function(Request $request){
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
-   }else {
-     echo json_encode( array('estado' => false ));
-   }
+  }else {
+    echo json_encode( array('estado' => false ));
+  }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
