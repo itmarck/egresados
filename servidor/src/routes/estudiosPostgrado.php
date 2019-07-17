@@ -82,8 +82,8 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
           }
       } 
       $codigo = $codigoCentro[0]->codigo;
-      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,fechaInicio,fechaTermino,vigencia) 
-                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino',1)");
+      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,fechaInicio,fechaTermino,anioCertificacion,vigencia) 
+                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino','$anioCertificacion',1)");
    } else {
       $universidad = $request->getParam('universidad');
       $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
@@ -98,8 +98,8 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
           }
       }
       $codigo = $codigoUniversidad[0]->codigo;
-      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoUniversidad,fechaInicio,fechaTermino,vigencia) 
-                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino',1)");
+      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoUniversidad,fechaInicio,fechaTermino,anioCertificacion,vigencia) 
+                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino','$anioCertificacion',1)");
    }
    
   
@@ -162,3 +162,4 @@ $app->delete('/api/estudiosPostgrado/{codigo}',function(Request $request){
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
 });
+
