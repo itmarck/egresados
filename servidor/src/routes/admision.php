@@ -4,7 +4,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/admisiones', function () {
  try {
-  $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
+  $data = $this->db->query("SELECT A.codigo,codigoEscuela,date_format(fechaAdmision,'%d/%m/%y') as fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
                             FROM admision A
                             INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo  
                             WHERE A.vigencia=1
@@ -21,7 +21,7 @@ $app->get('/api/admisiones', function () {
 });
 
 $app->get('/api/admisiones/{codigo}',function(Request $request){
-   $codigo = $request->getAttribute('codigo');
+   $codigo = $request->getAttribute('codigo'); 
   try {
     $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
                               FROM admision A
