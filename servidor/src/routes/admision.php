@@ -4,9 +4,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/admisiones', function () {
  try {
-  $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre,codigoModalidad, M.nombre as modalidad 
+  $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
                             FROM admision A
                             INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo  
+                            ORDER BY fechaAdmision
                             WHERE A.vigencia=1")->fetchAll();
   if ($data) {
     $result = array('estado' => true, 'data' => $data);
@@ -22,7 +23,7 @@ $app->get('/api/admisiones', function () {
 $app->get('/api/admisiones/{codigo}',function(Request $request){
    $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre,codigoModalidad, M.nombre as modalidad 
+    $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
                               FROM admision A
                               INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo 
                               WHERE A.codigo = $codigo and A.vigencia=1")->fetchAll();
