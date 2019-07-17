@@ -93,7 +93,7 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
           if ($insert > 0) {
             $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
           } else {
-          echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar el Centro'));
+          echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar la universidad'));
           exit;
           }
       }
@@ -104,9 +104,9 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
    
   
   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
+    echo json_encode(array('estado' => true,'mensaje'=>'Estudio registrado satisfactoriamente'));
   } else {
-    echo json_encode(array('estado' => false));
+    echo json_encode(array('estado' => false,'mensaje'=>'Algo fallo'));
   }
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
