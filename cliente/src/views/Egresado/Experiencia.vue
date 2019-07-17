@@ -23,12 +23,14 @@
                   <v-select
                     :items="centros"
                     v-model="centro"
+                    item-text="razonSocial"
+                    item-value="codigo"
                     placeholder="Seleccione centro laboral"
                     label="Nombre del centro laboral"
-                    :disabled="addCentro"
+                    v-if="!addCentro"
                   ></v-select>
                   <v-checkbox
-                    label="Agregar Centro Laboral"
+                    label="Agregar centro laboral manualmente"
                     color="primary"
                     v-model="addCentro"
                   />
@@ -40,7 +42,7 @@
                           v-model="actividad"
                           :items="actividades"
                           label="Escriba la actividad económica"
-                          placeholder="Actividad economica"                          
+                          placeholder="Actividad economica"
                         ></v-combobox>
                         <v-combobox
                           v-model="departamento"
@@ -50,7 +52,7 @@
                         ></v-combobox>
                         <v-combobox
                           v-model="provincia"
-                          :items="provinciass"
+                          :items="provincias"
                           label="Seleccione provincia"
                           placeholder="Provincia"
                         ></v-combobox>
@@ -60,7 +62,11 @@
                           label="Seleccione distritos"
                           placeholder="Distrito"
                         ></v-combobox>
-                        <v-text-field v-model="ruc" label="RUC" prepend-icon="location_city"></v-text-field>
+                        <v-text-field
+                          v-model="ruc"
+                          label="RUC"
+                          prepend-icon="location_city"
+                        ></v-text-field>
                         <v-text-field
                           v-model="razonSocial"
                           label="Razón social"
@@ -146,11 +152,19 @@
       <!-- Lista -->
       <v-flex xs12 md6>
         <v-card>
-          <v-list>
-            <v-list-tile>
+          <v-list two-line>
+            <v-list-tile
+              v-for="contrato of contratos"
+              :key="contrato.codigo"
+              @click="copiarDatos(contrato)"
+            >
               <v-list-tile-content>
-                <v-list-tile-title />
-                <v-list-tile-sub-title />
+                <v-list-tile-title v-html="contrato.Centrolaboral" />
+                <v-list-tile-sub-title>
+                  {{ contrato.cargo }} —
+                  {{ contrato.fechaInicio.toString().substring(0, 4) }}
+                  ({{ contrato.tiempo }} {{ contrato.unidad }})
+                </v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </v-list>
@@ -164,6 +178,8 @@ import { url } from "../../bd/config";
 export default {
   data: () => ({
     isEdit: false,
+    contratos: [],
+    contrato: "",
     carreras: [],
     carrera: "",
     centros: [],
@@ -186,16 +202,16 @@ export default {
     ruc: "",
     razonSocial: ""
   }),
+  computed: {},
   methods: {
     copiarDatos(carrera) {
       this.isEdit = true;
-      this.universidad = carrera.universidad;
-      this.escuela = carrera.nombreEscuela;
+      this.carrera = carrera.codigoCarrera;
+      this.centro = carrera.codigoCentroLaboral;
       this.fechaInicio = carrera.fechaInicio;
       this.fechaTermino = carrera.fechaTermino;
-      this.fechaAdmision = carrera.fechaAdmision;
-      this.ciclo = carrera.Admision.substring(5, 8);
-      this.modalidad = carrera.codigoModalidad;
+      this.cargo = carrera.cargo;
+      this.detalles = carrera.detalleFunciones;
     },
     editar() {},
     agregar() {},
@@ -213,10 +229,22 @@ export default {
       fetch(url + "carreras/73860228")
         .then(res => res.json())
         .then(res => (this.carreras = res.data));
+    },
+    cargarContratos() {
+      fetch(url + "contratos/73860228")
+        .then(res => res.json())
+        .then(res => (this.contratos = res.data));
+    },
+    cargarCentros() {
+      fetch(url + "centroLaboral")
+        .then(res => res.json())
+        .then(res => (this.centros = res.data));
     }
   },
   created() {
     this.cargarCarreras();
+    this.cargarContratos();
+    this.cargarCentros();
   }
 };
 </script>

@@ -98,7 +98,7 @@
                   v-if="!addAdmision"
                 >
                   <template slot="item" slot-scope="data">
-                    {{ data.item.nombre }}
+                    {{ data.item.ciclo }}
                     {{ data.item.modalidad }}
                     {{
                       "(" +
@@ -107,6 +107,7 @@
                         ).toLocaleDateString("es-ES", {
                           month: "long",
                           day: "numeric",
+                          year: 'numeric',
                           timeZone: "America/New_York"
                         }) +
                         ")"
@@ -242,9 +243,6 @@ export default {
       if (this.modalidad) {
         return this.modalidades[this.modalidad - 1].descripcion;
       }
-    },
-    getYear(texto) {
-      return texto.substr(0, 4);
     }
   },
   methods: {
