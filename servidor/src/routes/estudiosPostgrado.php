@@ -109,7 +109,7 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
     echo json_encode(array('estado' => false,'mensaje'=>'Algo fallo'));
   }
  } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+   echo json_encode(array('estado' => false,'mensaje'=>'Error al recepcionar los datos'));
  }
 });
 
