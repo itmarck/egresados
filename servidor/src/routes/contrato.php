@@ -46,7 +46,7 @@ $app->get('/api/contratos', function () {
 $app->get('/api/contratos/{dniPersona}',function(Request $request){
   $codigo = $request->getAttribute('dniPersona');
  try {
-   $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno) as Nombre,C.codigo,codigoEgresado,EP.nombre as Carrera,codigoCentroLaboral,Cen.razonSocial as Centrolaboral,cargo, date_format(C.fechaInicio,'%d/%m/%Y') as fechaInicio , date_format(C.fechaTermino,'%d/%m/%Y') as fechaTermino ,detalleFunciones 
+   $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno) as Nombre,C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as Centrolaboral,cargo, date_format(C.fechaInicio,'%d/%m/%Y') as fechaInicio , date_format(C.fechaTermino,'%d/%m/%Y') as fechaTermino ,detalleFunciones 
                             FROM contrato C
                             INNER JOIN egresado E on E.codigo = C.codigoEgresado
                             INNER JOIN persona P on P.codigo = E.codigoPersona
