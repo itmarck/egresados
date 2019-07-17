@@ -7,8 +7,8 @@ $app->get('/api/admisiones', function () {
   $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
                             FROM admision A
                             INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo  
-                            ORDER BY fechaAdmision
-                            WHERE A.vigencia=1")->fetchAll();
+                            WHERE A.vigencia=1
+                            ORDER BY fechaAdmision")->fetchAll();
   if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
