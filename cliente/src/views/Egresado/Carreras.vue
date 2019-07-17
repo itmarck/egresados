@@ -86,10 +86,54 @@
           <v-flex xs12>
             <v-card>
               <v-card-title class="title font-weight-light" primary-title>
-                Datos de adminisión
+                Datos de admisión
               </v-card-title>
               <v-card-text>
-                <v-form>
+                <v-select
+                  :items="admisiones"
+                  v-model="admision"
+                  item-value="codigo"
+                  label="Admisión"
+                  placeholder="Seleccione admisión"
+                  v-if="!addAdmision"
+                >
+                  <template slot="item" slot-scope="data">
+                    {{ data.item.nombre }}
+                    {{ data.item.modalidad }}
+                    {{
+                      "(" +
+                        new Date(
+                          data.item.fechaAdmision.replace(/-/g, "\/")
+                        ).toLocaleDateString("es-ES", {
+                          month: "long",
+                          day: "numeric",
+                          timeZone: "America/New_York"
+                        }) +
+                        ")"
+                    }}
+                  </template>
+                  <template slot="selection" slot-scope="data">
+                    {{ data.item.nombre }}
+                    {{ data.item.modalidad }}
+                    {{
+                      "(" +
+                        new Date(
+                          data.item.fechaAdmision.replace(/-/g, "\/")
+                        ).toLocaleDateString("es-ES", {
+                          month: "long",
+                          day: "numeric",
+                          timeZone: "America/New_York"
+                        }) +
+                        ")"
+                    }}
+                  </template>
+                </v-select>
+                <v-checkbox
+                  label="Usar otros datos de admisión"
+                  color="primary"
+                  v-model="addAdmision"
+                />
+                <v-form v-if="addAdmision">
                   <v-menu
                     v-model="admision"
                     lazy
@@ -185,6 +229,9 @@ export default {
     modalidades: [],
     modalidad: null,
     listaCarreras: [],
+    addAdmision: false,
+    admisiones: [],
+    admision: "",
     isEdit: false
   }),
   computed: {
@@ -201,28 +248,26 @@ export default {
     }
   },
   methods: {
-    copiarDatos(carrera) {
-      this.isEdit = true;
-      this.universidad = carrera.universidad;
-      this.escuela = carrera.nombreEscuela;
-      this.fechaInicio = carrera.fechaInicio;
-      this.fechaTermino = carrera.fechaTermino;
-      this.fechaAdmision = carrera.fechaAdmision;
-      this.ciclo = carrera.Admision.substring(5, 8);
-      this.modalidad = carrera.codigoModalidad;
-    },
-    editar() {},
-    agregar() {},
     nuevo() {
+      this.addAdmision = false;
       this.isEdit = false;
       this.universidad = "";
       this.escuela = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
       this.fechaTermino = new Date().toISOString().substring(0, 10);
-      this.fechaAdmision = new Date().toISOString().substring(0, 10);
-      this.ciclo = "";
-      this.modalidad = null;
+      this.admision = "";
     },
+    copiarDatos(carrera) {
+      this.addAdmision = false;
+      this.isEdit = true;
+      this.universidad = carrera.universidad;
+      this.escuela = carrera.nombreEscuela;
+      this.fechaInicio = carrera.fechaInicio;
+      this.fechaTermino = carrera.fechaTermino;
+      this.admision = carrera.codigoAdmision;
+    },
+    editar() {},
+    agregar() {},
     cargarEscuelas(universidad) {
       if (universidad) {
         fetch(url + "escuelasProfesionales/uni/" + universidad)
@@ -247,12 +292,18 @@ export default {
       fetch(url + "carreras/73860228")
         .then(res => res.json())
         .then(res => (this.listaCarreras = res.data));
+    },
+    cargarAdmisiones() {
+      fetch(url + "admisiones")
+        .then(res => res.json())
+        .then(res => (this.admisiones = res.data));
     }
   },
   created() {
     this.cargarUniversidades();
     this.cargarModalidades();
     this.cargarLista();
+    this.cargarAdmisiones();
   }
 };
 </script>
