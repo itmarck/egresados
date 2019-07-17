@@ -44,14 +44,19 @@ $app->post('/api/carreras/add',function(Request $request){
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
  try {
-    
-   $cantidad = $this->db->exec("INSERT INTO egresado(codigoEscuela,codigoPersona,codigoAdmision,fechaInicio,fechaTermino,vigencia) 
-                            Values('$codigoEscuela','$codigoPersona',$codigoAdmision,$fechaInicio,$fechaTermino,1)");
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
-  }
+  $exist = $this->db->query("SELECT codigo FROM egresado 
+  WHERE codigoEscuela = $codigoEscuela and codigoPersona = $codigoPersona")->fetchAll();
+    if ($exist) {
+      echo json_encode(array('estado' => false,'mensaje' => 'Ya tiene esa carrera registrada'));
+    }else {
+      $cantidad = $this->db->exec("INSERT INTO egresado(codigoEscuela,codigoPersona,codigoAdmision,fechaInicio,fechaTermino,vigencia) 
+      Values('$codigoEscuela','$codigoPersona',$codigoAdmision,$fechaInicio,$fechaTermino,1)");
+            if ($cantidad > 0) {
+            echo json_encode(array('estado' => true));
+            } else {
+            echo json_encode(array('estado' => false));
+            }
+    }  
  } catch (PDOException $e) {
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
@@ -135,3 +140,15 @@ $app->get('/api/carreras/actividadEconomica/{codigo}', function(Request $request
     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
   }
 });
+
+//Funciones
+
+// function validarCarrera($codigoEscuela,$codigoPersona){
+//   $data = $this->db->query("SELECT codigo FROM egresado 
+//           WHERE codigoEscuela = $codigoEscuela and codigoPersona = $codigoPersona")->fetchAll();
+//       if ($data) {
+//         return false;
+//       }else {
+//         return true;
+//       }
+// }
