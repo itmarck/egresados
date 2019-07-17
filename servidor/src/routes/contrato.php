@@ -55,25 +55,24 @@ $app->get('/api/contratos/{dniPersona}',function(Request $request){
                             WHERE P.dni = $codigo and C.vigencia=1")->fetchAll();
    if ($data) {
      foreach ($data as $key => $contrato) {
-       if ($contrato->fechaTermino) {
-         $finalizado = false;
-         $finicio = new DateTime($contrato->fechaInicio);
+       if ($contrato->fechaTermino){
+         $finalizado = true;
          $ftermino = new DateTime($contrato->fechaTermino);
-         $tiempo = $finicio->diff($ftermino);
-         if ($tiempo->y >=1) {
-           $contrato->unidad = ($tiempo->y =1) ? 'año' : 'años' ;
-           $contrato->tiempo = $tiempo->y;
-           $contrato->finalizado = $finalizado;
-         } else {
-          $contrato->unidad = ($tiempo->m =1) ? 'mes' : 'meses' ;
-          $contrato->tiempo = $tiempo->y * 12 + $tiempo->m;
-          $contrato->finalizado = $finalizado;
-         }
-         
+       }else{
+        $finalizado = false;
+        $ftermino = new DateTime();
+       }
+       $finicio = new DateTime($contrato->fechaInicio); 
+       $tiempo = $finicio->diff($ftermino);
+       if ($tiempo->y >= 1) {
+        $contrato->tiempo = $tiempo->y;
+        $contrato->unidad = ($tiempo->y == 1) ? 'año' : 'años';
        } else {
-        $finalizado = true;
+        $contrato->tiempo = $tiempo->y * 12 + $tiempo->m;
+        $contrato->unidad = ($contrato->tiempo  == 1) ? 'mes' : 'meses';
        }
        $contrato->select = true;
+       $contrato->finalizado = $finalizado;
      }
      $result = array('estado' => true, 'data' => $data);
      echo json_encode($result);
