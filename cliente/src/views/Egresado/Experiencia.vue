@@ -152,7 +152,7 @@
       <!-- Lista -->
       <v-flex xs12 md6>
         <v-card>
-          <v-list two-line>
+          <v-list three-line>
             <v-list-tile
               v-for="contrato of contratos"
               :key="contrato.codigo"
@@ -160,8 +160,8 @@
             >
               <v-list-tile-content>
                 <v-list-tile-title v-html="contrato.Centrolaboral" />
+                <v-list-tile-sub-title v-html="contrato.cargo" />
                 <v-list-tile-sub-title>
-                  {{ contrato.cargo }} —
                   {{ contrato.fechaInicio.toString().substring(0, 4) }}
                   ({{ contrato.tiempo }} {{ contrato.unidad }})
                 </v-list-tile-sub-title>
@@ -206,6 +206,7 @@ export default {
   methods: {
     copiarDatos(carrera) {
       this.isEdit = true;
+      this.addCentro = false;
       this.carrera = carrera.codigoCarrera;
       this.centro = carrera.codigoCentroLaboral;
       this.fechaInicio = carrera.fechaInicio;
@@ -217,6 +218,7 @@ export default {
     agregar() {},
     nuevo() {
       this.isEdit = false;
+      this.addCentro = false;
       this.universidad = "";
       this.escuela = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
