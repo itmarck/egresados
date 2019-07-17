@@ -1,6 +1,7 @@
 <template>
   <v-container grid-list-lg>
     <v-layout row wrap>
+      
       <!-- Postgrados -->
       <v-flex xs12 md6>
         <v-card>
@@ -38,7 +39,7 @@
       <!-- Contratos -->
       <v-flex xs12 md6>
         <v-card>
-          <v-list two-line subheader>
+          <v-list three-line subheader>
             <v-subheader>Experiencia</v-subheader>
             <v-list-tile
               v-for="contrato of contratos"
@@ -53,8 +54,8 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title v-html="contrato.Centrolaboral" />
+                <v-list-tile-sub-title v-html="contrato.cargo" />
                 <v-list-tile-sub-title>
-                  {{ contrato.cargo }} —
                   {{ contrato.fechaInicio.toString().substring(0, 4) }}
                   ({{ contrato.tiempo }} {{ contrato.unidad }})
                 </v-list-tile-sub-title>
@@ -63,11 +64,9 @@
           </v-list>
         </v-card>
       </v-flex>
-      <v-layout>
-        <v-flex d-flex>
-          <v-btn color="primary">Generar Curriculum</v-btn>
-        </v-flex>
-      </v-layout>
+      <v-flex xs12>
+        <v-btn block color="primary">Generar Curriculum</v-btn>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
