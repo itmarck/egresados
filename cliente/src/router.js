@@ -14,6 +14,11 @@ export default new Router({
       component: Login
     },
     {
+      path: '/registro',
+      name: 'registro',
+      component: () => import('./views/Registro.vue')
+    },
+    {
       path: '/personal',
       component: () => import('./views/Personal/View.vue'),
       children: [
