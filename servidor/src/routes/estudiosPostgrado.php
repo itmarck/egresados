@@ -63,19 +63,43 @@ $app->get('/api/estudiosPostgrado/{codigo}',function(Request $request){
 $app->post('/api/estudiosPostgrado/add',function(Request $request){
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoTipo = $request->getParam('codigoTipo');
-  $codigoCentroEstudios = $request->getParam('codigoCentroEstudios');
-  $codigoUniversidad = $request->getParam('codigoUniversidad');
   $nombre = $request->getParam('nombre');
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
   $anioCertificacion = $request->getParam('anioCertificacion');
+  $centroEstudios = $request->getParam('centroEstudios');
  try {
-   if ($codigoCentroEstudios) {
-    $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,fechaInicio,fechaTermino,vigencia) 
-                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigoCentroEstudios,'$fechaInicio','$fechaTermino',1)");
-   } else { 
-     $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoUniversidad,fechaInicio,fechaTermino,vigencia) 
-                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigoUniversidad,'$fechaInicio','$fechaTermino',1)");
+   if ($centroEstudios) {
+      $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
+      if (!$codigoCentro) {
+        $insert = $this->db->exec("INSERT INTO centroestudios(razonSocial,vigencia) 
+        Values('$centroEstudios',1)");
+          if ($insert > 0) {
+            $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
+          } else {
+          echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar el Centro'));
+          exit;
+          }
+      } 
+      $codigo = $codigoCentro[0]->codigo;
+      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,fechaInicio,fechaTermino,vigencia) 
+                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino',1)");
+   } else {
+      $universidad = $request->getParam('universidad');
+      $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
+      if (!$codigoUniversidad) {
+        $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
+        Values('$universidad',1,1)");
+          if ($insert > 0) {
+            $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
+          } else {
+          echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar el Centro'));
+          exit;
+          }
+      }
+      $codigo = $codigoUniversidad[0]->codigo;
+      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoUniversidad,fechaInicio,fechaTermino,vigencia) 
+                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino',1)");
    }
    
   
