@@ -13,6 +13,14 @@
               <v-card-text>
                 <v-form>
                   <v-select
+                    :items="carreras"
+                    v-model="carrera"
+                    item-text="nombreEscuela"
+                    item-value="codigo"
+                    placeholder="Seleccione carrera"
+                    label="Nombre de la escuela de la carrera"
+                  ></v-select>
+                  <v-select
                     v-model="tipo"
                     :items="tipos"
                     item-text="nombre"
@@ -103,6 +111,12 @@
                       </v-menu>
                     </v-flex>
                   </v-layout>
+                  <v-select
+                    :items="anios"
+                    v-model="certificacion"
+                    label="Año de certificación"
+                    placeholder="Certificación"
+                  ></v-select>
                 </v-form>
               </v-card-text>
             </v-card>
@@ -141,6 +155,10 @@
           </v-list>
         </v-card>
       </v-flex>
+      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
+        {{ respuesta }}
+        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
+      </v-snackbar>
     </v-layout>
   </v-container>
 </template>
@@ -149,6 +167,8 @@
 import { url } from "../../bd/config";
 export default {
   data: () => ({
+    carreras: [],
+    carrera: "",
     tipos: [],
     tipo: "",
     lugar: "U",
@@ -161,40 +181,86 @@ export default {
     inicio: false,
     fechaTermino: new Date().toISOString().substr(0, 10),
     termino: false,
+    certificacion: "",
     lista: [],
-    isEdit: false
+    isEdit: false,
+    snack: false,
+    respuesta: "Algo falló"
   }),
   computed: {
     descripcion() {
       if (this.tipo) {
         return this.tipos[this.tipo - 1].descripcion;
       }
+    },
+    anios() {
+      let anios = [];
+      let anioActual = new Date().getFullYear();
+      for (let i = 0; i < 50; i++) {
+        anios.push((anioActual - i).toString());
+      }
+      return anios;
     }
   },
   methods: {
+    editar() {},
+    agregar() {
+      let datos = {
+        codigoEgresado: this.carrera,
+        codigoTipo: this.tipo,
+        nombre: this.nombre,
+        fechaInicio: this.fechaInicio,
+        fechaTermino: this.fechaTermino,
+        anioCertificacion: this.certificacion
+      };
+      if (this.lugar == "U")
+        datos = { ...datos, universidad: this.universidad };
+      else datos = { ...datos, centroEstudios: this.centro };
+
+      fetch(url + "estudiosPostgrado/add", {
+        method: "POST",
+        body: JSON.stringify(datos),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => res.json())
+        .then(res => {
+          console.log(res);
+          this.respuesta = res.mensaje;
+          this.snack = true;
+          this.cargarLista();
+          if (res.estado == true) {
+            this.nuevo();
+          }
+        });
+    },
     copiarDatos(postgrado) {
       this.isEdit = true;
+      this.carrera = postgrado.codigoEgresado;
       this.tipo = postgrado.codigoTipo;
       this.fechaInicio = postgrado.fechaInicio;
       this.fechaTermino = postgrado.fechaTermino;
       this.nombre = postgrado.nombre;
-      this.lugar = postgrado.lugar;
+      this.certificacion = postgrado.anioCertificacion;
       if (postgrado.lugar == "U") {
+        this.lugar = "U";
         this.universidad = postgrado.universidad;
         this.centro = "";
       } else {
+        this.lugar = "C";
         this.centro = postgrado.razonSocial;
         this.universidad = "";
       }
     },
-    editar() {},
-    agregar() {},
     nuevo() {
       this.isEdit = false;
+      this.carrera = "";
       this.tipo = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
       this.fechaTermino = new Date().toISOString().substring(0, 10);
       this.nombre = "";
+      this.certificacion = "";
       this.lugar = "U";
       this.universidad = "";
       this.centro = "";
@@ -218,6 +284,11 @@ export default {
       fetch(url + "estudiosPostgrado/73860228")
         .then(res => res.json())
         .then(res => (this.lista = res.data));
+    },
+    cargarCarreras() {
+      fetch(url + "carreras/73860228")
+        .then(res => res.json())
+        .then(res => (this.carreras = res.data));
     }
   },
   created() {
@@ -225,6 +296,7 @@ export default {
     this.cargarUniversidades();
     this.cargarCentrosEstudio();
     this.cargarLista();
+    this.cargarCarreras();
   }
 };
 </script>
