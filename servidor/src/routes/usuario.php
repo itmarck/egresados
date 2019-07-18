@@ -36,16 +36,14 @@ $app->post('/api/usuarios/ingresar',function(Request $request){
                 
               }
               $data = $this->db->query($sql)->fetchAll();
-              $result = array('estado' => true, 'data' => $data);
+              $result = array('estado' => true,'mensaje'=>'Ingresando...', 'data' => $data);
               echo json_encode($result);
             }else {
-        $result = array('estado' => false);
-        array_push($result,"Clave Inconrrecta");
+        $result = array('estado' => false,'mensaje'=>'Contraseña Incorrecta');
         echo json_encode($result);
       }
    } else {
-    $result = array('estado' => false);
-    array_push($result,"Usuario incorrecto");
+    $result = array('estado' => false,'mensaje'=>'Usuario incorrecto');
     echo json_encode($result);
    }
  } catch (PDOException $e) {
