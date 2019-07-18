@@ -107,7 +107,7 @@
                         ).toLocaleDateString("es-ES", {
                           month: "long",
                           day: "numeric",
-                          year: 'numeric',
+                          year: "numeric",
                           timeZone: "America/New_York"
                         }) +
                         ")"
@@ -213,7 +213,7 @@
 </template>
 
 <script>
-import { url } from "../../bd/config";
+import { get } from "../../bd/api";
 export default {
   data: () => ({
     universidades: [],
@@ -267,34 +267,26 @@ export default {
     editar() {},
     agregar() {},
     cargarEscuelas(universidad) {
+      this.escuela = "";
+      this.escuelas = [];
       if (universidad) {
-        fetch(url + "escuelasProfesionales/uni/" + universidad)
-          .then(res => res.json())
-          .then(res => {
-            if (res.estado) this.escuelas = res.data;
-            else this.escuelas = [];
-          });
+        get("escuelasProfesionales/uni/" + universidad).then(res => {
+          if (res.estado) this.escuelas = res.data;
+          else this.escuelas = [];
+        });
       }
     },
     cargarModalidades() {
-      fetch(url + "modalidadesAdmision")
-        .then(res => res.json())
-        .then(res => (this.modalidades = res.data));
+      get("modalidadesAdmision").then(res => (this.modalidades = res.data));
     },
     cargarUniversidades() {
-      fetch(url + "universidades")
-        .then(res => res.json())
-        .then(res => (this.universidades = res.data));
+      get("universidades").then(res => (this.universidades = res.data));
     },
     cargarLista() {
-      fetch(url + "carreras/73860228")
-        .then(res => res.json())
-        .then(res => (this.listaCarreras = res.data));
+      get("carreras/73860228").then(res => (this.listaCarreras = res.data));
     },
     cargarAdmisiones() {
-      fetch(url + "admisiones")
-        .then(res => res.json())
-        .then(res => (this.admisiones = res.data));
+      get("admisiones").then(res => (this.admisiones = res.data));
     }
   },
   created() {

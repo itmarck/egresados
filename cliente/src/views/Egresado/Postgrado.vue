@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { url } from "../../bd/config";
+import { get, post } from "../../bd/api";
 export default {
   data: () => ({
     carreras: [],
@@ -218,14 +218,7 @@ export default {
         datos = { ...datos, universidad: this.universidad };
       else datos = { ...datos, centroEstudios: this.centro };
 
-      fetch(url + "estudiosPostgrado/add", {
-        method: "POST",
-        body: JSON.stringify(datos),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => res.json())
+      post("estudiosPostgrado/add", datos)
         .then(res => {
           console.log(res);
           this.respuesta = res.mensaje;
@@ -267,29 +260,19 @@ export default {
       this.centro = "";
     },
     cargarTipos() {
-      fetch(url + "tiposPostgrado")
-        .then(res => res.json())
-        .then(res => (this.tipos = res.data));
+      get("tiposPostgrado").then(res => (this.tipos = res.data));
     },
     cargarUniversidades() {
-      fetch(url + "universidades")
-        .then(res => res.json())
-        .then(res => (this.universidades = res.data));
+      get("universidades").then(res => (this.universidades = res.data));
     },
     cargarCentrosEstudio() {
-      fetch(url + "centroEstudios")
-        .then(res => res.json())
-        .then(res => (this.centros = res.data));
+      get("centroEstudios").then(res => (this.centros = res.data));
     },
     cargarLista() {
-      fetch(url + "estudiosPostgrado/73860228")
-        .then(res => res.json())
-        .then(res => (this.lista = res.data));
+      get("estudiosPostgrado/73860228").then(res => (this.lista = res.data));
     },
     cargarCarreras() {
-      fetch(url + "carreras/73860228")
-        .then(res => res.json())
-        .then(res => (this.carreras = res.data));
+      get("carreras/73860228").then(res => (this.carreras = res.data));
     }
   },
   created() {

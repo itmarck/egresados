@@ -1,7 +1,6 @@
 <template>
   <v-container grid-list-lg>
     <v-layout row wrap>
-      
       <!-- Postgrados -->
       <v-flex xs12 md6>
         <v-card>
@@ -72,7 +71,7 @@
 </template>
 
 <script>
-import { url } from "../../bd/config";
+import { get } from "../../bd/api";
 export default {
   data: () => ({
     contratos: [],
@@ -88,14 +87,12 @@ export default {
   },
   methods: {
     cargarContratos() {
-      fetch(url + "contratos/73860228")
-        .then(res => res.json())
-        .then(res => (this.contratos = res.data));
+      get("contratos/73860228").then(res => (this.contratos = res.data));
     },
     cargarPostgrados() {
-      fetch(url + "estudiosPostgrado/73860228")
-        .then(res => res.json())
-        .then(res => (this.postgrados = res.data));
+      get("estudiosPostgrado/73860228").then(
+        res => (this.postgrados = res.data)
+      );
     }
   },
   created() {

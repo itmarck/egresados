@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { url } from "../bd/config";
+import { post, hash } from "../bd/api";
 export default {
   components: {
     PublicToolbar: () => import("../components/PublicToolbar")
@@ -63,29 +63,22 @@ export default {
   }),
   methods: {
     ingresar() {
-      let datos = {
+      post("usuarios/ingresar", {
         nombre: this.usuario,
         clave: this.clave
-      };
-      fetch(url + "usuarios/ingresar", {
-        method: "POST",
-        body: JSON.stringify(datos),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => res.json())
-        .then(res => {
-          console.log(res);
-          this.snack = true;
-          this.respuesta = res.mensaje;
-          if (res.estado == true) {
-            localStorage.setItem("user", JSON.stringify(res.data));
-            if (res.data.tipo == "E") {
-              this.$router.push("/egresado");
-            }
+      }).then(res => {
+        console.log(res);
+        this.snack = true;
+        this.respuesta = res.mensaje;
+        if (res.estado == true) {
+          let data = JSON.stringify(res.data);
+          localStorage.setItem("user", data);
+          localStorage.setItem("hash", hash(hash(data).toString()));
+          if (res.data.tipo == "E") {
+            this.$router.push("/egresado");
           }
-        });
+        }
+      });
     }
   }
 };

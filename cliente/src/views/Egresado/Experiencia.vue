@@ -174,7 +174,7 @@
   </v-container>
 </template>
 <script>
-import { url } from "../../bd/config";
+import { get } from "../../bd/api";
 export default {
   data: () => ({
     isEdit: false,
@@ -219,28 +219,21 @@ export default {
     nuevo() {
       this.isEdit = false;
       this.addCentro = false;
-      this.universidad = "";
-      this.escuela = "";
+      this.carrera = "";
+      this.centro = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
       this.fechaTermino = new Date().toISOString().substring(0, 10);
-      this.fechaAdmision = new Date().toISOString().substring(0, 10);
-      this.ciclo = "";
-      this.modalidad = null;
+      this.cargo = "";
+      this.detalles = "";
     },
     cargarCarreras() {
-      fetch(url + "carreras/73860228")
-        .then(res => res.json())
-        .then(res => (this.carreras = res.data));
+      get("carreras/73860228").then(res => (this.carreras = res.data));
     },
     cargarContratos() {
-      fetch(url + "contratos/73860228")
-        .then(res => res.json())
-        .then(res => (this.contratos = res.data));
+      get("contratos/73860228").then(res => (this.contratos = res.data));
     },
     cargarCentros() {
-      fetch(url + "centroLaboral")
-        .then(res => res.json())
-        .then(res => (this.centros = res.data));
+      get("centroLaboral").then(res => (this.centros = res.data));
     }
   },
   created() {
