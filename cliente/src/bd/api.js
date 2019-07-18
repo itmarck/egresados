@@ -33,3 +33,27 @@ export function hash(string) {
     return a & a;
   }, 0);
 }
+
+export function getUser() {
+  let localUser = localStorage.getItem('user') || '';
+  let localHash = localStorage.getItem('hash');
+
+  let mHash = hash(hash(localUser).toString()).toString();
+
+  if (mHash == localHash) return JSON.parse(localUser);
+  else {
+    removeUser();
+    return null;
+  }
+}
+
+export function setUser(data) {
+  let user = JSON.stringify(data);
+  localStorage.setItem('user', user);
+  localStorage.setItem('hash', hash(hash(user).toString()));
+}
+
+export function removeUser() {
+  localStorage.removeItem('user');
+  localStorage.removeItem('hash');
+}
