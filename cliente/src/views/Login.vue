@@ -22,8 +22,6 @@
                       label="Contraseña"
                       placeholder="Contraseña"
                       type="password"
-                      hint="Mínimo 6 caracteres"
-                      persistent-hint
                     />
                   </v-form>
                 </v-card-text>
@@ -31,6 +29,15 @@
             </v-flex>
             <v-flex xs12>
               <v-btn block color="primary" @click="ingresar">Ingresar</v-btn>
+            </v-flex>
+            <v-flex xs12 d-flex>
+              <v-btn
+                flat
+                class="caption font-weight-light text-xs-center"
+                color="secondary"
+              >
+                Olvidé la contraseña
+              </v-btn>
             </v-flex>
           </v-layout>
         </v-flex>
