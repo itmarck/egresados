@@ -19,6 +19,7 @@
                     item-value="codigo"
                     placeholder="Seleccione carrera"
                     label="Nombre de la escuela de la carrera"
+                    prepend-icon="school"
                   ></v-select>
                   <v-select
                     v-model="tipo"
@@ -181,7 +182,7 @@ export default {
     inicio: false,
     fechaTermino: new Date().toISOString().substr(0, 10),
     termino: false,
-    certificacion: "",
+    certificacion: "2019",
     lista: [],
     isEdit: false,
     snack: false,
@@ -260,7 +261,7 @@ export default {
       this.fechaInicio = new Date().toISOString().substring(0, 10);
       this.fechaTermino = new Date().toISOString().substring(0, 10);
       this.nombre = "";
-      this.certificacion = "";
+      this.certificacion = "2019";
       this.lugar = "U";
       this.universidad = "";
       this.centro = "";
