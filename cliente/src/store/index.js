@@ -1,19 +1,16 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import { getUser } from '../bd/api';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-
+    user: getUser()
   },
   mutations: {
-
-  },
-  actions: {
-
-  },
-  modules: {
-    
+    updateUser(state) {
+      state.user = getUser();
+    }
   }
-})
+});

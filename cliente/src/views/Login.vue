@@ -50,7 +50,8 @@
 </template>
 
 <script>
-import { post, hash } from "../bd/api";
+import { post, hash, setUser } from "../bd/api";
+import { mapMutations } from "vuex";
 export default {
   components: {
     PublicToolbar: () => import("../components/PublicToolbar")
@@ -62,6 +63,7 @@ export default {
     respuesta: "Algo falló"
   }),
   methods: {
+    ...mapMutations(["updateUser"]),
     ingresar() {
       post("usuarios/ingresar", {
         nombre: this.usuario,
@@ -71,9 +73,8 @@ export default {
         this.snack = true;
         this.respuesta = res.mensaje;
         if (res.estado == true) {
-          let data = JSON.stringify(res.data);
-          localStorage.setItem("user", data);
-          localStorage.setItem("hash", hash(hash(data).toString()));
+          setUser(res.data);
+          this.updateUser();
           if (res.data.tipo == "E") {
             this.$router.push("/egresado");
           }
