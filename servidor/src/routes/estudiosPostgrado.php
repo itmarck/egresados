@@ -1,7 +1,6 @@
 <?php
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-
 $app->get('/api/estudiosPostgrado', function () {
  try {
   $data = $this->db->query("SELECT codigo,codigoEgresado,codigoTipo,codigoUniversidad,codigoCentroEstudios,nombre,fechaInicio,fechaTermino,anioCertificacion 
@@ -69,45 +68,57 @@ $app->post('/api/estudiosPostgrado/add',function(Request $request){
   $anioCertificacion = $request->getParam('anioCertificacion');
   $centroEstudios = $request->getParam('centroEstudios');
  try {
-   if ($centroEstudios) {
-      $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
-      if (!$codigoCentro) {
-        $insert = $this->db->exec("INSERT INTO centroestudios(razonSocial,vigencia) 
-        Values('$centroEstudios',1)");
-          if ($insert > 0) {
-            $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
-          } else {
-          echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar el Centro'));
-          exit;
-          }
-      } 
-      $codigo = $codigoCentro[0]->codigo;
-      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,fechaInicio,fechaTermino,anioCertificacion,vigencia) 
-                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino','$anioCertificacion',1)");
-   } else {
+   if ($nombre!= "") {
+      if ($centroEstudios) {
+        if ($centroEstudios!=""){
+        $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
+        if (!$codigoCentro) {
+          $insert = $this->db->exec("INSERT INTO centroestudios(razonSocial,vigencia) 
+          Values('$centroEstudios',1)");
+            if ($insert > 0) {
+              $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
+            } else {
+            echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar el Centro'));
+            exit;
+            }
+        } 
+        $codigo = $codigoCentro[0]->codigo;
+        $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoCentroEstudios,fechaInicio,fechaTermino,anioCertificacion,vigencia) 
+                                    Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino','$anioCertificacion',1)");
+        }
+      } else {       
       $universidad = $request->getParam('universidad');
-      $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
-      if (!$codigoUniversidad) {
-        $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
-        Values('$universidad',1,1)");
-          if ($insert > 0) {
-            $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
-          } else {
-          echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar la universidad'));
-          exit;
-          }
+
+        if ($universidad != "") {
+        $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
+        if (!$codigoUniversidad) {
+          $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
+          Values('$universidad',1,1)");
+            if ($insert > 0) {
+              $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
+            } else {
+            echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar la universidad'));
+            exit;
+            }
+        }
+        $codigo = $codigoUniversidad[0]->codigo;
+        $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoUniversidad,fechaInicio,fechaTermino,anioCertificacion,vigencia) 
+                                    Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino','$anioCertificacion',1)");
+        } else {
+        echo json_encode(array('estado' => false,'mensaje'=>'No se pueden mandar campos vacios'));
+        exit;
+        }
       }
-      $codigo = $codigoUniversidad[0]->codigo;
-      $cantidad = $this->db->exec("INSERT INTO estudiospostgrado(codigoEgresado,codigoTipo,nombre,codigoUniversidad,fechaInicio,fechaTermino,anioCertificacion,vigencia) 
-                                  Values($codigoEgresado,$codigoTipo,'$nombre',$codigo,'$fechaInicio','$fechaTermino','$anioCertificacion',1)");
+          if ($cantidad > 0) {
+           echo json_encode(array('estado' => true,'mensaje'=>'Estudio registrado satisfactoriamente'));
+          } else {
+            echo json_encode(array('estado' => false,'mensaje'=>'Algo fallo'));
+          }
+   } else {
+    echo json_encode(array('estado' => false,'mensaje'=>'No se pueden mandar campos vacios'));
+    exit;
    }
    
-  
-  if ($cantidad > 0) {
-    echo json_encode(array('estado' => true,'mensaje'=>'Estudio registrado satisfactoriamente'));
-  } else {
-    echo json_encode(array('estado' => false,'mensaje'=>'Algo fallo'));
-  }
  } catch (PDOException $e) {
    echo json_encode(array('estado' => false,'mensaje'=>'Error al recepcionar los datos'));
  }
@@ -162,4 +173,8 @@ $app->delete('/api/estudiosPostgrado/{codigo}',function(Request $request){
    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
  }
 });
+
+
+
+
 
