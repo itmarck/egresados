@@ -9,7 +9,7 @@
       <v-btn v-if="this.$route.path == '/registro'" flat to="login">
         Ingresar
       </v-btn>
-      <v-btn v-else flat to="registro">Registrarse</v-btn>
+      <v-btn v-else flat to="registro">Unirse</v-btn>
     </v-toolbar-items>
   </v-toolbar>
 </template>
