@@ -25,7 +25,7 @@ $app->post('/api/usuarios/ingresar',function(Request $request){
    if ($usuario) {
         if (password_verify($clave,$usuario[0]->clave)) {
               $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre'  and vigencia=1")->fetchAll();
-              $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno FROM usuario ";
+              $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno, CONCAT(P.nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre FROM usuario ";
               $codigoPersona = $user[0]->codigoPersona;
               if (!$codigoPersona) {
                 $sql = $sql . "INNER JOIN personal P on P.codigo = usuario.codigoPersonal
