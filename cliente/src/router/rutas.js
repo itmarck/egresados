@@ -1,0 +1,94 @@
+import Login from '../views/Login.vue';
+
+export default [
+  {
+    path: '*',
+    redirect: 'login'
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/registro',
+    name: 'registro',
+    component: () => import('../views/Registro.vue')
+  },
+  {
+    path: '/personal',
+    component: () => import('../views/Personal/View.vue'),
+    children: [
+      {
+        path: '',
+        redirect: 'inicio'
+      },
+      {
+        path: 'inicio',
+        component: () => import('../views/Personal/Inicio.vue')
+      },
+      {
+        path: 'mantenimiento',
+        component: () => import('../views/Personal/Mantenimiento.vue')
+      },
+      {
+        path: 'egresados',
+        component: () => import('../views/Personal/Egresados.vue')
+      },
+      {
+        path: 'reportes',
+        component: () => import('../views/Personal/Reportes.vue')
+      },
+      {
+        path: 'admin',
+        component: () => import('../views/Personal/Admin.vue')
+      },
+      {
+        path: 'perfil',
+        component: () => import('../views/Perfil.vue')
+      },
+      {
+        path: 'seguridad',
+        component: () => import('../views/Seguridad.vue')
+      }
+    ]
+  },
+  {
+    path: '/egresado',
+    component: () => import('../views/Egresado/View.vue'),
+    children: [
+      {
+        path: '',
+        redirect: 'inicio'
+      },
+      {
+        path: 'inicio',
+        component: () => import('../views/Egresado/Inicio.vue')
+      },
+      {
+        path: 'carreras',
+        component: () => import('../views/Egresado/Carreras.vue')
+      },
+      {
+        path: 'postgrado',
+        component: () => import('../views/Egresado/Postgrado.vue')
+      },
+      {
+        path: 'experiencia',
+        component: () => import('../views/Egresado/Experiencia.vue')
+      },
+      {
+        path: 'curriculum',
+        component: () => import('../views/Egresado/Curriculum.vue')
+      },
+      {
+        path: 'perfil',
+        component: () => import('../views/Perfil.vue')
+      },
+      {
+        path: 'seguridad',
+        component: () => import('../views/Seguridad.vue')
+      }
+    ]
+  }
+];
