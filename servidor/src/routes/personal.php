@@ -1,37 +1,38 @@
 <?php
+
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
 $app->get('/api/personal', function () {
- try {
-  $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno,dni,genero,correo,celular FROM personal WHERE vigencia=1")->fetchAll();
-  if ($data) {
-    $result = array('estado' => true, 'data' => $data);
-    echo json_encode($result);
- }else {
-   echo json_encode( array('estado' => false ));
- }
- } catch (PDOException $e) {
-  echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  try {
+    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno,dni,genero,correo,celular FROM personal WHERE vigencia=1")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
 });
 
-$app->get('/api/personal/{codigo}',function(Request $request){
-   $codigo = $request->getAttribute('codigo');
+$app->get('/api/personal/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
   try {
     $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno,dni,genero,correo,celular FROM personal WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
-   }else {
-     echo json_encode( array('estado' => false ));
-   }
+    } else {
+      echo json_encode(array('estado' => false));
+    }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
 });
 
-$app->post('/api/personal/add',function(Request $request){
+$app->post('/api/personal/add', function (Request $request) {
   $nombres = $request->getParam('nombres');
   $apellidoPaterno = $request->getParam('apellidoPaterno');
   $apellidoMaterno = $request->getParam('apellidoMaterno');
@@ -47,22 +48,22 @@ $app->post('/api/personal/add',function(Request $request){
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
 });
 
-$app->put('/api/personal/{codigo}',function(Request $request){
+$app->put('/api/personal/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $nombres = $request->getParam('nombres');
   $apellidoPaterno = $request->getParam('apellidoPaterno');
   $apellidoMaterno = $request->getParam('apellidoMaterno');
   $genero = $request->getParam('genero');
- 
+
   $celular = $request->getParam('celular');
   $correo = $request->getParam('correo');
- 
- try {
-   $cantidad = $this->db->exec("UPDATE personal set
+
+  try {
+    $cantidad = $this->db->exec("UPDATE personal set
                                 nombres ='$nombres',
                                 apellidoPaterno = '$apellidoPaterno',
                                 apellidoMaterno = '$apellidoMaterno',
@@ -70,27 +71,27 @@ $app->put('/api/personal/{codigo}',function(Request $request){
                                 celular = '$celular',
                                 correo = '$correo'
                                 WHERE codigo = $codigo");
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true));
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
- } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
- }
 });
 
-$app->delete('/api/personal/{codigo}',function(Request $request){
+$app->delete('/api/personal/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
- try {
-   $cantidad = $this->db->exec("DELETE FROM personal 
+  try {
+    $cantidad = $this->db->exec("DELETE FROM personal 
                                 WHERE codigo = $codigo");
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true));
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
- } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
- }
 });

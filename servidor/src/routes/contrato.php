@@ -52,7 +52,8 @@ $app->get('/api/contratos/{dniPersona}',function(Request $request){
                             INNER JOIN persona P on P.codigo = E.codigoPersona
                             INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
                             INNER JOIN centrolaboral Cen on Cen.codigo  = C.codigoCentroLaboral
-                            WHERE P.dni = $codigo and C.vigencia=1")->fetchAll();
+                            WHERE P.dni = $codigo and C.vigencia=1'
+                            ORDER BY Cen.razonSocial")->fetchAll();
    if ($data) {
      foreach ($data as $key => $contrato) {
        if ($contrato->fechaTermino){

@@ -1,127 +1,128 @@
 <?php
+
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
 $app->get('/api/escuelasProfesionales', function () {
- try {
-  $data = $this->db->query("SELECT codigo,codigoFacultad,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE vigencia=1")->fetchAll();
-  if ($data) {
-    $result = array('estado' => true, 'data' => $data);
-    echo json_encode($result);
- }else {
-   echo json_encode( array('estado' => false ));
- }
- } catch (PDOException $e) {
-  echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  try {
+    $data = $this->db->query("SELECT codigo,codigoFacultad,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE vigencia=1")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
 });
 $app->get('/api/escuelasProfesionales/uni/{Nombre}', function (Request $request) {
   $codigo = $request->getAttribute('Nombre');
   try {
-   $data = $this->db->query("SELECT E.nombre FROM escuelaprofesional E
+    $data = $this->db->query("SELECT E.nombre FROM escuelaprofesional E
                             INNER JOIN universidad U on U.codigo =  E.codigoUniversidad
                             WHERE U.nombre = '$codigo' and E.vigencia=1")->fetchAll();
-   if ($data) {
-    $nombres = [];
-    foreach ($data as $key => $value) {
-      array_push($nombres, $value->nombre);
+    if ($data) {
+      $nombres = [];
+      foreach ($data as $key => $value) {
+        array_push($nombres, $value->nombre);
+      }
+      $result = array('estado' => true, 'data' => $nombres);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false));
     }
-    $result = array('estado' => true, 'data' => $nombres);
-    echo json_encode($result);
-   }else {
-     echo json_encode( array('estado' => false ));
-   }
   } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
-   }
- });
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+  }
+});
 
-$app->get('/api/escuelasProfesionales/{codigo}',function(Request $request){
-   $codigo = $request->getAttribute('codigo');
+$app->get('/api/escuelasProfesionales/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
   try {
     $data = $this->db->query("SELECT nombre FROM escuelaprofesional WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
-   }else {
-     echo json_encode( array('estado' => false ));
-   }
+    } else {
+      echo json_encode(array('estado' => false));
+    }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
 });
 
-$app->post('/api/escuelasProfesionales/add',function(Request $request){
+$app->post('/api/escuelasProfesionales/add', function (Request $request) {
   $nombre = $request->getParam('nombre');
   $siglas = $request->getParam('siglas');
   $codigoFacultad = $request->getParam('codigoFacultad');
   $codigoUniversidad = $request->getParam('codigoUniversidad');
   $estado = $request->getParam('estado');
- try {
-  if ($codigoFacultad) {
-    $cantidad = $this->db->exec("INSERT INTO escuelaprofesional(nombre,siglas,estado,codigoFacultad,codigoUniversidad,vigencia) 
+  try {
+    if ($codigoFacultad) {
+      $cantidad = $this->db->exec("INSERT INTO escuelaprofesional(nombre,siglas,estado,codigoFacultad,codigoUniversidad,vigencia) 
                             Values('$nombre','$siglas',$estado,$codigoFacultad,$codigoUniversidad,1)");
-  } else {
-    $cantidad = $this->db->exec("INSERT INTO escuelaprofesional(nombre,siglas,estado,codigoUniversidad,vigencia) 
+    } else {
+      $cantidad = $this->db->exec("INSERT INTO escuelaprofesional(nombre,siglas,estado,codigoUniversidad,vigencia) 
                             Values('$nombre','$siglas',$estado,$codigoUniversidad,1)");
+    }
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true));
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
-   if ($cantidad > 0) {
-     echo json_encode(array('estado' => true));
-   } else {
-     echo json_encode(array('estado' => false));
-   }
- } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
- }
 });
 
-$app->put('/api/escuelasProfesionales/{codigo}',function(Request $request){
+$app->put('/api/escuelasProfesionales/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');
   $siglas = $request->getParam('siglas');
   $codigoFacultad = $request->getParam('codigoFacultad');
   $codigoUniversidad = $request->getParam('codigoUniversidad');
   $estado = $request->getParam('estado');
- try {
-   if ($codigoFacultad) {
-    $cantidad = $this->db->exec("UPDATE escuelaprofesional set
+  try {
+    if ($codigoFacultad) {
+      $cantidad = $this->db->exec("UPDATE escuelaprofesional set
                                 nombre ='$nombre',
                                 siglas = '$siglas',
                                 estado = '$estado',
                                 codigoUniversidad = '$codigoUniversidad',
                                 codigoFacultad = '$codigoFacultad'  
                                 WHERE codigo = $codigo");
-   } else {
-    $cantidad = $this->db->exec("UPDATE escuelaprofesional set
+    } else {
+      $cantidad = $this->db->exec("UPDATE escuelaprofesional set
                                 nombre ='$nombre',
                                 siglas = '$siglas',
                                 estado = '$estado',
                                 codigoUniversidad = '$codigoUniversidad'
                                 WHERE codigo = $codigo");
-   }
-   
-  
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
+    }
+
+
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true));
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
- } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
- }
 });
 
-$app->delete('/api/escuelasProfesionales/{codigo}',function(Request $request){
+$app->delete('/api/escuelasProfesionales/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
- try {
-   $cantidad = $this->db->exec("DELETE FROM escuelaprofesional 
+  try {
+    $cantidad = $this->db->exec("DELETE FROM escuelaprofesional 
                                 WHERE codigo = $codigo");
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true));
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
- } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
- }
 });
