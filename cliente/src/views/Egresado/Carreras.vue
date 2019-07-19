@@ -304,6 +304,17 @@ export default {
       this.cargarUniversidades();
       this.cargarLista();
     },
+    cargarModalidades() {
+      get("modalidadesAdmision").then(res => (this.modalidades = res.data));
+    },
+    cargarLista() {
+      get("carreras/" + this.user.dni).then(
+        res => (this.listaCarreras = res.data)
+      );
+    },
+    cargarUniversidades() {
+      get("universidades").then(res => (this.universidades = res.data));
+    },
     cargarEscuelas(universidad) {
       this.escuela = "";
       this.escuelas = [];
@@ -314,20 +325,10 @@ export default {
         });
       }
     },
-    cargarModalidades() {
-      get("modalidadesAdmision").then(res => (this.modalidades = res.data));
-    },
-    cargarUniversidades() {
-      get("universidades").then(res => (this.universidades = res.data));
-    },
-    cargarLista() {
-      get("carreras/" + this.user.dni).then(
-        res => (this.listaCarreras = res.data)
-      );
-    },
     cargarAdmisiones(escuela) {
       this.admision = "";
       this.admisiones = [];
+      this.addAdmision = false;
       if (escuela) {
         get("admisiones/" + escuela + "/" + this.universidad).then(res => {
           if (res.estado) this.admisiones = res.data;
