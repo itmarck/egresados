@@ -17,9 +17,17 @@
           class="hidden-sm-and-down"
           v-for="link of links"
           :key="link.text"
-          :to="link.to"
+          :to="link.to"      
         >
           {{ link.text }}
+        </v-btn>
+        <v-btn 
+          flat 
+          class="hidden-sm-and-down" 
+          to="admin" 
+          v-if="user.tipo == 'A'"
+        >
+          Admin
         </v-btn>
       </v-toolbar-items>
       <v-menu offset-y>
@@ -83,8 +91,7 @@ export default {
       { text: "Inicio", to: "inicio", icon: "home" },
       { text: "Mantenimiento", to: "mantenimiento", icon: "public" },
       { text: "Egresados", to: "egresados", icon: "group" },
-      { text: "Reportes", to: "reportes", icon: "file_copy" },
-      { text: "Admin", to: "admin", icon: "vpn_key" }
+      { text: "Reportes", to: "reportes", icon: "file_copy" }
     ]
   }),
   computed: {
