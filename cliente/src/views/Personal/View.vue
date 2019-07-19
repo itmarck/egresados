@@ -2,7 +2,14 @@
   <v-container grid-list-xs>
     <v-toolbar app>
       <v-toolbar-side-icon @click="drawer = !drawer" class="hidden-md-and-up" />
-      <v-toolbar-title>Personal</v-toolbar-title>
+      <v-toolbar-title>
+        <span class="font-weight-black text-uppercase">
+          {{ user.nombres }}
+        </span>
+        <span class="font-weight-light text-uppercase">
+          {{ user.apellidoPaterno }} {{ user.apellidoMaterno }}
+        </span>
+      </v-toolbar-title>
       <v-spacer />
       <v-toolbar-items>
         <v-btn
@@ -35,9 +42,7 @@
     <v-navigation-drawer app v-model="drawer" temporary>
       <v-flex xs12 class="px-4 grey lighten-5">
         <v-img :src="require('@/assets/epici.svg')">
-          <v-layout
-            slot="placeholder"
-          >
+          <v-layout slot="placeholder">
             <v-progress-circular
               indeterminate
               color="grey lighten-5"
@@ -69,6 +74,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { removeUser } from "../../bd/api";
 export default {
   data: () => ({
     drawer: false,
@@ -80,9 +87,13 @@ export default {
       { text: "Admin", to: "admin", icon: "vpn_key" }
     ]
   }),
+  computed: {
+    ...mapState(["user"])
+  },
   methods: {
     cerrarSesion() {
-      
+      removeUser();
+      this.$router.push("/login");
     }
   }
 };

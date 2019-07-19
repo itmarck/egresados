@@ -175,6 +175,7 @@
 </template>
 <script>
 import { get } from "../../bd/api";
+import { mapState } from "vuex";
 export default {
   data: () => ({
     isEdit: false,
@@ -202,7 +203,9 @@ export default {
     ruc: "",
     razonSocial: ""
   }),
-  computed: {},
+  computed: {
+    ...mapState(["user"])
+  },
   methods: {
     copiarDatos(carrera) {
       this.isEdit = true;
@@ -227,10 +230,12 @@ export default {
       this.detalles = "";
     },
     cargarCarreras() {
-      get("carreras/73860228").then(res => (this.carreras = res.data));
+      get("carreras/" + this.user.dni).then(res => (this.carreras = res.data));
     },
     cargarContratos() {
-      get("contratos/73860228").then(res => (this.contratos = res.data));
+      get("contratos/" + this.user.dni).then(
+        res => (this.contratos = res.data)
+      );
     },
     cargarCentros() {
       get("centroLaboral").then(res => (this.centros = res.data));

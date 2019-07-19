@@ -214,6 +214,7 @@
 
 <script>
 import { get } from "../../bd/api";
+import { mapState } from "vuex";
 export default {
   data: () => ({
     universidades: [],
@@ -236,6 +237,7 @@ export default {
     isEdit: false
   }),
   computed: {
+    ...mapState(["user"]),
     nombreAdmision() {
       return this.fechaAdmision.substr(0, 4) + "-" + this.ciclo;
     },
@@ -283,7 +285,9 @@ export default {
       get("universidades").then(res => (this.universidades = res.data));
     },
     cargarLista() {
-      get("carreras/73860228").then(res => (this.listaCarreras = res.data));
+      get("carreras/" + this.user.dni).then(
+        res => (this.listaCarreras = res.data)
+      );
     },
     cargarAdmisiones() {
       get("admisiones").then(res => (this.admisiones = res.data));

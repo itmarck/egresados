@@ -2,7 +2,14 @@
   <v-container grid-list-xs>
     <v-toolbar app dark color="primary">
       <v-toolbar-side-icon @click="drawer = !drawer" class="hidden-md-and-up" />
-      <v-toolbar-title>Egresado</v-toolbar-title>
+      <v-toolbar-title>
+        <span class="font-weight-black text-uppercase">
+          {{ user.nombres }}
+        </span>
+        <span class="font-weight-light text-uppercase">
+          {{ user.apellidoPaterno }} {{ user.apellidoMaterno }}
+        </span>
+      </v-toolbar-title>
       <v-spacer />
       <v-toolbar-items>
         <v-btn
@@ -79,6 +86,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { removeUser } from "../../bd/api";
 export default {
   data: () => ({
     drawer: false,
@@ -90,8 +99,14 @@ export default {
       { text: "Curriculum", to: "curriculum", icon: "library_books" }
     ]
   }),
+  computed: {
+    ...mapState(["user"])
+  },
   methods: {
-    cerrarSesion() {}
+    cerrarSesion() {
+      removeUser();
+      this.$router.push("/login");
+    }
   }
 };
 </script>

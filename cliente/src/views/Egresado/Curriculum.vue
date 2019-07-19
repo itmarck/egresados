@@ -72,12 +72,14 @@
 
 <script>
 import { get } from "../../bd/api";
+import { mapState } from "vuex";
 export default {
   data: () => ({
     contratos: [],
     postgrados: []
   }),
   computed: {
+    ...mapState(["user"]),
     contratosSeleccionados() {
       return this.contratos.filter(e => e.select);
     },
@@ -87,10 +89,12 @@ export default {
   },
   methods: {
     cargarContratos() {
-      get("contratos/73860228").then(res => (this.contratos = res.data));
+      get("contratos/" + this.user.dni).then(
+        res => (this.contratos = res.data)
+      );
     },
     cargarPostgrados() {
-      get("estudiosPostgrado/73860228").then(
+      get("estudiosPostgrado/" + this.user.dni).then(
         res => (this.postgrados = res.data)
       );
     }

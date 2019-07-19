@@ -166,6 +166,7 @@
 
 <script>
 import { get, post } from "../../bd/api";
+import { mapState } from "vuex";
 export default {
   data: () => ({
     carreras: [],
@@ -189,6 +190,7 @@ export default {
     respuesta: "Algo falló"
   }),
   computed: {
+    ...mapState(["user"]),
     descripcion() {
       if (this.tipo) {
         return this.tipos[this.tipo - 1].descripcion;
@@ -218,16 +220,15 @@ export default {
         datos = { ...datos, universidad: this.universidad };
       else datos = { ...datos, centroEstudios: this.centro };
 
-      post("estudiosPostgrado/add", datos)
-        .then(res => {
-          console.log(res);
-          this.respuesta = res.mensaje;
-          this.snack = true;
-          this.cargarLista();
-          if (res.estado == true) {
-            this.nuevo();
-          }
-        });
+      post("estudiosPostgrado/add", datos).then(res => {
+        console.log(res);
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        this.cargarLista();
+        if (res.estado == true) {
+          this.nuevo();
+        }
+      });
     },
     copiarDatos(postgrado) {
       this.isEdit = true;
@@ -269,10 +270,12 @@ export default {
       get("centroEstudios").then(res => (this.centros = res.data));
     },
     cargarLista() {
-      get("estudiosPostgrado/73860228").then(res => (this.lista = res.data));
+      get("estudiosPostgrado/" + this.user.dni).then(
+        res => (this.lista = res.data)
+      );
     },
     cargarCarreras() {
-      get("carreras/73860228").then(res => (this.carreras = res.data));
+      get("carreras/" + this.user.dni).then(res => (this.carreras = res.data));
     }
   },
   created() {
