@@ -5,9 +5,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/facultades', function () {
   try {
-    $data = $this->db->query("SELECT codigo,nombre,siglas,estado  FROM facultad WHERE vigencia=1")->fetchAll();
+    $data = $this->db->query("SELECT F.nombre FROM facultad F  WHERE vigencia=1")->fetchAll();
     if ($data) {
-      $result = array('estado' => true, 'data' => $data);
+      $nombres = [];
+      foreach ($data as $key => $value) {
+        array_push($nombres, $value->nombre);
+      }
+      $result = array('estado' => true, 'data' => $nombres);
       echo json_encode($result);
     } else {
       echo json_encode(array('estado' => false));
