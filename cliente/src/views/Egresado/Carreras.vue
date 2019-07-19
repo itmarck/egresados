@@ -26,6 +26,7 @@
                     item-text="nombre"
                     item-value="codigo"
                     placeholder="Escuela"
+                    @change="cargarAdmisiones(escuela)"
                   ></v-combobox>
                   <v-layout row wrap>
                     <v-flex xs6>
@@ -267,11 +268,31 @@ export default {
       this.admision = carrera.codigoAdmision;
     },
     editar() {},
-    agregar() {},
+    agregar() {
+      let datos = {
+        nombreUniversidad: this.universidad,
+        nombreEscuela: this.escuela,
+        codigoPersona: this.user.codigo,
+        fechaInicio: this.fechaInicio,
+        fechaTermino: this.fechaTermino
+      };
+      if (this.addAdmision) {
+        datos = {
+          ...datos,
+          fechaAdmision: this.fechaAdmision,
+          nombreAdmision: this.nombreAdmision,
+          codigoModalidad: this.modalidad
+        };
+      } else datos = { ...datos, codigoAdmision: this.admision };
+      post("carreras/add", datos).then(res => {
+        if (res.estado == true) alert("Todo good");
+        this.cargarTodo();
+        this.nuevo();
+      });
+    },
     cargarTodo() {
       this.cargarUniversidades();
       this.cargarLista();
-      this.cargarAdmisiones();
     },
     cargarEscuelas(universidad) {
       this.escuela = "";
@@ -294,8 +315,18 @@ export default {
         res => (this.listaCarreras = res.data)
       );
     },
-    cargarAdmisiones() {
-      get("admisiones").then(res => (this.admisiones = res.data));
+    cargarAdmisiones(escuela) {
+      this.admision = "";
+      this.admisiones = [];
+      if (escuela) {
+        get("admisiones/" + escuela).then(res => {
+          if (res.estado) this.admisiones = res.data;
+          else {
+            this.admisiones = [];
+            this.addAdmision = true;
+          }
+        });
+      }
     }
   },
   created() {
