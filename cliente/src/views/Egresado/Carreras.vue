@@ -209,6 +209,11 @@
           </v-list>
         </v-card>
       </v-flex>
+      <!-- Snackbar -->
+      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
+        {{ respuesta }}
+        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
+      </v-snackbar>
     </v-layout>
   </v-container>
 </template>
@@ -235,7 +240,9 @@ export default {
     addAdmision: false,
     admisiones: [],
     admision: "",
-    isEdit: false
+    isEdit: false,
+    snack: false,
+    respuesta: ""
   }),
   computed: {
     ...mapState(["user"]),
@@ -285,9 +292,12 @@ export default {
         };
       } else datos = { ...datos, codigoAdmision: this.admision };
       post("carreras/add", datos).then(res => {
-        if (res.estado == true) alert("Todo good");
-        this.cargarTodo();
-        this.nuevo();
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) {
+          this.cargarTodo();
+          this.nuevo();
+        }
       });
     },
     cargarTodo() {
