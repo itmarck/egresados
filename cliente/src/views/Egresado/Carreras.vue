@@ -214,7 +214,7 @@
 </template>
 
 <script>
-import { get } from "../../bd/api";
+import { get, post } from "../../bd/api";
 import { mapState } from "vuex";
 export default {
   data: () => ({
