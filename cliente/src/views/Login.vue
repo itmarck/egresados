@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { post, hash, setUser } from "../bd/api";
+import { post, setUser } from "../bd/api";
 export default {
   components: {
     PublicToolbar: () => import("../components/PublicToolbar")
