@@ -40,31 +40,80 @@ $app->get('/api/carreras/{codigo}', function (Request $request) {
 
 $app->post('/api/carreras/add', function (Request $request) {
   $nombreUniversidad = $request->getParam('nombreUniversidad');
-  $codigoEscuela = $request->getParam('nombreEscuela');
-  $dni = $request->getParam('dni');
+  $nombreEscuela = $request->getParam('nombreEscuela');
+  $codigoPersona = $request->getParam('codigoPersona');
   $codigoAdmision = $request->getParam('codigoAdmision');
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
-  // $fechaadmision  nombre codigoModalidad
   try {
-    $exist = $this->db->query("SELECT codigo FROM egresado 
-  WHERE codigoEscuela = $codigoEscuela and codigoPersona = $codigoPersona")->fetchAll();
-    if ($exist) {
-      echo json_encode(array('estado' => false, 'mensaje' => 'Ya tiene esa carrera registrada'));
+    if ($nombreUniversidad != "") {
+      $codigo = $this->db->query("SELECT codigo FROM universidad WHERE nombre = '$nombreUniversidad'")->fetchAll();
+      if (!$codigo) {
+        $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
+        Values('$nombreUniversidad',1,1)");
+        if ($insert > 0) {
+          $codigo = $this->db->query("SELECT codigo from universidad WHERE nombre = '$nombreUniversidad'")->fetchAll();
+          
+        } else {
+          echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la universidad'));
+          exit;
+        }
+      }
+      $codigoUniversidad = $codigo[0]->codigo;
+      if ($nombreEscuela != "") {
+        $exist = false;
+        
+        $codigo =  $this->db->query("SELECT codigo FROM escuelaprofesional WHERE nombre = '$nombreEscuela'")->fetchAll();
+        if ($codigo) {
+          $codigoEscuela = $codigo[0]->codigo;
+          $exist = $this->db->query("SELECT codigo FROM egresado 
+          WHERE codigoEscuela = $codigoEscuela and codigoPersona = $codigoPersona")->fetchAll();
+        } else {
+          $insert = $this->db->exec("INSERT INTO escuelaprofesional(nombre,codigoUniversidad,estado,vigencia)
+                                     VALUES ('$nombreEscuela',$codigoUniversidad,1,1)");
+          if ($insert > 0) {
+            $codigo = $this->db->query("SELECT codigo from escuelaprofesional WHERE nombre = '$nombreEscuela'")->fetchAll();
+            $codigoEscuela = $codigo[0]->codigo;
+          } else {
+            echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la escuela'));
+            exit;
+          }
+        }
+        if ($exist) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Ya tiene esa carrera registrada'));
+        } else {
+          if (!$codigoAdmision) {
+            $fechaAdmision = $request->getParam('fechaAdmision');
+            $nombreAdmision = $request->getParam('nombreAdmision');
+            $codigoModalidad = $request->getParam('codigoModalidad');
+            $insert = $this->db->exec("INSERT INTO admision(codigoEscuela,fechaAdmision,nombre,codigoModalidad,vigencia)
+                                      VALUES($codigoEscuela,'$fechaAdmision','$nombreAdmision',$codigoModalidad,1)");
+            if ($insert > 0) {
+              $codigo = $this->db->query("SELECT codigo from admision WHERE codigoEscuela = $codigoEscuela and nombre = '$nombreAdmision' and codigoModalidad = $codigoModalidad")->fetchAll();
+              $codigoAdmision = $codigo[0]->codigo;
+            } else {
+              echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la admision'));
+              exit;
+            }
+          }
+          $cantidad = $this->db->exec("INSERT INTO egresado(codigoEscuela,codigoPersona,codigoAdmision,fechaInicio,fechaTermino,vigencia)
+                                      VALUES($codigoEscuela,$codigoPersona,$codigoAdmision,'$fechaInicio','$fechaTermino',1)");
+          if ($cantidad > 0) {
+            echo json_encode(array('estado' => true, 'mensaje' => 'Carrera registrada satisfactoriamente'));
+          } else {
+            echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
+          }
+        }
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'No se pueden mandar campos vacios'));
+        exit;
+      }
     } else {
-
-      if (!$codigoAdmision) { }
-
-      // $cantidad = $this->db->exec("INSERT INTO egresado(codigoEscuela,codigoPersona,codigoAdmision,fechaInicio,fechaTermino,vigencia) 
-      // Values('$codigoEscuela','$codigoPersona',$codigoAdmision,$fechaInicio,$fechaTermino,1)");
-      //       if ($cantidad > 0) {
-      //       echo json_encode(array('estado' => true));
-      //       } else {
-      //       echo json_encode(array('estado' => false));
-      //       }
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pueden mandar campos vacios'));
+      exit;
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo  json_encode(array('estado' => false, 'mensaje' => 'Error al recepcionar los datos ' . $e->getMessage()));
   }
 });
 
