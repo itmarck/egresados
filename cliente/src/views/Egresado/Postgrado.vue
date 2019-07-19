@@ -224,7 +224,7 @@ export default {
         console.log(res);
         this.respuesta = res.mensaje;
         this.snack = true;
-        this.cargarLista();
+        this.cargarTodo();
         if (res.estado == true) {
           this.nuevo();
         }
@@ -260,6 +260,11 @@ export default {
       this.universidad = "";
       this.centro = "";
     },
+    cargarTodo() {
+      this.cargarUniversidades();
+      this.cargarCentrosEstudio();
+      this.cargarLista();
+    },
     cargarTipos() {
       get("tiposPostgrado").then(res => (this.tipos = res.data));
     },
@@ -279,10 +284,8 @@ export default {
     }
   },
   created() {
+    this.cargarTodo();
     this.cargarTipos();
-    this.cargarUniversidades();
-    this.cargarCentrosEstudio();
-    this.cargarLista();
     this.cargarCarreras();
   }
 };

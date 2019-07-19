@@ -229,6 +229,10 @@ export default {
       this.cargo = "";
       this.detalles = "";
     },
+    cargarTodo() {
+      this.cargarContratos();
+      this.cargarCentros();
+    },
     cargarCarreras() {
       get("carreras/" + this.user.dni).then(res => (this.carreras = res.data));
     },
@@ -242,9 +246,8 @@ export default {
     }
   },
   created() {
+    this.cargarTodo();
     this.cargarCarreras();
-    this.cargarContratos();
-    this.cargarCentros();
   }
 };
 </script>

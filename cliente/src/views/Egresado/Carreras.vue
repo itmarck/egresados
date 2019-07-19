@@ -268,6 +268,11 @@ export default {
     },
     editar() {},
     agregar() {},
+    cargarTodo() {
+      this.cargarUniversidades();
+      this.cargarLista();
+      this.cargarAdmisiones();
+    },
     cargarEscuelas(universidad) {
       this.escuela = "";
       this.escuelas = [];
@@ -294,10 +299,8 @@ export default {
     }
   },
   created() {
-    this.cargarUniversidades();
+    this.cargarTodo();
     this.cargarModalidades();
-    this.cargarLista();
-    this.cargarAdmisiones();
   }
 };
 </script>
