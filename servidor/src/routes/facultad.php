@@ -2,7 +2,6 @@
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-
 $app->get('/api/facultades', function () {
   try {
     $data = $this->db->query("SELECT F.nombre FROM facultad F  WHERE vigencia=1")->fetchAll();
@@ -12,6 +11,20 @@ $app->get('/api/facultades', function () {
         array_push($nombres, $value->nombre);
       }
       $result = array('estado' => true, 'data' => $nombres);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+  }
+});
+
+$app->get('/api/facultades-objeto', function () {
+  try {
+    $data = $this->db->query("SELECT codigo,nombre,siglas,estado,vigencia  FROM facultad ")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
       echo json_encode(array('estado' => false));
