@@ -21,13 +21,17 @@ $app->get('/api/admisiones', function () {
   }
 });
 
-$app->get('/api/admisiones/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->get('/api/admisiones/{nombreEscuela}/{nombreUniversidad}', function (Request $request) {
+  $nombreEscuela = $request->getAttribute('nombreEscuela');
+  $nombreUniversidad = $request->getAttribute('nombreUniversidad');
   try {
-    $data = $this->db->query("SELECT A.codigo,codigoEscuela,fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
-                              FROM admision A
-                              INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo 
-                              WHERE A.codigo = $codigo and A.vigencia=1")->fetchAll();
+    $data = $this->db->query("SELECT A.codigo,codigoEscuela,date_format(fechaAdmision,'%Y/%m/%d') as fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
+                            FROM admision A
+                            INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo  
+                            INNER JOIN escuelaprofesional E on E.codigo = A.codigoEscuela
+                            INNER JOIN universidad U on E.codigoUniversidad = U.codigo 
+                            WHERE A.vigencia=1 and E.nombre = '$nombreEscuela' and U.nombre = '$nombreUniversidad'
+                            ORDER BY fechaAdmision")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
