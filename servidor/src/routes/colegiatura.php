@@ -64,7 +64,7 @@ $app->put('/api/colegiaturas/{codigoEgresado}', function (Request $request) {
   try {
     $cantidad = $this->db->exec("UPDATE colegiatura set
                                 fecha = '$fecha'
-                                WHERE codigo = $codigo");
+                                WHERE codigo = $codigoEgresado");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true));
     } else {
