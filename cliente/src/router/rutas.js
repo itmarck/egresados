@@ -1,4 +1,5 @@
 import Login from '../views/Login.vue';
+import { getUser } from '../bd/api';
 
 export default [
   {
@@ -18,6 +19,10 @@ export default [
   {
     path: '/personal',
     component: () => import('../views/Personal/View.vue'),
+    beforeEnter: (to, from, next) => {
+      if (['A', 'P'].includes(getUser().tipo)) next();
+      else next('/');
+    },
     children: [
       {
         path: '',
@@ -41,7 +46,11 @@ export default [
       },
       {
         path: 'admin',
-        component: () => import('../views/Personal/Admin.vue')
+        component: () => import('../views/Personal/Admin.vue'),
+        beforeEnter: (to, from, next) => {
+          if (getUser().tipo == 'A') next();
+          else next(false);
+        }
       },
       {
         path: 'perfil',
@@ -51,11 +60,16 @@ export default [
         path: 'seguridad',
         component: () => import('../views/Seguridad.vue')
       }
-    ]
+    ],
+    meta: { auth: true }
   },
   {
     path: '/egresado',
     component: () => import('../views/Egresado/View.vue'),
+    beforeEnter: (to, from, next) => {
+      if (getUser().tipo == 'E') next();
+      else next('/');
+    },
     children: [
       {
         path: '',
@@ -89,6 +103,7 @@ export default [
         path: 'seguridad',
         component: () => import('../views/Seguridad.vue')
       }
-    ]
+    ],
+    meta: { auth: true }
   }
 ];
