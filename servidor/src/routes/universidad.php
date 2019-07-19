@@ -24,7 +24,7 @@ $app->get('/api/universidades', function () {
 
 $app->get('/api/universidades-objeto', function () {
   try {
-    $data = $this->db->query("SELECT codigo, nombre, siglas, estado,vigencia FROM universidad WHERE vigencia=1")->fetchAll();
+    $data = $this->db->query("SELECT codigo, nombre, siglas, estado,vigencia")->fetchAll();
     if ($data) {
 
       $result = array('estado' => true, 'data' => $data);
