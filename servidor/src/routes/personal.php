@@ -5,7 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/personal', function () {
   try {
-    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno,dni,genero,correo,celular FROM personal WHERE vigencia=1")->fetchAll();
+    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni FROM personal WHERE vigencia=1")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
