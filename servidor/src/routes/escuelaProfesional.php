@@ -5,7 +5,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/escuelasProfesionales', function () {
   try {
-    $data = $this->db->query("SELECT codigo,codigoFacultad,nombre,siglas,estado,codigoUniversidad FROM escuelaprofesional WHERE vigencia=1")->fetchAll();
+    $data = $this->db->query("SELECT E.codigo,F.nombre as facultad,E.nombre,E.siglas,E.estado,U.nombre as universidad, E.vigencia 
+                              FROM escuelaprofesional E
+                              LEFT JOIN facultad F on F.codigo = codigoFacultad
+                              INNER JOIN universidad U on U.codigo = E.codigoUniversidad")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -16,6 +19,7 @@ $app->get('/api/escuelasProfesionales', function () {
     echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
   }
 });
+
 $app->get('/api/escuelasProfesionales/uni/{Nombre}', function (Request $request) {
   $codigo = $request->getAttribute('Nombre');
   try {
