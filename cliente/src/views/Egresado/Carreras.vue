@@ -329,7 +329,7 @@ export default {
       this.admision = "";
       this.admisiones = [];
       if (escuela) {
-        get("admisiones/" + escuela).then(res => {
+        get("admisiones/" + escuela + "/" + this.universidad).then(res => {
           if (res.estado) this.admisiones = res.data;
           else {
             this.admisiones = [];
