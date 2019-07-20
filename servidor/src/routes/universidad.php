@@ -18,7 +18,7 @@ $app->get('/api/universidades', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -33,7 +33,7 @@ $app->get('/api/universidades-objeto', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -48,7 +48,7 @@ $app->get('/api/universidades/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -63,7 +63,7 @@ $app->post('/api/universidades/{nombre}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -75,12 +75,12 @@ $app->post('/api/universidades', function (Request $request) {
     $cantidad = $this->db->exec("INSERT INTO universidad(nombre,siglas,estado,vigencia) 
                             Values('$nombre','$siglas',$estado,1)");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true,'mensaje'=>'Universidad agregada'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Universidad agregada'));
     } else {
-      echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar la universidad'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la universidad'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -96,12 +96,12 @@ $app->put('/api/universidades/{codigo}', function (Request $request) {
                                 estado = '$estado' 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Universidad actualizada'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la universidad'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -116,20 +116,32 @@ $app->delete('/api/universidades/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 $app->patch('/api/universidades/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
   try {
-    $cantidad = $this->db->exec("UPDATE universidad set
-                                vigencia = $vigencia
-                                WHERE codigo = $codigo");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+    if (!$vigencia) {
+
+      $estudios = $this->db->query("SELECT U.nombre FROM universidad U INNER JOIN estudiosPostgrado E on E.codigoUniversidad = U.codigo WHERE U.codigo = $codigo")->fetchAll();
+      $escuela = $this->db->query("SELECT U.nombre FROM universidad U INNER JOIN escuelaProfesional E on E.codigoUniversidad = U.codigo WHERE U.codigo = $codigo")->fetchAll();;
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+      $estudios = false;
+      $escuela = false;
+    }
+    if ($estudios || $escuela) {
+      echo json_encode(array('estado' => false, 'mensaje' => 'Tiene datos enlazados'));
+      exit;
+    }
+    $cantidad = $this->db->exec("UPDATE universidad set
+      vigencia = $vigencia
+      WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Universidad Eliminada, aun se puede recuperar' : 'Universidad Recuperada' ));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha cambiado la vigencia'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
