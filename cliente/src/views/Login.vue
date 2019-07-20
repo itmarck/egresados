@@ -4,11 +4,11 @@
     <v-container fill-height grid-list-lg>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md6 xl4>
-          <v-layout row wrap>
-            <v-flex xs12>
-              <v-card>
-                <v-card-text>
-                  <v-form>
+          <v-form @submit.prevent="ingresar">
+            <v-layout row wrap>
+              <v-flex xs12>
+                <v-card>
+                  <v-card-text>
                     <v-text-field
                       v-model="usuario"
                       prepend-icon="person"
@@ -23,23 +23,23 @@
                       placeholder="Contraseña"
                       type="password"
                     />
-                  </v-form>
-                </v-card-text>
-              </v-card>
-            </v-flex>
-            <v-flex xs12>
-              <v-btn block color="primary" @click="ingresar">Ingresar</v-btn>
-            </v-flex>
-            <v-flex xs12 d-flex>
-              <v-btn
-                flat
-                class="caption font-weight-light text-xs-center"
-                color="secondary"
-              >
-                Olvidé la contraseña
-              </v-btn>
-            </v-flex>
-          </v-layout>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex xs12>
+                <v-btn type="submit" block color="primary">Ingresar</v-btn>
+              </v-flex>
+              <v-flex xs12 d-flex>
+                <v-btn
+                  flat
+                  class="caption font-weight-light text-xs-center"
+                  color="secondary"
+                >
+                  Olvidé la contraseña
+                </v-btn>
+              </v-flex>
+            </v-layout>
+          </v-form>
         </v-flex>
         <v-snackbar
           v-model="snack"
