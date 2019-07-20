@@ -20,9 +20,9 @@ $app->get('/api/personas', function () {
 $app->get('/api/personas/{DNI}', function (Request $request) {
   $DNI = $request->getAttribute('DNI');
   try {
-    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil FROM persona WHERE DNI = $DNI and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,dni,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil,vigencia FROM persona WHERE DNI = $DNI and vigencia=1")->fetchAll();;
     if ($data) {
-      $result = array('estado' => true, 'data' => $data);
+      $result = array('estado' => true, 'data' => $data[0]);
       echo json_encode($result);
     } else {
       echo json_encode(array('estado' => false));
