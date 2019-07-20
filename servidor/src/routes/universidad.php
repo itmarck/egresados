@@ -52,22 +52,6 @@ $app->get('/api/universidades/{codigo}', function (Request $request) {
   }
 });
 
-$app->post('/api/universidades/add', function (Request $request) {
-  $nombre = $request->getParam('nombre');
-  $siglas = $request->getParam('siglas');
-  $estado = $request->getParam('estado');
-  try {
-    $cantidad = $this->db->exec("INSERT INTO universidad(nombre,siglas,estado,vigencia) 
-                            Values('$nombre','$siglas',$estado,1)");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
-    } else {
-      echo json_encode(array('estado' => false));
-    }
-  } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
-  }
-});
 $app->post('/api/universidades/{nombre}', function (Request $request) {
   $nombre = $request->getAttribute('nombre');
   try {
@@ -77,6 +61,23 @@ $app->post('/api/universidades/{nombre}', function (Request $request) {
       echo json_encode(array('estado' => true));
     } else {
       echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+  }
+});
+
+$app->post('/api/universidades', function (Request $request) {
+  $nombre = $request->getParam('nombre');
+  $siglas = $request->getParam('siglas');
+  $estado = $request->getParam('estado');
+  try {
+    $cantidad = $this->db->exec("INSERT INTO universidad(nombre,siglas,estado,vigencia) 
+                            Values('$nombre','$siglas',$estado,1)");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true,'mensaje'=>'Universidad agregada'));
+    } else {
+      echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar la universidad'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
