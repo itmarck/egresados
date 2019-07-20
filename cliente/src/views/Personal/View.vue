@@ -73,9 +73,9 @@
             <v-list-tile-title v-text="link.text" />
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile class="google-font" v-if="user.tipo == 'A'">
+        <v-list-tile class="google-font" v-if="user.tipo == 'A'" to="admin">
           <v-list-tile-action>
-            <v-icon>admin</v-icon>
+            <v-icon>vpn_key</v-icon>
           </v-list-tile-action>
 
           <v-list-tile-content>
