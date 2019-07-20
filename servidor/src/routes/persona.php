@@ -128,3 +128,20 @@ $app->delete('/api/personas/{DNI}', function (Request $request) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
+
+$app->patch('/api/personas/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  try {
+    $cantidad = $this->db->exec("UPDATE persona set
+                                vigencia = $vigencia
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});

@@ -124,13 +124,15 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
   $codigoAdmision = $request->getParam('codigoAdmision');
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
+  $vigencia = $request->getParam('vigencia');
   try {
     $cantidad = $this->db->exec("UPDATE egresado set
                                 codigoEscuela ='$codigoEscuela',
                                 codigoPersona = '$codigoPersona',
                                 codigoAdmision = '$codigoAdmision',
                                 fechaInicio = '$fechaInicio',
-                                fechaTermino = '$fechaTermino'  
+                                fechaTermino = '$fechaTermino',
+                                vigencia = '$vigencia'  
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true));
@@ -153,7 +155,7 @@ $app->delete('/api/carreras/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -193,6 +195,23 @@ $app->get('/api/carreras/actividadEconomica/{codigo}', function (Request $reques
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+  }
+});
+
+$app->patch('/api/carreras/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  try {
+    $cantidad = $this->db->exec("UPDATE egresado set
+                                vigencia = $vigencia
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 

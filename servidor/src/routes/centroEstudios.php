@@ -18,7 +18,7 @@ $app->get('/api/centroEstudios', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -33,7 +33,7 @@ $app->get('/api/centroEstudios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -48,16 +48,18 @@ $app->post('/api/centroEstudios/add', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
 $app->put('/api/centroEstudios/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $razonSocial = $request->getParam('razonSocial');
+  $vigencia = $request->getParam('vigencia');
   try {
     $cantidad = $this->db->exec("UPDATE centroestudios set
-                                razonSocial ='$razonSocial'
+                                razonSocial ='$razonSocial',
+                                vigencia = '$vigencia',
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true));
@@ -65,7 +67,7 @@ $app->put('/api/centroEstudios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -80,6 +82,23 @@ $app->delete('/api/centroEstudios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
+$app->patch('/api/centroEstudios/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  try {
+    $cantidad = $this->db->exec("UPDATE centroestudios set
+                                vigencia = $vigencia
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });

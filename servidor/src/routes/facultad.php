@@ -12,10 +12,10 @@ $app->get('/api/facultades', function () {
       }
       echo json_encode(array('estado' => true, 'data' => $nombres));
     } else {
-      echo json_encode(array('estado' => false,'mensaje'=>'No se pudieron obtener los datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron obtener los datos'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -28,8 +28,8 @@ $app->get('/api/facultades-objeto', function () {
     } else {
       echo json_encode(array('estado' => false));
     }
-  } catch (PDOException $e) { 
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -44,7 +44,7 @@ $app->get('/api/facultades/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -61,7 +61,7 @@ $app->post('/api/facultades/add', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -77,12 +77,12 @@ $app->put('/api/facultades/{codigo}', function (Request $request) {
                                 estado = '$estado' 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true,'mensaje'=>'Actualizado'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Actualizado'));
     } else {
-      echo json_encode(array('estado' => false,'mensaje'=>'No se pudo actualizar'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -92,11 +92,28 @@ $app->delete('/api/facultades/{codigo}', function (Request $request) {
     $cantidad = $this->db->exec("DELETE FROM facultad 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true,'mensaje'=>'Eliminado'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Eliminado'));
     } else {
-      echo json_encode(array('estado' => false,'mensaje'=>'No se pudo eliminar'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo eliminar'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
+$app->patch('/api/facultades/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  try {
+    $cantidad = $this->db->exec("UPDATE facultad set
+                                vigencia = $vigencia
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
