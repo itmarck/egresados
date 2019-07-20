@@ -1,7 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    tabla: 'universidad'
+    tabla: 'Universidades'
   },
   mutations: {
     update(state, payload) {

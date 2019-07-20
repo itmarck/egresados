@@ -1,12 +1,5 @@
 <template>
-  <v-select
-    :items="tablas"
-    v-model="tabla"
-    item-text="texto"
-    item-value="nombre"
-    hide-details
-    solo
-  >
+  <v-select :items="tablas" v-model="tabla" hide-details solo>
     <template slot="prepend-inner">
       <v-icon left>web</v-icon>
     </template>
@@ -17,10 +10,7 @@
 import { mapState } from "vuex";
 export default {
   data: () => ({
-    tablas: [
-      { texto: "Universidades", nombre: "universidad" },
-      { texto: "Escuelas", nombre: "escuela" }
-    ]
+    tablas: ["Universidades", "Escuelas", "Facultades", "Admisiones"]
   }),
   computed: {
     tabla: {
