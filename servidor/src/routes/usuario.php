@@ -13,7 +13,7 @@ $app->get('/api/usuarios', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -47,7 +47,7 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
       echo json_encode($result);
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -62,7 +62,7 @@ $app->get('/api/usuarios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -92,7 +92,7 @@ $app->post('/api/usuarios/add', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'Nombre de usuario ya existe'));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -124,7 +124,7 @@ $app->put('/api/usuarios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -139,6 +139,6 @@ $app->delete('/api/usuarios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });

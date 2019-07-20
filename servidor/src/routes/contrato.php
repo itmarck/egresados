@@ -18,7 +18,7 @@ $app->get('/api/contratos', function () {
    echo json_encode( array('estado' => false ));
  }
  } catch (PDOException $e) {
-  echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -101,7 +101,7 @@ $app->post('/api/contratos/add',function(Request $request){
     echo json_encode(array('estado' => false));
   }
  } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
  }
 });
 
@@ -128,7 +128,7 @@ $app->put('/api/contratos/{codigo}',function(Request $request){
     echo json_encode(array('estado' => false));
   }
  } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
  }
 });
 
@@ -143,6 +143,6 @@ $app->delete('/api/contratos/{codigo}',function(Request $request){
     echo json_encode(array('estado' => false));
   }
  } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
  }
 });

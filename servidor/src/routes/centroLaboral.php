@@ -17,7 +17,7 @@ $app->get('/api/centroLaboral', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -36,7 +36,7 @@ $app->get('/api/centroLaboral/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -54,7 +54,7 @@ $app->post('/api/centroLaboral/add', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -77,7 +77,7 @@ $app->put('/api/centroLaboral/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -92,6 +92,6 @@ $app->delete('/api/centroLaboral/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });

@@ -10,13 +10,12 @@ $app->get('/api/facultades', function () {
       foreach ($data as $key => $value) {
         array_push($nombres, $value->nombre);
       }
-      $result = array('estado' => true, 'data' => $nombres);
-      echo json_encode($result);
+      echo json_encode(array('estado' => true, 'data' => $nombres));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false,'mensaje'=>'No se pudieron obtener los datos'));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -29,8 +28,8 @@ $app->get('/api/facultades-objeto', function () {
     } else {
       echo json_encode(array('estado' => false));
     }
-  } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+  } catch (PDOException $e) { 
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -45,7 +44,7 @@ $app->get('/api/facultades/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -62,7 +61,7 @@ $app->post('/api/facultades/add', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -78,12 +77,12 @@ $app->put('/api/facultades/{codigo}', function (Request $request) {
                                 estado = '$estado' 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true,'mensaje'=>'Actualizado'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false,'mensaje'=>'No se pudo actualizar'));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -93,11 +92,11 @@ $app->delete('/api/facultades/{codigo}', function (Request $request) {
     $cantidad = $this->db->exec("DELETE FROM facultad 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true,'mensaje'=>'Eliminado'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false,'mensaje'=>'No se pudo eliminar'));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });

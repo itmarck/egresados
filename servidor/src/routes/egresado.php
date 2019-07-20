@@ -13,7 +13,7 @@ $app->get('/api/carreras', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -34,7 +34,7 @@ $app->get('/api/carreras/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -138,7 +138,7 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -192,12 +192,11 @@ $app->get('/api/carreras/actividadEconomica/{codigo}', function (Request $reques
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
 //Funciones
-
 // function validarCarrera($codigoEscuela,$codigoPersona){
 //   $data = $this->db->query("SELECT codigo FROM egresado 
 //           WHERE codigoEscuela = $codigoEscuela and codigoPersona = $codigoPersona")->fetchAll();

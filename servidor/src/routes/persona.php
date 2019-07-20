@@ -56,7 +56,7 @@ $app->get('/api/personas/codigo/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -79,7 +79,7 @@ $app->post('/api/personas/add', function (Request $request) {
       echo json_encode("No se ha agregado");
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -110,7 +110,7 @@ $app->put('/api/personas/{DNI}', function (Request $request) {
       echo json_encode("No se ha actualizado");
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
 
@@ -125,6 +125,6 @@ $app->delete('/api/personas/{DNI}', function (Request $request) {
       echo json_encode("No se ha Eliminado");
     }
   } catch (PDOException $e) {
-    echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
