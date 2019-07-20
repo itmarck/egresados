@@ -24,6 +24,15 @@ export async function put(peticion, datos) {
   return res.json();
 }
 
+export async function patch(peticion, datos) {
+  let res = await fetch(url + peticion, {
+    method: 'PATCH',
+    body: JSON.stringify(datos),
+    headers: { 'Content-Type': 'application/json' }
+  });
+  return res.json();
+}
+
 export function hash(string) {
   return string.split('').reduce(function(a, b) {
     a = (a << 5) - a + b.charCodeAt(0);
