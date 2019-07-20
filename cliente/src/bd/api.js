@@ -6,31 +6,25 @@ export async function get(peticion) {
   return res.json();
 }
 
-export async function post(peticion, datos) {
+async function call(peticion, datos, method) {
   let res = await fetch(url + peticion, {
-    method: 'POST',
+    method,
     body: JSON.stringify(datos),
     headers: { 'Content-Type': 'application/json' }
   });
   return res.json();
+}
+
+export async function post(peticion, datos) {
+  return call(peticion, datos, 'POST');
 }
 
 export async function put(peticion, datos) {
-  let res = await fetch(url + peticion, {
-    method: 'PUT',
-    body: JSON.stringify(datos),
-    headers: { 'Content-Type': 'application/json' }
-  });
-  return res.json();
+  return call(peticion, datos, 'PUT');
 }
 
 export async function patch(peticion, datos) {
-  let res = await fetch(url + peticion, {
-    method: 'PATCH',
-    body: JSON.stringify(datos),
-    headers: { 'Content-Type': 'application/json' }
-  });
-  return res.json();
+  return call(peticion, datos, 'PATCH');
 }
 
 export function hash(string) {
