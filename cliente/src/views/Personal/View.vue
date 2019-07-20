@@ -17,14 +17,14 @@
           class="hidden-sm-and-down"
           v-for="link of links"
           :key="link.text"
-          :to="link.to"      
+          :to="link.to"
         >
           {{ link.text }}
         </v-btn>
-        <v-btn 
-          flat 
-          class="hidden-sm-and-down" 
-          to="admin" 
+        <v-btn
+          flat
+          class="hidden-sm-and-down"
+          to="admin"
           v-if="user.tipo == 'A'"
         >
           Admin
@@ -71,6 +71,15 @@
 
           <v-list-tile-content>
             <v-list-tile-title v-text="link.text" />
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile class="google-font" v-if="user.tipo == 'A'">
+          <v-list-tile-action>
+            <v-icon>admin</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>Admin</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
