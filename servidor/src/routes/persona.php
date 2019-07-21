@@ -76,7 +76,7 @@ $app->post('/api/personas', function (Request $request) {
     if (!$dni) {
       $this->db->beginTransaction();
       $cantidad = $this->db->exec("INSERT INTO persona(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,fechaNacimiento,celular,correo,estadoCivil,vigencia) 
-                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$fechaNacimiento','$celular','$correo',$estadoCivil,1)");
+                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$fechaNacimiento','$celular','$correo','$estadoCivil',1)");
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;

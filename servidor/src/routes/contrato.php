@@ -81,7 +81,7 @@ $app->get('/api/contratos/{dniPersona}',function(Request $request){
     echo json_encode( array('estado' => false ));
   }
  } catch (PDOException $e) {
-  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos' . $e->getMessage()));
+  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos ' . $e->getMessage()));
  }
 });
 
