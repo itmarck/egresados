@@ -138,7 +138,7 @@
                   />
                   <section v-if="addAdmision">
                     <v-menu
-                      v-model="admision"
+                      v-model="fAdmision"
                       lazy
                       offset-y
                       full-width
@@ -156,7 +156,7 @@
                       </template>
                       <v-date-picker
                         v-model="fechaAdmision"
-                        @input="admision = false"
+                        @input="fAdmision = false"
                       ></v-date-picker>
                     </v-menu>
                     <v-select
@@ -181,6 +181,10 @@
                 </v-card-text>
               </v-card>
             </v-flex>
+            <v-btn color="primary" v-if="isEdit" @click="dialog = true">
+              <v-icon left>add</v-icon>
+              Titulacion
+            </v-btn>
             <v-btn color="primary" v-if="isEdit" @click="editar" type="submit">
               Editar
             </v-btn>
@@ -220,6 +224,85 @@
         {{ respuesta }}
         <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
       </v-snackbar>
+      <!-- Dialog para titulación -->
+      <v-dialog v-model="dialog" persistent max-width="400">
+        <v-card>
+          <v-card-title class="title font-weight-light" primary-title>
+            Datos de titulación
+          </v-card-title>
+          <v-card-text>
+            <v-select
+              :items="modalidadesTitulacion"
+              v-model="modalidadTitulacion"
+              item-text="nombre"
+              item-value="codigo"
+              label="Modalidad de titulación"
+              :hint="descripcionTitulacion"
+              prepend-icon="school"
+            ></v-select>
+
+            <v-menu
+              v-model="fTitulacion"
+              lazy
+              offset-y
+              full-width
+              min-width="280px"
+              :close-on-content-click="false"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="fechaTitulacion"
+                  label="Fecha de titulación"
+                  prepend-icon="event"
+                  readonly
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="fechaTitulacion"
+                @input="fTitulacion = false"
+              ></v-date-picker>
+            </v-menu>
+            <v-checkbox label="Agregar colegiatura" v-model="addColegiatura" />
+            <v-card v-if="addColegiatura">
+              <v-card-text>
+                <v-text-field
+                  v-model="codigoColegiado"
+                  label="Ingrese código de colegiado"
+                  placeholder="Código de colegiado"
+                ></v-text-field>
+                <v-menu
+                  v-model="colegiatura"
+                  lazy
+                  offset-y
+                  full-width
+                  min-width="280px"
+                  :close-on-content-click="false"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="fechaColegiatura"
+                      label="Fecha de titulación"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="fechaColegiatura"
+                    @input="colegiatura = false"
+                  ></v-date-picker>
+                </v-menu>
+              </v-card-text>
+            </v-card>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat @click="dialog = false">Cancelar</v-btn>
+            <v-btn flat @click="agregarTitulacion">Aceptar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-layout>
   </v-container>
 </template>
@@ -229,6 +312,12 @@ import { get, post } from "../../bd/api";
 import { mapState } from "vuex";
 export default {
   data: () => ({
+    isEdit: false,
+    snack: false,
+    respuesta: "",
+    dialog: false,
+
+    codigo: "",
     universidades: [],
     universidad: "",
     escuelas: [],
@@ -238,17 +327,22 @@ export default {
     fechaTermino: new Date().toISOString().substring(0, 10),
     termino: false,
     fechaAdmision: new Date().toISOString().substring(0, 10),
-    admision: false,
+    fAdmision: false,
+    fechaTitulacion: new Date().toISOString().substring(0, 10),
+    fTitulacion: false,
     ciclo: "",
+    modalidadesTitulacion: [],
+    modalidadTitulacion: "",
     modalidades: [],
     modalidad: null,
     listaCarreras: [],
     addAdmision: false,
     admisiones: [],
     admision: "",
-    isEdit: false,
-    snack: false,
-    respuesta: ""
+    addColegiatura: false,
+    codigoColegiado: "",
+    fechaColegiatura: new Date().toISOString().substring(0, 10),
+    colegiatura: false
   }),
   computed: {
     ...mapState(["user"]),
@@ -259,12 +353,19 @@ export default {
       if (this.modalidad) {
         return this.modalidades[this.modalidad - 1].descripcion;
       }
+    },
+    descripcionTitulacion() {
+      if (this.modalidadTitulacion) {
+        return this.modalidadesTitulacion[this.modalidadTitulacion - 1]
+          .descripcion;
+      }
     }
   },
   methods: {
     nuevo() {
       this.addAdmision = false;
       this.isEdit = false;
+      this.codigo = "";
       this.universidad = "";
       this.escuela = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
@@ -274,6 +375,7 @@ export default {
     copiarDatos(carrera) {
       this.addAdmision = false;
       this.isEdit = true;
+      this.codigo = carrera.codigo;
       this.universidad = carrera.universidad;
       this.escuela = carrera.nombreEscuela;
       this.fechaInicio = carrera.fechaInicio;
@@ -306,9 +408,11 @@ export default {
         }
       });
     },
+    agregarTitulacion() {},
     cargarTodo() {
       this.cargarUniversidades();
       this.cargarLista();
+      this.cargarModalidadesTitulacion();
     },
     cargarModalidades() {
       get("modalidadesAdmision").then(res => (this.modalidades = res.data));
@@ -344,6 +448,11 @@ export default {
           }
         });
       }
+    },
+    cargarModalidadesTitulacion() {
+      get("modalidadesTitulacion").then(
+        res => (this.modalidadesTitulacion = res.data)
+      );
     }
   },
   created() {
