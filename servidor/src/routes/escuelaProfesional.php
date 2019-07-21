@@ -137,14 +137,14 @@ $app->patch('/api/escuelasProfesionales/{codigo}', function (Request $request) {
   $escuela = $request->db->getParam('escuela');
   try {
     if ($escuela!= null) {
-      $carreras = $request->db->query("SELECT C.codigo from escuelaProfesional C INNER JOIN egresado E on E.codigoEscuelaProfesional = C.codigo WHERE C.codigo = $codigo")->fetchAll();
+      $carreras = $request->db->query("SELECT C.codigo from escuelaProfesional C INNER JOIN egresado E on E.codigoEscuela = C.codigo WHERE C.codigo = $codigo")->fetchAll();
       if ($escuela == "0") {
         if ($carreras) {
           echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge una escuela que la reemplace'));
           exit;
         }
         foreach ($carreras as $key => $C) {
-          $this->db->exec("UPDATE egresado SET codigoEscuelaProfesional = $escuela where codigo = $C->codigo");
+          $this->db->exec("UPDATE egresado SET codigoEscuela = $escuela where codigo = $C->codigo");
         }
       }
     }
