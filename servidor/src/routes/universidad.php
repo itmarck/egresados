@@ -125,15 +125,13 @@ $app->patch('/api/universidades/{codigo}', function (Request $request) {
   $universidad = $request->getParam('universidad');
   try {
     if ($universidad != null) {
-      $estudios = $this->db->query("SELECT U.nombre, E.codigo FROM universidad U INNER JOIN estudiosPostgrado E on E.codigoUniversidad = U.codigo WHERE U.codigo = $codigo")->fetchAll();
-      $escuela  = $this->db->query("SELECT U.nombre, E.codigo FROM universidad U INNER JOIN escuelaProfesional E on E.codigoUniversidad = U.codigo WHERE U.codigo = $codigo")->fetchAll();
+      $estudios = $this->db->query("SELECT  E.codigo FROM universidad U INNER JOIN estudiosPostgrado E on E.codigoUniversidad = U.codigo WHERE U.codigo = $codigo")->fetchAll();
+      $escuela  = $this->db->query("SELECT  E.codigo FROM universidad U INNER JOIN escuelaProfesional E on E.codigoUniversidad = U.codigo WHERE U.codigo = $codigo")->fetchAll();
       if ($universidad  == 0) {
-        if (!$vigencia) {
           if ($estudios || $escuela) {
-            echo json_encode(array('estado' => false, 'mensaje' => 'Tiene datos enlazados'));
+            echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge una universidad que la reemplace'));
             exit;
           }
-        }
       } else {
         foreach ($estudios as $key => $E) {
           $this->db->exec("UPDATE estudiosPostgrado   SET codigoUniversidad = $universidad where codigo = $E->codigo ");

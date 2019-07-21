@@ -166,7 +166,7 @@ $app->patch('/api/personas/{codigo}', function (Request $request) {
                                 vigencia = $vigencia
                                 WHERE codigoPersona = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Persona Eliminada, siempre estará en nuestra memoria' : 'Persona rescatada del inframundo'));
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Persona eliminada, siempre estará en nuestra memoria' : 'Persona rescatada del inframundo'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
     }
