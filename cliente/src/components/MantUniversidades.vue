@@ -12,6 +12,7 @@
             :items="universidades"
             placeholder="Seleccione Universidad"
             item-value="codigo"
+            item-text="nombre"
             hide-details
             return-object
             clearable
