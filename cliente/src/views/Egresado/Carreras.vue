@@ -3,187 +3,193 @@
     <v-layout row wrap>
       <!-- Registro -->
       <v-flex xs12 md6>
-        <v-layout row wrap>
-          <!-- Carrera card -->
-          <v-flex xs12>
-            <v-card>
-              <v-card-title class="title font-weight-light" primary-title>
-                Datos de carrera
-              </v-card-title>
-              <v-card-text>
-                <v-form>
-                  <v-combobox
-                    v-model="universidad"
-                    label="Seleccione universidad"
-                    :items="universidades"
-                    placeholder="Universidad"
-                    @change="cargarEscuelas(universidad)"
-                  ></v-combobox>
-                  <v-combobox
-                    v-model="escuela"
-                    label="Seleccione escuela"
-                    :items="escuelas"
-                    item-text="nombre"
-                    item-value="codigo"
-                    placeholder="Escuela"
-                    @change="cargarAdmisiones(escuela)"
-                  ></v-combobox>
-                  <v-layout row wrap>
-                    <v-flex xs6>
-                      <v-menu
-                        v-model="inicio"
-                        lazy
-                        offset-y
-                        full-width
-                        min-width="280px"
-                        :close-on-content-click="false"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <v-text-field
+        <v-form @submit.prevent="">
+          <v-layout row wrap>
+            <!-- Carrera card -->
+            <v-flex xs12>
+              <v-card>
+                <v-card-title class="title font-weight-light" primary-title>
+                  Datos de carrera
+                </v-card-title>
+                <v-card-text>
+                  <v-form>
+                    <v-combobox
+                      v-model="universidad"
+                      label="Seleccione universidad"
+                      :items="universidades"
+                      placeholder="Universidad"
+                      @change="cargarEscuelas(universidad)"
+                    ></v-combobox>
+                    <v-combobox
+                      v-model="escuela"
+                      label="Seleccione escuela"
+                      :items="escuelas"
+                      item-text="nombre"
+                      item-value="codigo"
+                      placeholder="Escuela"
+                      @change="cargarAdmisiones(escuela)"
+                    ></v-combobox>
+                    <v-layout row wrap>
+                      <v-flex xs6>
+                        <v-menu
+                          v-model="inicio"
+                          lazy
+                          offset-y
+                          full-width
+                          min-width="280px"
+                          :close-on-content-click="false"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="fechaInicio"
+                              label="Fecha de inicio"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
                             v-model="fechaInicio"
-                            label="Fecha de inicio"
-                            prepend-icon="event"
-                            readonly
-                            v-on="on"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="fechaInicio"
-                          @input="inicio = false"
-                        ></v-date-picker>
-                      </v-menu>
-                    </v-flex>
-                    <v-flex xs6>
-                      <v-menu
-                        v-model="termino"
-                        lazy
-                        offset-y
-                        full-width
-                        min-width="280px"
-                        :close-on-content-click="false"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <v-text-field
+                            @input="inicio = false"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-flex>
+                      <v-flex xs6>
+                        <v-menu
+                          v-model="termino"
+                          lazy
+                          offset-y
+                          full-width
+                          min-width="280px"
+                          :close-on-content-click="false"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="fechaTermino"
+                              label="Fecha de término"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
                             v-model="fechaTermino"
-                            label="Fecha de término"
-                            prepend-icon="event"
-                            readonly
-                            v-on="on"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="fechaTermino"
-                          @input="termino = false"
-                        ></v-date-picker>
-                      </v-menu>
-                    </v-flex>
-                  </v-layout>
-                </v-form>
-              </v-card-text>
-            </v-card>
-          </v-flex>
+                            @input="termino = false"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-flex>
+                    </v-layout>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </v-flex>
 
-          <!-- Admision card -->
-          <v-flex xs12>
-            <v-card>
-              <v-card-title class="title font-weight-light" primary-title>
-                Datos de admisión
-              </v-card-title>
-              <v-card-text>
-                <v-select
-                  :items="admisiones"
-                  v-model="admision"
-                  item-value="codigo"
-                  label="Admisión"
-                  placeholder="Seleccione admisión"
-                  v-if="!addAdmision"
-                >
-                  <template slot="item" slot-scope="data">
-                    {{ data.item.ciclo }}
-                    {{ data.item.modalidad }}
-                    {{
-                      "(" +
-                        new Date(
-                          data.item.fechaAdmision.replace(/-/g, "\/")
-                        ).toLocaleDateString("es-ES", {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                          timeZone: "America/New_York"
-                        }) +
-                        ")"
-                    }}
-                  </template>
-                  <template slot="selection" slot-scope="data">
-                    {{ data.item.nombre }}
-                    {{ data.item.modalidad }}
-                    {{
-                      "(" +
-                        new Date(
-                          data.item.fechaAdmision.replace(/-/g, "\/")
-                        ).toLocaleDateString("es-ES", {
-                          month: "long",
-                          day: "numeric",
-                          timeZone: "America/New_York"
-                        }) +
-                        ")"
-                    }}
-                  </template>
-                </v-select>
-                <v-checkbox
-                  label="Usar otros datos de admisión"
-                  color="primary"
-                  v-model="addAdmision"
-                />
-                <v-form v-if="addAdmision">
-                  <v-menu
+            <!-- Admision card -->
+            <v-flex xs12>
+              <v-card>
+                <v-card-title class="title font-weight-light" primary-title>
+                  Datos de admisión
+                </v-card-title>
+                <v-card-text>
+                  <v-select
+                    :items="admisiones"
                     v-model="admision"
-                    lazy
-                    offset-y
-                    full-width
-                    min-width="280px"
-                    :close-on-content-click="false"
-                  >
-                    <template v-slot:activator="{ on }">
-                      <v-text-field
-                        v-model="fechaAdmision"
-                        label="Fecha de admisión"
-                        prepend-icon="developer_board"
-                        readonly
-                        v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="fechaAdmision"
-                      @input="admision = false"
-                    ></v-date-picker>
-                  </v-menu>
-                  <v-select
-                    v-model="ciclo"
-                    :items="['I', 'II', 'III']"
-                    prepend-icon="date_range"
-                    label="Seleccione ciclo"
-                    placeholder="Número de ciclo"
-                  ></v-select>
-                  <v-select
-                    v-model="modalidad"
-                    :items="modalidades"
-                    item-text="nombre"
                     item-value="codigo"
-                    label="Seleccione modalidad de admisión"
-                    placeholder="Modalidad"
-                    prepend-icon="laptop"
-                    persistent-hint
-                    :hint="descripcion"
-                  ></v-select>
-                </v-form>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-btn color="primary" v-if="isEdit" @click="editar">Editar</v-btn>
-          <v-btn color="primary" v-else @click="agregar">Agregar</v-btn>
-          <v-btn color="primary" outline @click="nuevo">Limpiar</v-btn>
-        </v-layout>
+                    label="Admisión"
+                    placeholder="Seleccione admisión"
+                    v-if="!addAdmision"
+                  >
+                    <template slot="item" slot-scope="data">
+                      {{ data.item.ciclo }}
+                      {{ data.item.modalidad }}
+                      {{
+                        "(" +
+                          new Date(
+                            data.item.fechaAdmision.replace(/-/g, "\/")
+                          ).toLocaleDateString("es-ES", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                            timeZone: "America/New_York"
+                          }) +
+                          ")"
+                      }}
+                    </template>
+                    <template slot="selection" slot-scope="data">
+                      {{ data.item.nombre }}
+                      {{ data.item.modalidad }}
+                      {{
+                        "(" +
+                          new Date(
+                            data.item.fechaAdmision.replace(/-/g, "\/")
+                          ).toLocaleDateString("es-ES", {
+                            month: "long",
+                            day: "numeric",
+                            timeZone: "America/New_York"
+                          }) +
+                          ")"
+                      }}
+                    </template>
+                  </v-select>
+                  <v-checkbox
+                    label="Usar otros datos de admisión"
+                    color="primary"
+                    v-model="addAdmision"
+                  />
+                  <section v-if="addAdmision">
+                    <v-menu
+                      v-model="admision"
+                      lazy
+                      offset-y
+                      full-width
+                      min-width="280px"
+                      :close-on-content-click="false"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-text-field
+                          v-model="fechaAdmision"
+                          label="Fecha de admisión"
+                          prepend-icon="developer_board"
+                          readonly
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="fechaAdmision"
+                        @input="admision = false"
+                      ></v-date-picker>
+                    </v-menu>
+                    <v-select
+                      v-model="ciclo"
+                      :items="['I', 'II', 'III']"
+                      prepend-icon="date_range"
+                      label="Seleccione ciclo"
+                      placeholder="Número de ciclo"
+                    ></v-select>
+                    <v-select
+                      v-model="modalidad"
+                      :items="modalidades"
+                      item-text="nombre"
+                      item-value="codigo"
+                      label="Seleccione modalidad de admisión"
+                      placeholder="Modalidad"
+                      prepend-icon="laptop"
+                      persistent-hint
+                      :hint="descripcion"
+                    ></v-select>
+                  </section>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-btn color="primary" v-if="isEdit" @click="editar" type="submit">
+              Editar
+            </v-btn>
+            <v-btn color="primary" v-else @click="agregar" type="submit">
+              Agregar
+            </v-btn>
+            <v-btn color="primary" outline @click="nuevo">Limpiar</v-btn>
+          </v-layout>
+        </v-form>
       </v-flex>
 
       <!-- Lista card -->
