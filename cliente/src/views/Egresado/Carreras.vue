@@ -308,7 +308,7 @@
 </template>
 
 <script>
-import { get, post } from "../../bd/api";
+import { get, post, put } from "../../bd/api";
 import { mapState } from "vuex";
 export default {
   data: () => ({
@@ -382,7 +382,31 @@ export default {
       this.fechaTermino = carrera.fechaTermino;
       this.admision = carrera.codigoAdmision;
     },
-    editar() {},
+    editar() {
+      let datos = {
+        nombreUniversidad: this.universidad,
+        nombreEscuela: this.escuela,
+        codigoPersona: this.user.codigo,
+        fechaInicio: this.fechaInicio,
+        fechaTermino: this.fechaTermino
+      };
+      if (this.addAdmision) {
+        datos = {
+          ...datos,
+          fechaAdmision: this.fechaAdmision,
+          nombreAdmision: this.nombreAdmision,
+          codigoModalidad: this.modalidad
+        };
+      } else datos = { ...datos, codigoAdmision: this.admision };
+      put("carreras/" + this.codigo, datos).then(res => {
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) {
+          this.cargarTodo();
+          this.nuevo();
+        }
+      });
+    },
     agregar() {
       let datos = {
         nombreUniversidad: this.universidad,
