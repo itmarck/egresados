@@ -46,13 +46,13 @@ $app->get('/api/contratos', function () {
 $app->get('/api/contratos/{dniPersona}',function(Request $request){
   $codigo = $request->getAttribute('dniPersona');
  try {
-   $data = $this->db->query("SELECT C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as Centrolaboral,cargo, C.fechaInicio , C.fechaTermino ,detalleFunciones 
+   $data = $this->db->query("SELECT C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as centrolaboral,cargo, C.fechaInicio , C.fechaTermino ,detalleFunciones 
                             FROM contrato C
                             INNER JOIN egresado E on E.codigo = C.codigoEgresado
                             INNER JOIN persona P on P.codigo = E.codigoPersona
                             INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
                             INNER JOIN centrolaboral Cen on Cen.codigo  = C.codigoCentroLaboral
-                            WHERE P.dni = $codigo and C.vigencia=1'
+                            WHERE P.dni = $codigo and C.vigencia=1
                             ORDER BY Cen.razonSocial")->fetchAll();
    if ($data) {
      foreach ($data as $key => $contrato) {
@@ -81,7 +81,7 @@ $app->get('/api/contratos/{dniPersona}',function(Request $request){
     echo json_encode( array('estado' => false ));
   }
  } catch (PDOException $e) {
-   echo '{"Error": { "mensaje": '. $e->getMessage().'}';
+  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos' . $e->getMessage()));
  }
 });
 
