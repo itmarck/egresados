@@ -49,12 +49,11 @@
                 Datos de escuela
               </v-card-title>
               <v-card-text>
-                <v-form v-if="vigencia == true">
+                <section v-if="vigencia == true">
                   <v-autocomplete
                     v-model="universidad"
                     :items="universidades"
                     label="Nombre de la universidad"
-                    placeholder="Universidad"
                     :readonly="isEdit"
                   ></v-autocomplete>
                   <v-combobox
@@ -83,22 +82,25 @@
                     item-value="valor"
                     label="Estado de la escuela"
                   ></v-select>
-                </v-form>
-                <v-form v-else>
-                  <span class="font-weight-medium">{{ nombreEscuela }}</span>
-                  está eliminada pero aún puedes recurperarla. Los vinculos a
-                  ésta Escuela ya no se pueden recuperar.
-                  <v-checkbox
-                    label="Recuperar universidad"
-                    v-model="vigencia"
-                  />
-                </v-form>
+                </section>
+                <section v-else>
+                  <p>
+                    <span class="font-weight-medium">
+                      {{ nombreEscuela }}
+                    </span>
+                    está eliminada pero aún puedes recurperarla. Los vinculos a
+                    ésta Escuela ya no se podrán recuperar.
+                  </p>
+                  <v-btn flat block @click="recuperar">
+                    Recuperar Escuela
+                  </v-btn>
+                </section>
               </v-card-text>
             </v-card>
           </v-flex>
-          <v-btn v-if="isEdit && vigencia == true" @click="editar"
-            >Editar</v-btn
-          >
+          <v-btn v-if="isEdit && vigencia == true" @click="editar">
+            Editar
+          </v-btn>
           <v-btn v-else-if="vigencia == true" @click="agregar">Agregar</v-btn>
           <v-btn v-if="isEdit && vigencia == true" @click="dialog = true">
             Eliminar
@@ -143,7 +145,7 @@
 </template>
 
 <script>
-import { get } from "../bd/api";
+import { get, post, patch } from "../bd/api";
 export default {
   components: {
     MantSelect: () => import("./MantSelect")
@@ -162,7 +164,7 @@ export default {
     codigo: "",
     nombre: "",
     universidades: [],
-    universidad: "",
+    universidad: undefined,
     facultades: [],
     facultad: "",
     escuelas: [],
@@ -178,13 +180,13 @@ export default {
         e =>
           e.vigencia == true &&
           e.codigo != this.escuela.codigo &&
-          e.universidad != this.escuela.universidad
+          e.universidad == this.escuela.universidad
       );
       escuelas.unshift({ nombre: "Ninguna", codigo: 0 });
       return escuelas;
     },
     nombreEscuela() {
-      if (this.codigo != "") return this.escuela.nombre;
+      if (this.escuela) return this.escuela.nombre;
       else return "";
     }
   },
@@ -202,11 +204,62 @@ export default {
         if (this.facultad != "") this.cargarFacultades();
       } else this.nuevo();
     },
-    agregar() {},
-    editar() {},
+    agregar() {
+      let datos = {
+        nombre: this.nombre,
+        siglas: this.siglas,
+        nombreUniversidad: this.universidad,
+        estado: this.estado
+      };
+      if (this.universidad == "Universidad Nacional Pedro Ruiz Gallo") {
+        if (this.facultad == "") {
+          this.snackbar("La Facultad no puede estar vacia");
+          return;
+        }
+        datos = {
+          ...datos,
+          nombreFacultad: this.facultad,
+          siglasFacultad: this.obtenerSiglas(this.facultad)
+        };
+      }
+      post("escuelasProfesionales/add", datos).then(res => {
+        this.snackbar(res.mensaje);
+        if (res.estado == true) {
+          this.cargarTodo();
+          this.nuevo();
+        }
+      });
+    },
+    editar() {
+      let datos = {
+        nombre: this.nombre,
+        siglas: this.siglas,
+        nombreUniversidad: this.universidad,
+        estado: this.estado
+      };
+      if (this.universidad == "Universidad Nacional Pedro Ruiz Gallo") {
+        if (this.facultad == "") {
+          this.snackbar("La Facultad no puede estar vacia");
+          return;
+        }
+        datos = {
+          ...datos,
+          nombreFacultad: this.facultad,
+          siglasFacultad: this.obtenerSiglas(this.facultad)
+        };
+      }
+      put("escuelasProfesionales/" + this.escuela.codigo, datos).then(res => {
+        this.snackbar(res.mensaje);
+        if (res.estado == true) {
+          this.cargarTodo();
+          this.nuevo();
+        }
+      });
+    },
     nuevo() {
       this.isEdit = false;
-      this.universidad = "";
+      this.escuela = undefined;
+      this.universidad = undefined;
       this.facultad = "";
       this.codigo = "";
       this.nombre = "";
@@ -215,7 +268,35 @@ export default {
       this.vigencia = 1;
     },
     eliminar() {
-      this.vigencia = false;
+      patch("escuelasProfesionales/" + this.escuela.codigo, {
+        vigencia: true,
+        escuela: this.dialogSelect
+      }).then(res => {
+        this.snackbar(res.mensaje);
+        if (res.estado == true) {
+          this.vigencia = false;
+          this.dialog = false;
+          this.cargarTodo();
+        }
+      });
+    },
+    recuperar() {
+      patch("escuelasProfesionales/" + this.escuela.codigo, {
+        vigencia: false
+      }).then(res => {
+        this.snackbar(res.mensaje);
+        if (res.estado == true) {
+          this.vigencia = true;
+          this.cargarTodo();
+        }
+      });
+    },
+    obtenerSiglas(string) {
+      return string
+        .split(" ")
+        .map(e => e[0])
+        .join("")
+        .toUpperCase();
     },
     cargarTodo() {
       this.cargarEscuelas();
@@ -235,6 +316,10 @@ export default {
     },
     cargarFacultades() {
       get("facultades").then(res => (this.facultades = res.data));
+    },
+    snackbar(mensaje) {
+      this.respuesta = mensaje;
+      this.snack = true;
     }
   },
   created() {
