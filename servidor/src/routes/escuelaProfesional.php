@@ -13,7 +13,7 @@ $app->get('/api/escuelasProfesionales', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -34,7 +34,7 @@ $app->get('/api/escuelasProfesionales/uni/{Nombre}', function (Request $request)
       $result = array('estado' => true, 'data' => $nombres);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -136,13 +136,14 @@ $app->patch('/api/escuelasProfesionales/{codigo}', function (Request $request) {
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
   $escuela = $request->db->getParam('escuela');
   try {
-    if ($escuela!= null) {
+    if ($escuela != null) {
       $carreras = $request->db->query("SELECT E.codigo from escuelaProfesional C INNER JOIN egresado E on E.codigoEscuela = C.codigo WHERE C.codigo = $codigo")->fetchAll();
       if ($escuela == "0") {
         if ($carreras) {
           echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge una escuela que la reemplace'));
           exit;
         }
+      } else {
         foreach ($carreras as $key => $C) {
           $this->db->exec("UPDATE egresado SET codigoEscuela = $escuela where codigo = $C->codigo");
         }
