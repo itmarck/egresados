@@ -17,7 +17,7 @@ $app->get('/api/centroLaboral', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -36,7 +36,7 @@ $app->get('/api/centroLaboral/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -54,7 +54,7 @@ $app->post('/api/centroLaboral/add', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -77,7 +77,7 @@ $app->put('/api/centroLaboral/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -92,6 +92,38 @@ $app->delete('/api/centroLaboral/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
+
+$app->patch('/api/centroLaboral/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  $centro = $request->db->getParam('centro');
+  try {
+    if ($centro != null) {
+      $contratos = $request->db->query("SELECT C.codigo from centroLaboral L INNER JOIN contrato C on C.codigoCentroLaboral = L.codigo WHERE L.codigo = $codigo")->fetchAll();
+      if ($centro == "0") {
+        if ($contratos) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge un centro que lo reemplace'));
+          exit;
+        }
+        foreach ($contratos as $key => $C) {
+          $this->db->exec("UPDATE contrato SET codigoCentroLaboral = $centro where codigo = $C->codigo");
+        }
+      }
+    }
+
+    $cantidad = $this->db->exec("UPDATE centroLaboral set
+                                vigencia = $vigencia
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Centro laboral eliminado, aun se puede recuperar' : 'Centro laboral recuperado'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });

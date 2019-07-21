@@ -146,7 +146,7 @@ $app->patch('/api/universidades/{codigo}', function (Request $request) {
       vigencia = $vigencia
       WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Universidad Eliminada, aun se puede recuperar' : 'Universidad Recuperada'));
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Universidad eliminada, aun se puede recuperar' : 'Universidad recuperada'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se ha cambiado la vigencia'));
     }
