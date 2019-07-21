@@ -98,11 +98,11 @@ $app->post('/api/personas', function (Request $request) {
       } else {
         echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la persona'));
       }
-    }else {
+    } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Al parecer el DNI ya esta registrado'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos '. $e->getMessage()));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
 
@@ -131,9 +131,8 @@ $app->put('/api/personas/{codigo}', function (Request $request) {
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Datos de persona actualizados'));
-    } else {      
+    } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'Uy. No se pudieron actualizar los datos'));
-
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -162,12 +161,15 @@ $app->patch('/api/personas/{codigo}', function (Request $request) {
     $cantidad = $this->db->exec("UPDATE persona set
                                 vigencia = $vigencia
                                 WHERE codigo = $codigo");
+    $cantidad = $this->db->exec(" UPDATE usuario set 
+                                vigencia = $vigencia
+                                WHERE codigoPersona = $codigo");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Persona Eliminada, siempre estará en nuestra memoria' : 'Persona rescatada del inframundo'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
