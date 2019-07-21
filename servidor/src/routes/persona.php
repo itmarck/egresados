@@ -71,6 +71,7 @@ $app->post('/api/personas', function (Request $request) {
   $correo = $request->getParam('correo');
   $estadoCivil = $request->getParam('estado');
   $usuario = $request->getParam('usuario');
+  $contraseña = $request->getParam('contraseña');
   try {
     $dni = $this->db->query("SELECT dni FROM persona WHERE dni = '$DNI'")->fetchAll();
     if (!$dni) {
@@ -80,7 +81,7 @@ $app->post('/api/personas', function (Request $request) {
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
-        $hash = password_hash(contraseña, PASSWORD_DEFAULT);
+        $hash = password_hash(($contraseña) ? $contraseña : contraseña , PASSWORD_DEFAULT);
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
           $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia)
