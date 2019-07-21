@@ -13,7 +13,7 @@ $app->get('/api/carreras', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -34,7 +34,7 @@ $app->get('/api/carreras/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -53,7 +53,6 @@ $app->post('/api/carreras/add', function (Request $request) {
         Values('$nombreUniversidad',1,1)");
         if ($insert > 0) {
           $codigo = $this->db->query("SELECT codigo from universidad WHERE nombre = '$nombreUniversidad'")->fetchAll();
-          
         } else {
           echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la universidad'));
           exit;
@@ -62,7 +61,7 @@ $app->post('/api/carreras/add', function (Request $request) {
       $codigoUniversidad = $codigo[0]->codigo;
       if ($nombreEscuela != "") {
         $exist = false;
-        
+
         $codigo =  $this->db->query("SELECT codigo FROM escuelaprofesional WHERE nombre = '$nombreEscuela'")->fetchAll();
         if ($codigo) {
           $codigoEscuela = $codigo[0]->codigo;
@@ -118,29 +117,87 @@ $app->post('/api/carreras/add', function (Request $request) {
 });
 
 $app->put('/api/carreras/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
-  $codigoEscuela = $request->getParam('codigoEscuela');
+  $codigoEgresado = $request->getAttribute('codigo');
+  $nombreUniversidad = $request->getParam('nombreUniversidad');
+  $nombreEscuela = $request->getParam('nombreEscuela');
   $codigoPersona = $request->getParam('codigoPersona');
   $codigoAdmision = $request->getParam('codigoAdmision');
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
-  $vigencia = $request->getParam('vigencia');
   try {
-    $cantidad = $this->db->exec("UPDATE egresado set
-                                codigoEscuela ='$codigoEscuela',
-                                codigoPersona = '$codigoPersona',
-                                codigoAdmision = '$codigoAdmision',
-                                fechaInicio = '$fechaInicio',
-                                fechaTermino = '$fechaTermino',
-                                vigencia = '$vigencia'  
-                                WHERE codigo = $codigo");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+    if ($nombreUniversidad != "") {
+      $codigo = $this->db->query("SELECT codigo FROM universidad WHERE nombre = '$nombreUniversidad'")->fetchAll();
+      if (!$codigo) {
+        $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
+        Values('$nombreUniversidad',1,1)");
+        if ($insert > 0) {
+          $codigo = $this->db->query("SELECT codigo from universidad WHERE nombre = '$nombreUniversidad'")->fetchAll();
+        } else {
+          echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la universidad'));
+          exit;
+        }
+      }
+      $codigoUniversidad = $codigo[0]->codigo;
+      if ($nombreEscuela != "") {
+        $exist = false;
+
+        $codigo =  $this->db->query("SELECT codigo FROM escuelaprofesional WHERE nombre = '$nombreEscuela'")->fetchAll();
+        if ($codigo) {
+          $codigoEscuela = $codigo[0]->codigo;
+          $exist = $this->db->query("SELECT codigo FROM egresado 
+          WHERE codigoEscuela = $codigoEscuela and codigoPersona = $codigoPersona")->fetchAll();
+        } else {
+          $insert = $this->db->exec("INSERT INTO escuelaprofesional(nombre,codigoUniversidad,estado,vigencia)
+                                     VALUES ('$nombreEscuela',$codigoUniversidad,1,1)");
+          if ($insert > 0) {
+            $codigo = $this->db->query("SELECT codigo from escuelaprofesional WHERE nombre = '$nombreEscuela'")->fetchAll();
+            $codigoEscuela = $codigo[0]->codigo;
+          } else {
+            echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la escuela'));
+            exit;
+          }
+        }
+        if ($exist) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Ya tiene esa carrera registrada'));
+        } else {
+          if (!$codigoAdmision) {
+            $fechaAdmision = $request->getParam('fechaAdmision');
+            $nombreAdmision = $request->getParam('nombreAdmision');
+            $codigoModalidad = $request->getParam('codigoModalidad');
+            $insert = $this->db->exec("INSERT INTO admision(codigoEscuela,fechaAdmision,nombre,codigoModalidad,vigencia)
+                                      VALUES($codigoEscuela,'$fechaAdmision','$nombreAdmision',$codigoModalidad,1)");
+            if ($insert > 0) {
+              $codigo = $this->db->query("SELECT codigo from admision WHERE codigoEscuela = $codigoEscuela and nombre = '$nombreAdmision' and codigoModalidad = $codigoModalidad")->fetchAll();
+              $codigoAdmision = $codigo[0]->codigo;
+            } else {
+              echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la admision'));
+              exit;
+            }
+          }
+          $cantidad = $this->db->exec("UPDATE egresado set
+                                      codigoEscuela ='$codigoEscuela',
+                                      codigoPersona = '$codigoPersona',
+                                      codigoAdmision = '$codigoAdmision',
+                                      fechaInicio = '$fechaInicio',
+                                      fechaTermino = '$fechaTermino',
+                                      vigencia = 1  
+                                      WHERE codigo = $codigoEgresado");
+          if ($cantidad > 0) {
+            echo json_encode(array('estado' => true, 'mensaje' => 'Carrera registrada satisfactoriamente'));
+          } else {
+            echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
+          }
+        }
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'No se pueden mandar campos vacios'));
+        exit;
+      }
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pueden mandar campos vacios'));
+      exit;
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' .$e->getMessage()));
   }
 });
 
@@ -155,7 +212,7 @@ $app->delete('/api/carreras/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -194,7 +251,7 @@ $app->get('/api/carreras/actividadEconomica/{codigo}', function (Request $reques
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
