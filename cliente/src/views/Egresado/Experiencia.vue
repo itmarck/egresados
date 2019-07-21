@@ -39,6 +39,16 @@
                     <v-card v-if="addCentro" style="margin-bottom: 2.5em">
                       <v-card-text>
                         <section>
+                          <v-text-field
+                            v-model="ruc"
+                            label="RUC"
+                            append-icon="location_city"
+                          ></v-text-field>
+                          <v-text-field
+                            v-model="razonSocial"
+                            label="Razón social"
+                            append-icon="poll"
+                          ></v-text-field>
                           <v-combobox
                             v-model="actividad"
                             :items="actividades"
@@ -63,16 +73,6 @@
                             label="Seleccione distritos"
                             placeholder="Distrito"
                           ></v-combobox>
-                          <v-text-field
-                            v-model="ruc"
-                            label="RUC"
-                            prepend-icon="location_city"
-                          ></v-text-field>
-                          <v-text-field
-                            v-model="razonSocial"
-                            label="Razón social"
-                            prepend-icon="poll"
-                          ></v-text-field>
                         </section>
                       </v-card-text>
                     </v-card>
@@ -176,15 +176,21 @@
           </v-card>
         </v-flex>
       </v-layout>
+      <!-- Snackbar -->
+      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
+        {{ respuesta }}
+        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
+      </v-snackbar>
     </v-form>
   </v-container>
 </template>
 <script>
-import { get } from "../../bd/api";
+import { get, post, put } from "../../bd/api";
 import { mapState } from "vuex";
 export default {
   data: () => ({
     isEdit: false,
+    codigo: "",
     contratos: [],
     contrato: "",
     carreras: [],
@@ -207,7 +213,9 @@ export default {
     distritos: [],
     distrito: "",
     ruc: "",
-    razonSocial: ""
+    razonSocial: "",
+    respuesta: "",
+    snack: false
   }),
   computed: {
     ...mapState(["user"])
@@ -216,6 +224,7 @@ export default {
     copiarDatos(carrera) {
       this.isEdit = true;
       this.addCentro = false;
+      this.codigo = carrera.codigo;
       this.carrera = carrera.codigoCarrera;
       this.centro = carrera.codigoCentroLaboral;
       this.fechaInicio = carrera.fechaInicio;
@@ -223,11 +232,63 @@ export default {
       this.cargo = carrera.cargo;
       this.detalles = carrera.detalleFunciones;
     },
-    editar() {},
-    agregar() {},
+    editar() {
+      let datos = {
+        carrera: this.carrera,
+        cargo: this.cargo,
+        inicio: this.fechaInicio,
+        termino: this.fechaTermino,
+        descripcion: this.detalles,
+        centro: this.centro
+      };
+      if (this.addCentro) {
+        datos = {
+          ...datos,
+          actividadEconomica: this.actividadEconomica,
+          distrito: this.codigo,
+          ruc: this.ruc,
+          razonSocial: this.razonSocial
+        };
+      } else datos = { ...datos, centro: this.centro };
+      put("contratos/" + this.codigo, datos).then(res => {
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) {
+          this.cargarTodo();
+        }
+      });
+    },
+    agregar() {
+      let datos = {
+        carrera: this.carrera,
+        cargo: this.cargo,
+        inicio: this.fechaInicio,
+        termino: this.fechaTermino,
+        descripcion: this.detalles,
+        centro: this.centro
+      };
+      if (this.addCentro) {
+        datos = {
+          ...datos,
+          actividadEconomica: this.actividadEconomica,
+          distrito: this.codigo,
+          ruc: this.ruc,
+          razonSocial: this.razonSocial
+        };
+      } else datos = { ...datos, centro: this.centro };
+      post("contratos", datos).then(res => {
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) {
+          this.cargarTodo();
+          this.nuevo();
+        }
+      });
+    },
     nuevo() {
       this.isEdit = false;
       this.addCentro = false;
+      this.codigo = "";
       this.carrera = "";
       this.centro = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
