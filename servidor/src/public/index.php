@@ -5,6 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH");
 
 require '../../vendor/autoload.php';
 
