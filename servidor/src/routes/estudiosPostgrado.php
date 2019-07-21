@@ -77,7 +77,7 @@ $app->post('/api/estudiosPostgrado/add', function (Request $request) {
             $insert = $this->db->exec("INSERT INTO centroestudios(razonSocial,vigencia) 
           Values('$centroEstudios',1)");
             if ($insert > 0) {
-              $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
+              $codigoCentro = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
             } else {
               echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar el Centro'));
               exit;
@@ -96,7 +96,7 @@ $app->post('/api/estudiosPostgrado/add', function (Request $request) {
             $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
           Values('$universidad',1,1)");
             if ($insert > 0) {
-              $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
+              $codigoUniversidad = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
             } else {
               echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la universidad'));
               exit;

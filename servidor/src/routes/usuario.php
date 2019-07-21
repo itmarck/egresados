@@ -43,7 +43,7 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
         echo json_encode($result);
       }
     } else {
-      $result = array('estado' => false, 'mensaje' => 'Usuario incorrecto');
+      $result = array('estado' => false, 'mensaje' => 'Usuario no existe o esta inhabilitado');
       echo json_encode($result);
     }
   } catch (PDOException $e) {

@@ -52,7 +52,7 @@ $app->post('/api/carreras/add', function (Request $request) {
         $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
         Values('$nombreUniversidad',1,1)");
         if ($insert > 0) {
-          $codigo = $this->db->query("SELECT codigo from universidad WHERE nombre = '$nombreUniversidad'")->fetchAll();
+          $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         } else {
           echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la universidad'));
           exit;
@@ -71,7 +71,7 @@ $app->post('/api/carreras/add', function (Request $request) {
           $insert = $this->db->exec("INSERT INTO escuelaprofesional(nombre,codigoUniversidad,estado,vigencia)
                                      VALUES ('$nombreEscuela',$codigoUniversidad,1,1)");
           if ($insert > 0) {
-            $codigo = $this->db->query("SELECT codigo from escuelaprofesional WHERE nombre = '$nombreEscuela'")->fetchAll();
+            $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
             $codigoEscuela = $codigo[0]->codigo;
           } else {
             echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la escuela'));
@@ -88,7 +88,7 @@ $app->post('/api/carreras/add', function (Request $request) {
             $insert = $this->db->exec("INSERT INTO admision(codigoEscuela,fechaAdmision,nombre,codigoModalidad,vigencia)
                                       VALUES($codigoEscuela,'$fechaAdmision','$nombreAdmision',$codigoModalidad,1)");
             if ($insert > 0) {
-              $codigo = $this->db->query("SELECT codigo from admision WHERE codigoEscuela = $codigoEscuela and nombre = '$nombreAdmision' and codigoModalidad = $codigoModalidad")->fetchAll();
+              $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
               $codigoAdmision = $codigo[0]->codigo;
             } else {
               echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la admision'));
