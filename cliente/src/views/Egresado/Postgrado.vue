@@ -161,26 +161,22 @@
             </v-list>
           </v-card>
         </v-flex>
-        <v-snackbar
-          v-model="snack"
-          bottom
-          left
-          :timeout="6000"
-          color="secondary"
-        >
-          {{ respuesta }}
-          <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-        </v-snackbar>
       </v-layout>
+      <!-- Snackbar -->
+      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
+        {{ respuesta }}
+        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
+      </v-snackbar>
     </v-form>
   </v-container>
 </template>
 
 <script>
-import { get, post } from "../../bd/api";
+import { get, post, put } from "../../bd/api";
 import { mapState } from "vuex";
 export default {
   data: () => ({
+    codigo: "",
     carreras: [],
     carrera: "",
     tipos: [],
@@ -218,7 +214,26 @@ export default {
     }
   },
   methods: {
-    editar() {},
+    editar() {
+      let datos = {
+        codigoEgresado: this.carrera,
+        codigoTipo: this.tipo,
+        nombre: this.nombre,
+        fechaInicio: this.fechaInicio,
+        fechaTermino: this.fechaTermino,
+        anioCertificacion: this.certificacion
+      };
+      if (this.lugar == "U")
+        datos = { ...datos, universidad: this.universidad };
+      else datos = { ...datos, centroEstudios: this.centro };
+      put("estudiosPostgrado/" + this.codigo, datos).then(res => {
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) {
+          this.cargarTodo();
+        }
+      });
+    },
     agregar() {
       let datos = {
         codigoEgresado: this.carrera,
@@ -243,6 +258,7 @@ export default {
     },
     copiarDatos(postgrado) {
       this.isEdit = true;
+      this.codigo = postgrado.codigo;
       this.carrera = postgrado.codigoEgresado;
       this.tipo = postgrado.codigoTipo;
       this.fechaInicio = postgrado.fechaInicio;
@@ -263,6 +279,7 @@ export default {
       this.isEdit = false;
       this.carrera = "";
       this.tipo = "";
+      this.codigo = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
       this.fechaTermino = new Date().toISOString().substring(0, 10);
       this.nombre = "";
