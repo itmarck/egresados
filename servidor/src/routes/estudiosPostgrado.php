@@ -13,7 +13,7 @@ $app->get('/api/estudiosPostgrado', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -56,7 +56,7 @@ $app->get('/api/estudiosPostgrado/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -125,37 +125,75 @@ $app->post('/api/estudiosPostgrado/add', function (Request $request) {
 });
 
 $app->put('/api/estudiosPostgrado/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+  $codigoEstudio = $request->getAttribute('codigo');
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoTipo = $request->getParam('codigoTipo');
-  $codigoCentroEstudios = $request->getParam('codigoCentroEstudios');
-  $codigoUniversidad = $request->getParam('codigoUniversidad');
+  $centroEstudios = $request->getParam('centroEstudios');
+  $universidad = $request->getParam('universidad');
   $nombre = $request->getParam('nombre');
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');
   $anioCertificacion = $request->getParam('anioCertificacion');
   try {
-    $sql = "UPDATE estudiospostgrado set
+    if ($nombre != "") {
+      $sql = "UPDATE estudiospostgrado set
             codigoEgresado ='$codigoEgresado',
             codigoTipo = '$codigoTipo',
             nombre = '$nombre',
             fechaInicio = '$fechaInicio',
             fechaTermino = '$fechaTermino',
-            anioCertificacion = $anioCertificacion ";
-    if ($codigoCentroEstudios) {
-      $sql = $sql .  "codigoCentroEstudios = '$codigoCentroEstudios' ";
+            anioCertificacion = $anioCertificacion, ";
+      if ($centroEstudios) {
+        if ($centroEstudios != "") {
+          $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
+          if (!$codigoCentro) {
+            $insert = $this->db->exec("INSERT INTO centroestudios(razonSocial,vigencia) 
+          Values('$centroEstudios',1)");
+            if ($insert > 0) {
+              $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
+            } else {
+              echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar el Centro'));
+              exit;
+            }
+          }
+          $codigo = $codigoCentro[0]->codigo;
+          $sql = $sql .  " codigoCentroEstudios = '$codigo' ";
+        }
+      } else {
+        $universidad = $request->getParam('universidad');
+        if ($universidad != "") {
+          $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
+          if (!$codigoUniversidad) {
+            $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
+          Values('$universidad',1,1)");
+            if ($insert > 0) {
+              $codigoUniversidad = $this->db->query("SELECT codigo from universidad WHERE nombre = '$universidad'")->fetchAll();
+            } else {
+              echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la universidad'));
+              exit;
+            }
+          }
+          $codigo = $codigoUniversidad[0]->codigo;
+          $sql = $sql . " codigoUniversidad = '$codigo' ";
+        } else {
+          echo json_encode(array('estado' => false, 'mensaje' => 'No se pueden mandar campos vacios'));
+          exit;
+        }
+      }
+
+      $sql = $sql . "WHERE codigo = $codigoEstudio";
+      $cantidad = $this->db->exec($sql);
+      if ($cantidad > 0) {
+        echo json_encode(array('estado' => true, 'mensaje' => 'Estudio actualizado satisfactoriamente'));
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
+      }
     } else {
-      $sql = $sql . " codigoUniversidad = '$codigoUniversidad' ";
-    }
-    $sql = $sql . "WHERE codigo = $codigo";
-    $cantidad = $this->db->exec($sql);
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
-    } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pueden mandar campos vacios'));
+      exit;
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos '. $e->getMessage()));
   }
 });
 
@@ -170,7 +208,7 @@ $app->delete('/api/estudiosPostgrado/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
