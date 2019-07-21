@@ -134,12 +134,26 @@ $app->delete('/api/escuelasProfesionales/{codigo}', function (Request $request) 
 $app->patch('/api/escuelasProfesionales/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  $escuela = $request->db->getParam('escuela');
   try {
+    if ($escuela!= null) {
+      $carreras = $request->db->query("SELECT C.codigo from escuelaProfesional C INNER JOIN egresado E on E.codigoEscuelaProfesional = C.codigo WHERE C.codigo = $codigo")->fetchAll();
+      if ($escuela == "0") {
+        if ($carreras) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge una escuela que la reemplace'));
+          exit;
+        }
+        foreach ($carreras as $key => $C) {
+          $this->db->exec("UPDATE egresado SET codigoEscuelaProfesional = $escuela where codigo = $C->codigo");
+        }
+      }
+    }
+
     $cantidad = $this->db->exec("UPDATE escuelaprofesional set
                                 vigencia = $vigencia
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Escuela Eliminada, aun se puede recuperar' : 'Escuela Recuperada'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
     }
