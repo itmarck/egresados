@@ -183,7 +183,7 @@
             </v-flex>
 
             <!-- Titulacion card -->
-            <v-flex xs12 v-if="modalidadTitulacion">
+            <v-flex xs12 v-if="titulacion.modalidadTitulacion">
               <v-card>
                 <v-card-title class="title font-weight-light">
                   Datos de titulación
@@ -205,7 +205,7 @@
                       {{ nombreModalidad }}
                     </span>
                   </p>
-                  <p v-if="codigoColegiado">
+                  <p v-if="titulacion.codigoColegiado">
                     Colegiada el
                     <span class="font-weight-medium">
                       {{
@@ -344,7 +344,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn flat @click="cerrarDialog">Cerrar</v-btn>
-            <v-btn v-if="modalidadTitulacion" flat @click="editarTitulacion">
+            <v-btn v-if="titulacion.modalidadTitulacion" flat @click="editarTitulacion">
               Editar
             </v-btn>
             <v-btn v-else flat @click="agregarTitulacion">Agregar</v-btn>
