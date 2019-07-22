@@ -20,7 +20,7 @@ $app->get('/api/carreras', function () {
 $app->get('/api/carreras/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT E.codigo,E.codigoEscuela,EP.nombre as nombreEscuela,U.codigo as CodigoUni,U.nombre as universidad,codigoPersona,A.codigoModalidad,codigoAdmision,A.nombre as Admision,A.fechaAdmision as fechaAdmision,fechaInicio,fechaTermino, T.codigoModalidad as modalidadTitulacion, T.fecha as fechaTitulacion, C.codigo as codigoColegiatura, C.fecha as fechaColegiatura
+    $data = $this->db->query("SELECT E.codigo,E.codigoEscuela,EP.nombre as nombreEscuela,U.codigo as CodigoUni,U.nombre as universidad,codigoPersona,A.codigoModalidad,codigoAdmision,A.nombre as Admision,A.fechaAdmision as fechaAdmision,fechaInicio,fechaTermino, T.codigoModalidad as modalidadTitulacion, date_format(T.fecha,'%Y/%m/%d') as fechaTitulacion, C.codigo as codigoColegiatura, date_format(C.fecha,'%Y/%m/%d') as fechaColegiatura
                                 FROM egresado E 
                                 INNER JOIN persona P on P.codigo = codigoPersona 
                                 INNER JOIN escuelaProfesional EP on E.codigoEscuela = EP.codigo 
@@ -152,7 +152,7 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
           $insert = $this->db->exec("INSERT INTO escuelaprofesional(nombre,codigoUniversidad,estado,vigencia)
                                      VALUES ('$nombreEscuela',$codigoUniversidad,1,1)");
           if ($insert > 0) {
-            $codigo = $this->db->query("SELECT codigo from escuelaprofesional WHERE nombre = '$nombreEscuela'")->fetchAll();
+            $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
             $codigoEscuela = $codigo[0]->codigo;
           } else {
             echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la escuela'));
@@ -169,7 +169,7 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
             $insert = $this->db->exec("INSERT INTO admision(codigoEscuela,fechaAdmision,nombre,codigoModalidad,vigencia)
                                       VALUES($codigoEscuela,'$fechaAdmision','$nombreAdmision',$codigoModalidad,1)");
             if ($insert > 0) {
-              $codigo = $this->db->query("SELECT codigo from admision WHERE codigoEscuela = $codigoEscuela and nombre = '$nombreAdmision' and codigoModalidad = $codigoModalidad")->fetchAll();
+              $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
               $codigoAdmision = $codigo[0]->codigo;
             } else {
               echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la admision'));
@@ -199,7 +199,7 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
       exit;
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' .$e->getMessage()));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
 
