@@ -13,7 +13,7 @@ $app->get('/api/titulaciones', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -28,24 +28,34 @@ $app->get('/api/titulaciones/{codigoEgresado}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
-$app->post('/api/titulaciones/add', function (Request $request) {
+$app->post('/api/titulaciones', function (Request $request) {
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoModalidad = $request->getParam('codigoModalidad');
   $fecha = $request->getParam('fecha');
+  $codigoColegiado = $request->getParam('codigoColegiado');
+  $fechaColegiatura = $request->getParam('fechaColegiatura');
   try {
     $cantidad = $this->db->exec("INSERT INTO titulacion(codigoEgresado,codigoModalidad,fecha,vigencia) 
                             Values('$codigoEgresado','$codigoModalidad',$fecha,1)");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      if ($codigoColegiado) {
+        $cantidad = $this->db->exec("INSERT INTO colegiatura(codigoEgresado,codigo,fecha,vigencia) 
+        Values('$codigoEgresado','$codigoColegiado',$fechaColegiatura,1)");
+        if ($cantidad = 0) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron registrar los datos'));
+          exit(2);
+        }
+      }
+      echo json_encode(array('estado' => true, 'mensaje' => 'Datos registrados correctamente'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron registrar los datos'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -54,19 +64,25 @@ $app->put('/api/titulaciones/{codigoEgresado}', function (Request $request) {
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoModalidad = $request->getParam('codigoModalidad');
   $fecha = $request->getParam('fecha');
+  $codigoColegiado = $request->getParam('codigoColegiado');
+  $fechaColegiatura = $request->getParam('fechaColegiatura');
   try {
     $cantidad = $this->db->exec("UPDATE titulacion set
                                 codigoEgresado ='$codigoEgresado',
                                 codigoModalidad = '$codigoModalidad',
-                                fecha = '$fecha' 
+                                fecha = '$fecha',
+                                vigencia = 1
                                 WHERE codigoEgresado = $codigoEgresado");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      if ($codigoColegiado) {
+        $cantidad = $this->db->exec("UPDATE colegiatura SET codigoColegiado = '$codigoColegiado', fecha = '$fechaColegiatura', vigencia = 1 WHERE codigoEgresado = $codigoEgresado");
+      }
+      echo json_encode(array('estado' => true, 'mensaje' => 'Datos actualizados correctamente'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron actualizar los datos'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -81,6 +97,6 @@ $app->delete('/api/titulaciones/{codigoEgresado}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });

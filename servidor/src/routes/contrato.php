@@ -78,16 +78,17 @@ $app->get('/api/contratos/{dniPersona}',function(Request $request){
      $result = array('estado' => true, 'data' => $data);
      echo json_encode($result);
   }else {
-    echo json_encode( array('estado' => false ));
+    echo json_encode( array('estado' => false,'mensaje'=>'No se han encontrado datos'));
   }
  } catch (PDOException $e) {
   echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos ' . $e->getMessage()));
  }
 });
 
-$app->post('/api/contratos/add',function(Request $request){
+$app->post('/api/contratos',function(Request $request){
+  //carrera(codigo),centro(codigo),cargo,inicio,termino,descripcion,actividadEconomica,distrito(codigo),ruc(null),razonSocial
   $codigoEgresado = $request->getParam('codigoEgresado');
-  $codigoCentroLaboral = $request->getParam('codigoCentroLaboral');
+  $centroLaboral = $request->getParam('centro');
   $cargo = $request->getParam('cargo');
   $fechaInicio = $request->getParam('fechaInicio');
   $fechaTermino = $request->getParam('fechaTermino');  
@@ -96,9 +97,9 @@ $app->post('/api/contratos/add',function(Request $request){
    $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
                             Values('$codigoEgresado','$codigoCentroLaboral',$fechaInicio,'$cargo',$fechaTermino,'$detalleFunciones',1)");
    if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
+    echo json_encode(array('estado' => true,'mensaje'=>'Contrato agregado correctamente'));
   } else {
-    echo json_encode(array('estado' => false));
+    echo json_encode(array('estado' => false,'mensaje'=>'No se pudo agregar el contrato'));
   }
  } catch (PDOException $e) {
   echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
