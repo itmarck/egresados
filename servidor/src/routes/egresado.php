@@ -187,7 +187,7 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
           if ($cantidad > 0) {
             echo json_encode(array('estado' => true, 'mensaje' => 'Carrera actualizada satisfactoriamente'));
           } else {
-            echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
+            echo json_encode(array('estado' => false, 'mensaje' => 'No se han actualizado los datos'));
           }
         }
       } else {

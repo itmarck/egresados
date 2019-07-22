@@ -145,15 +145,16 @@ $app->delete('/api/usuarios/{codigo}', function (Request $request) {
 
 $app->patch('/api/usuarios/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
-  $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  $pass = ($request->getParam('contraseña')) ? 0 : 1;
   try {
+    $hash = password_hash($pass, PASSWORD_DEFAULT);
     $cantidad = $this->db->exec("UPDATE usuario set
-                                vigencia = $vigencia
+                                clave = $hash
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Contraseña actualizada'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la contraseña'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

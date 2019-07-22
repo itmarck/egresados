@@ -79,7 +79,7 @@ $app->put('/api/facultades/{codigo}', function (Request $request) {
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Actualizado'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han actualizado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
