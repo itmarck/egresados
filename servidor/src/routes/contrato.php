@@ -99,6 +99,7 @@ $app->post('/api/contratos', function (Request $request) {
   $ruc  = $request->getParam('ruc');
   $razonSocial  = $request->getParam('razonSocial');
   try {
+
     if (!$codigoCentroLaboral) {
       $codigo = $this->db->query("SELECT codigo FROM actividadEconomica where nombre = '$actividadEconomica'")->fetchall();
       if (!$codigo) {
@@ -111,6 +112,7 @@ $app->post('/api/contratos', function (Request $request) {
                                   VALUES('$codigoActividad',$codigoDistrito,'$ruc','$razonSocial',1)");
       $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
       $codigoCentroLaboral = $codigo[0]->codigo;
+      
     }
     $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
   Values('$codigoEgresado','$codigoCentroLaboral',$fechaInicio,'$cargo',$fechaTermino,'$detalleFunciones',1)");
@@ -120,7 +122,7 @@ $app->post('/api/contratos', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo agregar el contrato'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
 
