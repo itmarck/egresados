@@ -143,12 +143,11 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
       $codigoUniversidad = $codigo[0]->codigo;
       if ($nombreEscuela != "") {
         $exist = false;
-
         $codigo =  $this->db->query("SELECT codigo FROM escuelaprofesional WHERE nombre = '$nombreEscuela'")->fetchAll();
         if ($codigo) {
           $codigoEscuela = $codigo[0]->codigo;
           $exist = $this->db->query("SELECT codigo FROM egresado 
-          WHERE codigoEscuela = $codigoEscuela and codigoPersona = $codigoPersona")->fetchAll();
+          WHERE codigoEscuela = $codigoEscuela and codigo != $codigoEgresado and codigoPersona = $codigoPersona")->fetchAll();
         } else {
           $insert = $this->db->exec("INSERT INTO escuelaprofesional(nombre,codigoUniversidad,estado,vigencia)
                                      VALUES ('$nombreEscuela',$codigoUniversidad,1,1)");
@@ -186,7 +185,7 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
                                       vigencia = 1  
                                       WHERE codigo = $codigoEgresado");
           if ($cantidad > 0) {
-            echo json_encode(array('estado' => true, 'mensaje' => 'Carrera registrada satisfactoriamente'));
+            echo json_encode(array('estado' => true, 'mensaje' => 'Carrera actualizada satisfactoriamente'));
           } else {
             echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
           }
