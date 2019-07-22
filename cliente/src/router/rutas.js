@@ -54,7 +54,7 @@ export default [
       },
       {
         path: 'perfil',
-        component: () => import('../views/Perfil.vue')
+        component: () => import('../views/Personal/Perfil.vue')
       },
       {
         path: 'seguridad',
@@ -97,7 +97,7 @@ export default [
       },
       {
         path: 'perfil',
-        component: () => import('../views/Perfil.vue')
+        component: () => import('../views/Egresado/Perfil.vue')
       },
       {
         path: 'seguridad',
