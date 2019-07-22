@@ -72,14 +72,16 @@ $app->put('/api/titulaciones/{codigoEgresado}', function (Request $request) {
                                 fecha = '$fecha',
                                 vigencia = 1
                                 WHERE codigoEgresado = $codigoEgresado");
-    if ($cantidad > 0) {
-      if ($codigoColegiado) {
-        $cantidad = $this->db->exec("UPDATE colegiatura SET codigo = $codigoColegiado, fecha = '$fechaColegiatura', vigencia = 1 WHERE codigoEgresado = $codigoEgresado");
-      }
+  
+    if ($codigoColegiado) {
+      $cantidad2 = $this->db->exec("UPDATE colegiatura SET codigo = $codigoColegiado, fecha = '$fechaColegiatura', vigencia = 1 WHERE codigoEgresado = $codigoEgresado");
+    }
+    if ($cantidad > 0 ||  $cantidad2 > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Datos actualizados correctamente'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron actualizar los datos'));
     }
+    
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
