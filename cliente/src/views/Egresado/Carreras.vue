@@ -432,7 +432,7 @@ export default {
       this.fechaTitulacion = new Date().toISOString().substring(0, 10);
       this.codigoColegiado = "";
       this.fechaColegiatura = new Date().toISOString().substring(0, 10);
-      this.titulacion = null;
+      this.titulacion = {};
     },
     copiarDatos(carrera) {
       get("escuelasProfesionales/uni/" + carrera.universidad).then(res => {
