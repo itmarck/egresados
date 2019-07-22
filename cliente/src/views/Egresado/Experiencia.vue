@@ -234,6 +234,7 @@ export default {
     },
     editar() {
       let datos = {
+        codigoEgresado: this.carrera,
         carrera: this.carrera,
         cargo: this.cargo,
         inicio: this.fechaInicio,
@@ -249,7 +250,7 @@ export default {
           razonSocial: this.razonSocial
         };
       } else datos = { ...datos, centro: this.centro };
-      put("contratos/" + this.carrera, datos).then(res => {
+      put("contratos/" + this.codigo, datos).then(res => {
         this.respuesta = res.mensaje;
         this.snack = true;
         if (res.estado == true) {
