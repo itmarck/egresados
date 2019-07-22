@@ -68,14 +68,13 @@ $app->put('/api/titulaciones/{codigoEgresado}', function (Request $request) {
   $fechaColegiatura = $request->getParam('fechaColegiatura');
   try {
     $cantidad = $this->db->exec("UPDATE titulacion set
-                                codigoEgresado =$codigoEgresado,
                                 codigoModalidad = $codigoModalidad,
                                 fecha = '$fecha',
                                 vigencia = 1
                                 WHERE codigoEgresado = $codigoEgresado");
     if ($cantidad > 0) {
       if ($codigoColegiado) {
-        $cantidad = $this->db->exec("UPDATE colegiatura SET codigoColegiado = $codigoColegiado, fecha = '$fechaColegiatura', vigencia = 1 WHERE codigoEgresado = $codigoEgresado");
+        $cantidad = $this->db->exec("UPDATE colegiatura SET codigo = $codigoColegiado, fecha = '$fechaColegiatura', vigencia = 1 WHERE codigoEgresado = $codigoEgresado");
       }
       echo json_encode(array('estado' => true, 'mensaje' => 'Datos actualizados correctamente'));
     } else {
