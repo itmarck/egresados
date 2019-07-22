@@ -99,7 +99,7 @@ $app->post('/api/escuelasProfesionales/add', function (Request $request) {
                                   Values('$nombre','$siglas',$estado,$codigoUniversidad,1)");
       }
       if ($cantidad > 0) {
-        echo json_encode(array('estado' => true, 'mensaje' => 'Carrera registrada satisfactoriamente'));
+        echo json_encode(array('estado' => true, 'mensaje' => 'Escuela registrada satisfactoriamente'));
       } else {
         echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
       }
@@ -116,32 +116,64 @@ $app->put('/api/escuelasProfesionales/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');
   $siglas = $request->getParam('siglas');
-  $codigoFacultad = $request->getParam('codigoFacultad');
-  $codigoUniversidad = $request->getParam('codigoUniversidad');
+  $nombreFacultad = $request->getParam('facultad');
+  $nombreUniversidad = $request->getParam('universidad');
   $estado = $request->getParam('estado');
+  $siglasFacultad = $request->getParam('siglasFacultad');
   try {
-    if ($codigoFacultad) {
-      $cantidad = $this->db->exec("UPDATE escuelaprofesional set
-                                nombre ='$nombre',
-                                siglas = '$siglas',
-                                estado = '$estado',
-                                codigoUniversidad = '$codigoUniversidad',
-                                codigoFacultad = '$codigoFacultad'  
-                                WHERE codigo = $codigo");
-    } else {
-      $cantidad = $this->db->exec("UPDATE escuelaprofesional set
-                                nombre ='$nombre',
-                                siglas = '$siglas',
-                                estado = '$estado',
-                                codigoUniversidad = '$codigoUniversidad'
-                                WHERE codigo = $codigo");
-    }
 
 
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+    if ($nombreUniversidad != "") {
+      $codigo = $this->db->query("SELECT codigo FROM universidad WHERE nombre = '$nombreUniversidad'")->fetchAll();
+      if (!$codigo) {
+        $insert = $this->db->exec("INSERT INTO universidad(nombre,estado,vigencia) 
+        Values('$nombreUniversidad',1,1)");
+        if ($insert > 0) {
+          $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
+        } else {
+          echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la universidad'));
+          exit;
+        }
+      }
+      $codigoUniversidad = $codigo[0]->codigo;
+      if ($nombreFacultad) {
+        if ($nombreFacultad != "") {
+          $codigo =  $this->db->query("SELECT codigo FROM facultad WHERE nombre = '$nombreFacultad'")->fetchAll();
+          if (!$codigo) {
+            $insert = $this->db->exec("INSERT INTO facultad(nombre,siglas,estado,vigencia)
+                                           VALUES ('$nombreFacultad','$siglasFacultad',1,1)");
+            if ($insert > 0) {
+              $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
+              $codigoFacultad = $codigo[0]->codigo;
+            } else {
+              echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la escuela'));
+              exit;
+            }
+          }
+          $cantidad = $this->db->exec("UPDATE escuelaprofesional set
+                                      nombre ='$nombre',
+                                      siglas = '$siglas',
+                                      estado = '$estado',
+                                      codigoUniversidad = '$codigoUniversidad',
+                                      codigoFacultad = '$codigoFacultad'  
+                                      WHERE codigo = $codigo");
+        }
+      } else {
+        $cantidad = $this->db->exec("UPDATE escuelaprofesional set
+                                    nombre ='$nombre',
+                                    siglas = '$siglas',
+                                    estado = '$estado',
+                                    codigoUniversidad = '$codigoUniversidad'
+                                    WHERE codigo = $codigo");
+      }
+      if ($cantidad > 0) {
+        echo json_encode(array('estado' => true, 'mensaje' => 'Escuela actualizada satisfactoriamente'));
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
+      }
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pueden mandar campos vacios'));
+      exit;
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -156,7 +188,7 @@ $app->delete('/api/escuelasProfesionales/{codigo}', function (Request $request) 
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

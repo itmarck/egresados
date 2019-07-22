@@ -1,24 +1,25 @@
 <?php
+
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
 $app->get('/api/contratos', function () {
- try {
-  $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno) as Nombre,C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as Centrolaboral,cargo,C.fechaInicio,C.fechaTermino,detalleFunciones 
+  try {
+    $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno) as Nombre,C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as Centrolaboral,cargo,C.fechaInicio,C.fechaTermino,detalleFunciones 
                             FROM contrato C
                             INNER JOIN egresado E on E.codigo = C.codigoEgresado
                             INNER JOIN persona P on P.codigo = E.codigoPersona
                             INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
                             INNER JOIN centrolaboral Cen on Cen.codigo  = C.codigoCentroLaboral
                             WHERE C.vigencia=1")->fetchAll();
-  if ($data) {
-    $result = array('estado' => true, 'data' => $data);
-    echo json_encode($result);
- }else {
-   echo json_encode( array('estado' => false ));
- }
- } catch (PDOException $e) {
-  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -43,10 +44,10 @@ $app->get('/api/contratos', function () {
 //   }
 // });
 
-$app->get('/api/contratos/{dniPersona}',function(Request $request){
+$app->get('/api/contratos/{dniPersona}', function (Request $request) {
   $codigo = $request->getAttribute('dniPersona');
- try {
-   $data = $this->db->query("SELECT C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as centrolaboral,cargo, C.fechaInicio , C.fechaTermino ,detalleFunciones 
+  try {
+    $data = $this->db->query("SELECT C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as centrolaboral,cargo, C.fechaInicio , C.fechaTermino ,detalleFunciones 
                             FROM contrato C
                             INNER JOIN egresado E on E.codigo = C.codigoEgresado
                             INNER JOIN persona P on P.codigo = E.codigoPersona
@@ -54,68 +55,86 @@ $app->get('/api/contratos/{dniPersona}',function(Request $request){
                             INNER JOIN centrolaboral Cen on Cen.codigo  = C.codigoCentroLaboral
                             WHERE P.dni = $codigo and C.vigencia=1
                             ORDER BY Cen.razonSocial")->fetchAll();
-   if ($data) {
-     foreach ($data as $key => $contrato) {
-       if ($contrato->fechaTermino){
-         $finalizado = true;
-         $ftermino = new DateTime($contrato->fechaTermino);
-       }else{
-        $finalizado = false;
-        $ftermino = new DateTime();
-       }
-       $finicio = new DateTime($contrato->fechaInicio); 
-       $tiempo = $finicio->diff($ftermino);
-       if ($tiempo->y >= 1) {
-        $contrato->tiempo = $tiempo->y;
-        $contrato->unidad = ($tiempo->y == 1) ? 'año' : 'años';
-       } else {
-        $contrato->tiempo = $tiempo->y * 12 + $tiempo->m;
-        $contrato->unidad = ($contrato->tiempo  == 1) ? 'mes' : 'meses';
-       }
-       $contrato->select = true;
-       $contrato->finalizado = $finalizado;
-     }
-     $result = array('estado' => true, 'data' => $data);
-     echo json_encode($result);
-  }else {
-    echo json_encode( array('estado' => false,'mensaje'=>'No se han encontrado datos'));
+    if ($data) {
+      foreach ($data as $key => $contrato) {
+        if ($contrato->fechaTermino) {
+          $finalizado = true;
+          $ftermino = new DateTime($contrato->fechaTermino);
+        } else {
+          $finalizado = false;
+          $ftermino = new DateTime();
+        }
+        $finicio = new DateTime($contrato->fechaInicio);
+        $tiempo = $finicio->diff($ftermino);
+        if ($tiempo->y >= 1) {
+          $contrato->tiempo = $tiempo->y;
+          $contrato->unidad = ($tiempo->y == 1) ? 'año' : 'años';
+        } else {
+          $contrato->tiempo = $tiempo->y * 12 + $tiempo->m;
+          $contrato->unidad = ($contrato->tiempo  == 1) ? 'mes' : 'meses';
+        }
+        $contrato->select = true;
+        $contrato->finalizado = $finalizado;
+      }
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
- } catch (PDOException $e) {
-  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos ' . $e->getMessage()));
- }
 });
 
-$app->post('/api/contratos',function(Request $request){
+$app->post('/api/contratos', function (Request $request) {
   //carrera(codigo),centro(codigo),cargo,inicio,termino,descripcion,actividadEconomica,distrito(codigo),ruc(null),razonSocial
   $codigoEgresado = $request->getParam('codigoEgresado');
-  $centroLaboral = $request->getParam('centro');
   $cargo = $request->getParam('cargo');
-  $fechaInicio = $request->getParam('fechaInicio');
-  $fechaTermino = $request->getParam('fechaTermino');  
-  $detalleFunciones = $request->getParam('detalleFunciones');  
- try {
-   $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
-                            Values('$codigoEgresado','$codigoCentroLaboral',$fechaInicio,'$cargo',$fechaTermino,'$detalleFunciones',1)");
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true,'mensaje'=>'Contrato agregado correctamente'));
-  } else {
-    echo json_encode(array('estado' => false,'mensaje'=>'No se pudo agregar el contrato'));
+  $fechaInicio = $request->getParam('inicio');
+  $fechaTermino = $request->getParam('termino');
+  $detalleFunciones = $request->getParam('descripcion');
+  $codigoCentroLaboral = $request->getParam('centro');
+
+  $actividadEconomica = $request->getParam('actividadEconomica');
+  $codigoDistrito = $request->getParam('distrito');
+  $ruc  = $request->getParam('ruc');
+  $razonSocial  = $request->getParam('razonSocial');
+  try {
+    if (!$codigoCentroLaboral) {
+      $codigo = $this->db->query("SELECT codigo FROM actividadEconomica where nombre = '$actividadEconomica'")->fetchall();
+      if (!$codigo) {
+        $insert = $this->db->exec("INSERT INTO actividadEconomica(nombre,vigencia)
+                                  VALUES('$actividadEconomica',1)");
+        $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
+      }
+      $codigoActividad = $codigo[0]->codigo;
+      $insert = $this->db->exec("INSERT INTO centrolaboral(codigoActividad,codigoDistrito,RUC,razonSocial,vigencia)
+                                  VALUES('$codigoActividad',$codigoDistrito,'$ruc','$razonSocial',1)");
+      $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
+      $codigoCentroLaboral = $codigo[0]->codigo;
+    }
+    $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
+  Values('$codigoEgresado','$codigoCentroLaboral',$fechaInicio,'$cargo',$fechaTermino,'$detalleFunciones',1)");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Contrato agregado correctamente'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo agregar el contrato'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
- } catch (PDOException $e) {
-  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
- }
 });
 
-$app->put('/api/contratos/{codigo}',function(Request $request){
+$app->put('/api/contratos/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $codigoEgresado = $request->getParam('codigoEgresado');
   $codigoCentroLaboral = $request->getParam('codigoCentroLaboral');
   $fechaInicio = $request->getParam('fechaInicio');
   $cargo = $request->getParam('cargo');
-  $fechaTermino = $request->getParam('fechaTermino');  
-  $detalleFunciones = $request->getParam('detalleFunciones');  
- try {
-   $cantidad = $this->db->exec("UPDATE contrato set
+  $fechaTermino = $request->getParam('fechaTermino');
+  $detalleFunciones = $request->getParam('detalleFunciones');
+  try {
+    $cantidad = $this->db->exec("UPDATE contrato set
                                 codigoEgresado ='$codigoEgresado',
                                 codigoCentroLaboral = '$codigoCentroLaboral',
                                 fechaInicio = '$fechaInicio',
@@ -123,29 +142,29 @@ $app->put('/api/contratos/{codigo}',function(Request $request){
                                 fechaTermino = '$fechaTermino',
                                 detalleFunciones = '$detalleFunciones'
                                 WHERE codigo = $codigo");
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true));
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
- } catch (PDOException $e) {
-  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
- }
 });
 
-$app->delete('/api/contratos/{codigo}',function(Request $request){
+$app->delete('/api/contratos/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
- try {
-   $cantidad = $this->db->exec("DELETE FROM contrato 
+  try {
+    $cantidad = $this->db->exec("DELETE FROM contrato 
                                 WHERE codigo = $codigo");
-   if ($cantidad > 0) {
-    echo json_encode(array('estado' => true));
-  } else {
-    echo json_encode(array('estado' => false));
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true));
+    } else {
+      echo json_encode(array('estado' => false));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
- } catch (PDOException $e) {
-  echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
- }
 });
 
 $app->patch('/api/contratos/{codigo}', function (Request $request) {
