@@ -260,6 +260,7 @@ export default {
     },
     agregar() {
       let datos = {
+        codigoEgresado: this.codigo,
         carrera: this.carrera,
         cargo: this.cargo,
         inicio: this.fechaInicio,
