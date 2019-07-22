@@ -40,11 +40,11 @@ $app->post('/api/titulaciones', function (Request $request) {
   $fechaColegiatura = $request->getParam('fechaColegiatura');
   try {
     $cantidad = $this->db->exec("INSERT INTO titulacion(codigoEgresado,codigoModalidad,fecha,vigencia) 
-                            Values('$codigoEgresado','$codigoModalidad',$fecha,1)");
+                            Values($codigoEgresado,$codigoModalidad,'$fecha',1)");
     if ($cantidad > 0) {
       if ($codigoColegiado) {
         $cantidad = $this->db->exec("INSERT INTO colegiatura(codigoEgresado,codigo,fecha,vigencia) 
-        Values('$codigoEgresado','$codigoColegiado',$fechaColegiatura,1)");
+        Values($codigoEgresado,'$codigoColegiado','$fechaColegiatura',1)");
         if ($cantidad = 0) {
           echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron registrar los datos'));
           exit(2);
@@ -55,7 +55,7 @@ $app->post('/api/titulaciones', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron registrar los datos'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
 
@@ -68,8 +68,8 @@ $app->put('/api/titulaciones/{codigoEgresado}', function (Request $request) {
   $fechaColegiatura = $request->getParam('fechaColegiatura');
   try {
     $cantidad = $this->db->exec("UPDATE titulacion set
-                                codigoEgresado ='$codigoEgresado',
-                                codigoModalidad = '$codigoModalidad',
+                                codigoEgresado =$codigoEgresado,
+                                codigoModalidad = $codigoModalidad,
                                 fecha = '$fecha',
                                 vigencia = 1
                                 WHERE codigoEgresado = $codigoEgresado");
