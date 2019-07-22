@@ -164,7 +164,7 @@
                 @click="copiarDatos(contrato)"
               >
                 <v-list-tile-content>
-                  <v-list-tile-title v-html="contrato.Centrolaboral" />
+                  <v-list-tile-title v-html="contrato.centroLaboral" />
                   <v-list-tile-sub-title v-html="contrato.cargo" />
                   <v-list-tile-sub-title>
                     {{ contrato.fechaInicio.toString().substring(0, 4) }}
@@ -221,16 +221,16 @@ export default {
     ...mapState(["user"])
   },
   methods: {
-    copiarDatos(carrera) {
+    copiarDatos(contrato) {
       this.isEdit = true;
       this.addCentro = false;
-      this.codigo = carrera.codigo;
-      this.carrera = carrera.codigoCarrera;
-      this.centro = carrera.codigoCentroLaboral;
-      this.fechaInicio = carrera.fechaInicio;
-      this.fechaTermino = carrera.fechaTermino;
-      this.cargo = carrera.cargo;
-      this.detalles = carrera.detalleFunciones;
+      this.codigo = contrato.codigo;
+      this.carrera = contrato.codigoEgresado;
+      this.centro = contrato.codigoCentroLaboral;
+      this.fechaInicio = contrato.fechaInicio;
+      this.fechaTermino = contrato.fechaTermino;
+      this.cargo = contrato.cargo;
+      this.detalles = contrato.detalleFunciones;
     },
     editar() {
       let datos = {
@@ -238,8 +238,7 @@ export default {
         cargo: this.cargo,
         inicio: this.fechaInicio,
         termino: this.fechaTermino,
-        descripcion: this.detalles,
-        centro: this.centro
+        descripcion: this.detalles
       };
       if (this.addCentro) {
         datos = {
@@ -250,7 +249,7 @@ export default {
           razonSocial: this.razonSocial
         };
       } else datos = { ...datos, centro: this.centro };
-      put("contratos/" + this.codigo, datos).then(res => {
+      put("contratos/" + this.carrera, datos).then(res => {
         this.respuesta = res.mensaje;
         this.snack = true;
         if (res.estado == true) {
@@ -260,13 +259,12 @@ export default {
     },
     agregar() {
       let datos = {
-        codigoEgresado: this.codigo,
+        codigoEgresado: this.carrera,
         carrera: this.carrera,
         cargo: this.cargo,
         inicio: this.fechaInicio,
         termino: this.fechaTermino,
-        descripcion: this.detalles,
-        centro: this.centro
+        descripcion: this.detalles
       };
       if (this.addCentro) {
         datos = {
@@ -277,6 +275,8 @@ export default {
           razonSocial: this.razonSocial
         };
       } else datos = { ...datos, centro: this.centro };
+      console.log(datos);
+
       post("contratos", datos).then(res => {
         this.respuesta = res.mensaje;
         this.snack = true;
