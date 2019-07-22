@@ -87,7 +87,6 @@ $app->get('/api/contratos/{dniPersona}', function (Request $request) {
 });
 
 $app->post('/api/contratos', function (Request $request) {
-  //carrera(codigo),centro(codigo),cargo,inicio,termino,descripcion,actividadEconomica,distrito(codigo),ruc(null),razonSocial
   $codigoEgresado = $request->getParam('codigoEgresado');
   $cargo = $request->getParam('cargo');
   $fechaInicio = $request->getParam('inicio');
