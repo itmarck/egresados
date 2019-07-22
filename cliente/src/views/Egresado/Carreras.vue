@@ -85,7 +85,7 @@
             </v-flex>
 
             <!-- Admision card -->
-            <v-flex xs12>
+            <v-flex xs12 v-if="universidad != '' && escuela != ''">
               <v-card>
                 <v-card-title class="title font-weight-light" primary-title>
                   Datos de admisión
@@ -181,8 +181,53 @@
                 </v-card-text>
               </v-card>
             </v-flex>
+
+            <!-- Titulacion card -->
+            <v-flex xs12 v-if="modalidadTitulacion">
+              <v-card>
+                <v-card-title class="title font-weight-light">
+                  Datos de titulación
+                </v-card-title>
+                <v-card-text>
+                  <p>
+                    Carrera titulada el
+                    <span class="font-weight-medium">
+                      {{
+                        new Date(titulacion.fechaTitulacion).toLocaleDateString("es-ES", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric"
+                        })
+                      }}
+                    </span>
+                    por la modalidad
+                    <span class="font-weight-medium">
+                      {{ nombreModalidad }}
+                    </span>
+                  </p>
+                  <p v-if="codigoColegiado">
+                    Colegiada el
+                    <span class="font-weight-medium">
+                      {{
+                        new Date(titulacion.fechaColegiatura).toLocaleDateString("es-ES", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric"
+                        })
+                      }}
+                    </span>
+                    con el código
+                    <span class="font-weight-medium">
+                      {{ titulacion.codigoColegiado }}
+                    </span>
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+
             <v-btn color="primary" v-if="isEdit" @click="dialog = true">
-              <v-icon left>add</v-icon>
+              <v-icon v-if="modalidadTitulacion" small left>create</v-icon>
+              <v-icon v-else left>add</v-icon>
               Titulacion
             </v-btn>
             <v-btn color="primary" v-if="isEdit" @click="editar" type="submit">
@@ -298,8 +343,11 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat @click="dialog = false">Cancelar</v-btn>
-            <v-btn flat @click="agregarTitulacion">Aceptar</v-btn>
+            <v-btn flat @click="dialog = false">Cerrar</v-btn>
+            <v-btn v-if="modalidadTitulacion" flat @click="editarTitulacion">
+              Editar
+            </v-btn>
+            <v-btn v-else flat @click="agregarTitulacion">Agregar</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -331,8 +379,9 @@ export default {
     fechaTitulacion: new Date().toISOString().substring(0, 10),
     fTitulacion: false,
     ciclo: "",
+    titulacion: {},
     modalidadesTitulacion: [],
-    modalidadTitulacion: "",
+    modalidadTitulacion: null,
     modalidades: [],
     modalidad: null,
     listaCarreras: [],
@@ -340,7 +389,7 @@ export default {
     admisiones: [],
     admision: "",
     addColegiatura: false,
-    codigoColegiado: "",
+    codigoColegiado: null,
     fechaColegiatura: new Date().toISOString().substring(0, 10),
     colegiatura: false
   }),
@@ -359,28 +408,68 @@ export default {
         return this.modalidadesTitulacion[this.modalidadTitulacion - 1]
           .descripcion;
       }
+    },
+    nombreModalidad() {
+      if (this.titulacion.modalidadTitulacion) {
+        return this.modalidadesTitulacion[this.titulacion.modalidadTitulacion - 1].nombre;
+      }
     }
   },
   methods: {
     nuevo() {
       this.addAdmision = false;
+      this.addColegiatura = false;
+      this.dialog = false;
       this.isEdit = false;
       this.codigo = "";
       this.universidad = "";
       this.escuela = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
       this.fechaTermino = new Date().toISOString().substring(0, 10);
+      this.fechaAdmision = new Date().toISOString().substring(0, 10);
       this.admision = "";
+      this.modalidadTitulacion = "";
+      this.fechaTitulacion = new Date().toISOString().substring(0, 10);
+      this.codigoColegiado = "";
+      this.fechaColegiatura = new Date().toISOString().substring(0, 10);
+      this.titulacion = null;
     },
     copiarDatos(carrera) {
-      this.addAdmision = false;
-      this.isEdit = true;
-      this.codigo = carrera.codigo;
-      this.universidad = carrera.universidad;
-      this.escuela = carrera.nombreEscuela;
-      this.fechaInicio = carrera.fechaInicio;
-      this.fechaTermino = carrera.fechaTermino;
-      this.admision = carrera.codigoAdmision;
+      get("escuelasProfesionales/uni/" + carrera.universidad).then(res => {
+        if (res.estado) {
+          this.addAdmision = false;
+          get(
+            "admisiones/" + carrera.nombreEscuela + "/" + carrera.universidad
+          ).then(res => {
+            this.addAdmision = false;
+            this.isEdit = true;
+            this.codigo = carrera.codigo;
+            this.universidad = carrera.universidad;
+            this.escuela = carrera.nombreEscuela;
+            this.fechaInicio = carrera.fechaInicio;
+            this.fechaTermino = carrera.fechaTermino;
+            this.admision = carrera.codigoAdmision;
+            this.fechaTitulacion = carrera.fechaTitulacion;
+            this.fechaColegiatura = carrera.fechaColegiatura;
+            this.codigoColegiado = carrera.codigoColegiatura;
+            this.modalidadTitulacion = carrera.modalidadTitulacion;
+            if (this.codigoColegiado) this.addColegiatura = true;
+            else this.addColegiatura = false;
+            if (res.estado) this.admisiones = res.data;
+            else {
+              this.admisiones = [];
+              this.addAdmision = true;
+            }
+            this.titulacion = {
+              fechaTitulacion: carrera.fechaTitulacion,
+              fechaColegiatura: carrera.fechaColegiatura,
+              codigoColegiado: carrera.codigoColegiatura,
+              modalidadTitulacion: carrera.modalidadTitulacion
+            };
+          });
+          this.escuelas = res.data;
+        } else this.escuelas = [];
+      });
     },
     editar() {
       let datos = {
@@ -432,7 +521,50 @@ export default {
         }
       });
     },
-    agregarTitulacion() {},
+    editarTitulacion() {
+      let datos = {
+        codigoEgresado: this.codigo,
+        codigoModalidad: this.modalidadTitulacion,
+        fecha: this.fechaTitulacion
+      };
+      if (this.addColegiatura) {
+        datos = {
+          ...datos,
+          codigoColegiado: this.codigoColegiado,
+          fechaColegiatura: this.fechaColegiatura
+        };
+      }
+      put("titulaciones/" + this.codigo, datos).then(res => {
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) {
+          this.cargarTodo();
+          this.dialog = false;
+        }
+      });
+    },
+    agregarTitulacion() {
+      let datos = {
+        codigoEgresado: this.codigo,
+        codigoModalidad: this.modalidadTitulacion,
+        fecha: this.fechaTitulacion
+      };
+      if (this.addColegiatura) {
+        datos = {
+          ...datos,
+          codigoColegiado: this.codigoColegiado,
+          fechaColegiatura: this.fechaColegiatura
+        };
+      }
+      post("titulaciones", datos).then(res => {
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) {
+          this.cargarTodo();
+          this.dialog = false;
+        }
+      });
+    },
     cargarTodo() {
       this.cargarUniversidades();
       this.cargarLista();
