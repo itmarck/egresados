@@ -46,13 +46,13 @@ $app->post('/api/titulaciones', function (Request $request) {
         $cantidad = $this->db->exec("INSERT INTO colegiatura(codigoEgresado,codigo,fecha,vigencia) 
         Values($codigoEgresado,'$codigoColegiado','$fechaColegiatura',1)");
         if ($cantidad = 0) {
-          echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron registrar los datos'));
+          echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron registrar los datos de colegiatura'));
           exit(2);
         }
       }
       echo json_encode(array('estado' => true, 'mensaje' => 'Datos registrados correctamente'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron registrar los datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron registrar los datos de titulacion'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
