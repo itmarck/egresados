@@ -47,7 +47,7 @@ $app->get('/api/contratos', function () {
 $app->get('/api/contratos/{dniPersona}', function (Request $request) {
   $codigo = $request->getAttribute('dniPersona');
   try {
-    $data = $this->db->query("SELECT C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as centrolaboral,cargo, C.fechaInicio , C.fechaTermino ,detalleFunciones 
+    $data = $this->db->query("SELECT C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as centroLaboral,cargo, C.fechaInicio , C.fechaTermino ,detalleFunciones 
                             FROM contrato C
                             INNER JOIN egresado E on E.codigo = C.codigoEgresado
                             INNER JOIN persona P on P.codigo = E.codigoPersona
