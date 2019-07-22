@@ -142,7 +142,8 @@ $app->put('/api/estudiosPostgrado/{codigo}', function (Request $request) {
             nombre = '$nombre',
             fechaInicio = '$fechaInicio',
             fechaTermino = '$fechaTermino',
-            anioCertificacion = $anioCertificacion, ";
+            anioCertificacion = $anioCertificacion,
+            vigencia = 1, ";
       if ($centroEstudios) {
         if ($centroEstudios != "") {
           $codigoCentro = $this->db->query("SELECT codigo from centroestudios WHERE razonSocial = '$centroEstudios'")->fetchAll();
@@ -157,7 +158,7 @@ $app->put('/api/estudiosPostgrado/{codigo}', function (Request $request) {
             }
           }
           $codigo = $codigoCentro[0]->codigo;
-          $sql = $sql .  " codigoCentroEstudios = '$codigo' ";
+          $sql = $sql .  "codigoCentroEstudios = $codigo, codigoUniversidad = null ";
         }
       } else {
         $universidad = $request->getParam('universidad');
@@ -174,7 +175,7 @@ $app->put('/api/estudiosPostgrado/{codigo}', function (Request $request) {
             }
           }
           $codigo = $codigoUniversidad[0]->codigo;
-          $sql = $sql . " codigoUniversidad = '$codigo' ";
+          $sql = $sql . " codigoUniversidad = $codigo, codigoCentroEstudios= null ";
         } else {
           echo json_encode(array('estado' => false, 'mensaje' => 'No se pueden mandar campos vacios'));
           exit;
