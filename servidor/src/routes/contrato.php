@@ -47,7 +47,7 @@ $app->get('/api/contratos', function () {
 $app->get('/api/contratos/{dniPersona}', function (Request $request) {
   $codigo = $request->getAttribute('dniPersona');
   try {
-    $data = $this->db->query("SELECT C.codigo,codigoEgresado,EP.codigo as codigoCarrera,codigoCentroLaboral,Cen.razonSocial as centroLaboral,cargo, C.fechaInicio , C.fechaTermino ,detalleFunciones 
+    $data = $this->db->query("SELECT C.codigo,codigoEgresado,codigoCentroLaboral,Cen.razonSocial as centroLaboral,cargo, C.fechaInicio , C.fechaTermino ,detalleFunciones 
                             FROM contrato C
                             INNER JOIN egresado E on E.codigo = C.codigoEgresado
                             INNER JOIN persona P on P.codigo = E.codigoPersona
@@ -112,7 +112,6 @@ $app->post('/api/contratos', function (Request $request) {
                                   VALUES('$codigoActividad',$codigoDistrito,'$ruc','$razonSocial',1)");
       $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
       $codigoCentroLaboral = $codigo[0]->codigo;
-      
     }
     $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
   Values('$codigoEgresado','$codigoCentroLaboral','$fechaInicio','$cargo','$fechaTermino','$detalleFunciones',1)");
@@ -129,11 +128,11 @@ $app->post('/api/contratos', function (Request $request) {
 $app->put('/api/contratos/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $codigoEgresado = $request->getParam('codigoEgresado');
-  $codigoCentroLaboral = $request->getParam('codigoCentroLaboral');
-  $fechaInicio = $request->getParam('fechaInicio');
+  $codigoCentroLaboral = $request->getParam('centro');
+  $fechaInicio = $request->getParam('inicio');
   $cargo = $request->getParam('cargo');
-  $fechaTermino = $request->getParam('fechaTermino');
-  $detalleFunciones = $request->getParam('detalleFunciones');
+  $fechaTermino = $request->getParam('termino');
+  $detalleFunciones = $request->getParam('descripcion');
   try {
     $cantidad = $this->db->exec("UPDATE contrato set
                                 codigoEgresado ='$codigoEgresado',
@@ -144,9 +143,9 @@ $app->put('/api/contratos/{codigo}', function (Request $request) {
                                 detalleFunciones = '$detalleFunciones'
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Contrato actualizado'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Algo fallo'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
