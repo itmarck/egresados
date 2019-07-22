@@ -343,7 +343,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat @click="dialog = false">Cerrar</v-btn>
+            <v-btn flat @click="cerrarDialog">Cerrar</v-btn>
             <v-btn v-if="modalidadTitulacion" flat @click="editarTitulacion">
               Editar
             </v-btn>
@@ -539,7 +539,7 @@ export default {
         this.snack = true;
         if (res.estado == true) {
           this.cargarTodo();
-          this.dialog = false;
+          this.nuevo();
         }
       });
     },
@@ -564,6 +564,15 @@ export default {
           this.dialog = false;
         }
       });
+    },
+    cerrarDialog() {
+      if (this.titulacion.modalidadTitulacion) {
+        this.modalidadTitulacion = this.titulacion.modalidadTitulacion;
+        this.fechaTitulacion = this.titulacion.fechaTitulacion;
+        this.fechaColegiatura = this.titulacion.fechaColegiatura;
+        this.codigoColegiado = this.titulacion.codigoColegiatura;
+      }
+      this.dialog = false;
     },
     cargarTodo() {
       this.cargarUniversidades();
