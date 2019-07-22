@@ -561,7 +561,7 @@ export default {
         this.snack = true;
         if (res.estado == true) {
           this.cargarTodo();
-          this.dialog = false;
+          this.nuevo();
         }
       });
     },
