@@ -115,7 +115,7 @@ $app->post('/api/contratos', function (Request $request) {
       
     }
     $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
-  Values('$codigoEgresado','$codigoCentroLaboral',$fechaInicio,'$cargo',$fechaTermino,'$detalleFunciones',1)");
+  Values('$codigoEgresado','$codigoCentroLaboral','$fechaInicio','$cargo','$fechaTermino','$detalleFunciones',1)");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Contrato agregado correctamente'));
     } else {
