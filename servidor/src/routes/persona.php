@@ -175,7 +175,22 @@ $app->patch('/api/personas/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
-
+$app->patch('/api/personas/privacidad/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $privacidad = ($request->getParam('privacidad')) ? 0 : 1;
+  try {
+    $cantidad = $this->db->exec("UPDATE persona set
+                                privacidad = $privacidad
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => (!$privacidad) ? 'Ahora tu perfil es privado' : 'Ahora tu perfil es publico'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la privacidad'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
+  }
+});
 
 $app->post('/api/personas/images/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
