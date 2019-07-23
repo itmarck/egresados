@@ -1,7 +1,32 @@
 <template>
   <v-container grid-list-lg>
-    <v-form @submit.prevent="">
+    <v-form @submit.prevent="generar">
       <v-layout row wrap>
+        <v-flex xs12>
+          <v-card>
+            <v-list three-line subheader>
+              <v-subheader>Datos adicionales</v-subheader>
+              <v-container grid-list-lg>
+                <v-layout row wrap>
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      v-model="titulo"
+                      label="Ingrese título profesional"
+                      placeholder="Ingeniero en Computación en Informática"
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      v-model="direccion"
+                      label="Ingrese dirección"
+                      placeholder="Dirección completa"
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+              </v-container>
+            </v-list>
+          </v-card>
+        </v-flex>
         <!-- Postgrados -->
         <v-flex xs12 md6>
           <v-card>
@@ -10,7 +35,6 @@
               <v-list-tile
                 v-for="postgrado of postgrados"
                 :key="postgrado.codigo"
-                @click="postgrado.select = !postgrado.select"
               >
                 <v-list-tile-action>
                   <v-checkbox
@@ -41,11 +65,7 @@
           <v-card>
             <v-list three-line subheader>
               <v-subheader>Experiencia</v-subheader>
-              <v-list-tile
-                v-for="contrato of contratos"
-                :key="contrato.codigo"
-                @click="contrato.select = !contrato.select"
-              >
+              <v-list-tile v-for="contrato of contratos" :key="contrato.codigo">
                 <v-list-tile-action>
                   <v-checkbox
                     color="primary"
@@ -53,7 +73,7 @@
                   ></v-checkbox>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                  <v-list-tile-title v-html="contrato.Centrolaboral" />
+                  <v-list-tile-title v-html="contrato.centroLaboral" />
                   <v-list-tile-sub-title v-html="contrato.cargo" />
                   <v-list-tile-sub-title>
                     {{ contrato.fechaInicio.toString().substring(0, 4) }}
@@ -75,10 +95,14 @@
 <script>
 import { get } from "../../bd/api";
 import { mapState } from "vuex";
+import { generarPDF } from "../../pdf/index";
 export default {
   data: () => ({
     contratos: [],
-    postgrados: []
+    postgrados: [],
+    persona: {},
+    titulo: "",
+    direccion: ""
   }),
   computed: {
     ...mapState(["user"]),
@@ -90,6 +114,36 @@ export default {
     }
   },
   methods: {
+    getYear(string) {
+      return string.substring(0, 4);
+    },
+    generar() {
+      let datos = {
+        nombre: this.persona.nombres + " " + this.persona.apellidoPaterno,
+        titulo: this.titulo,
+        contacto: [this.persona.correo, this.persona.celular, this.direccion],
+        experiencia: this.contratosSeleccionados.map(e => {
+          return {
+            fecha:
+              this.getYear(e.fechaInicio) +
+              " - " +
+              this.getYear(e.fechaTermino),
+            centro: e.centroLaboral,
+            cargo: e.cargo,
+            descripcion: e.detalleFunciones,
+            tiempo: "(" + e.tiempo + " " + e.unidad + ")"
+          };
+        }),
+        contratos: this.contratosSeleccionados,
+        postgrados: this.postgradosSeleccionados,
+        persona: this.persona
+      };
+      console.log(datos);
+      generarPDF(datos, 0);
+    },
+    cargarPersona() {
+      get("personas/" + this.user.dni).then(res => (this.persona = res.data));
+    },
     cargarContratos() {
       get("contratos/" + this.user.dni).then(
         res => (this.contratos = res.data)
@@ -104,6 +158,7 @@ export default {
   created() {
     this.cargarContratos();
     this.cargarPostgrados();
+    this.cargarPersona();
   }
 };
 </script>
