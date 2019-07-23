@@ -112,3 +112,30 @@ $app->patch('/api/personal/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
+
+$app->post('/api/personal/images/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $directory = $this->get('upload_directory');
+
+  $archivo = $request->getUploadedFiles();
+
+  $imagen = $archivo['profile'];
+  if ($imagen->getError() === UPLOAD_ERR_OK) {
+    $filename = moveUploadedFile($directory, $imagen);
+    echo json_encode(array('estado' => true, 'mensaje' => 'Foto agregada'));
+    $this->db->exec("UPDATE personal SET urlfoto = '$filename' where codigo = $codigo");
+  } else {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al subir la imagen'));
+  }
+});
+
+function moveUploadedFile($directory, UploadedFile $imagen)
+{
+  $extension = pathinfo($imagen->getClientFilename(), PATHINFO_EXTENSION);
+  $basename = bin2hex(random_bytes(10));
+  $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+  $imagen->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+
+  return $filename;
+}
