@@ -187,7 +187,7 @@ $app->post('/api/personas/images/{codigo}', function (Request $request) {
   if ($imagen->getError() === UPLOAD_ERR_OK) {
     $filename = moveUploadedFile($directory, $imagen);
     echo json_encode(array('estado' => true, 'mensaje' => 'Foto agregada'));
-    $this->db->exec("UPDATE persona SET urlfoto = '$directory/$filename' where codigo = $codigo");
+    $this->db->exec("UPDATE persona SET urlfoto = '$filename' where codigo = $codigo");
   } else {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al subir la imagen'));
   }
