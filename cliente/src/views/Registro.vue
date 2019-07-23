@@ -127,11 +127,17 @@
           </v-flex>
         </v-layout>
       </v-form>
+      <!-- Snackbar -->
+      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
+        {{ respuesta }}
+        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
+      </v-snackbar>
     </v-container>
   </v-content>
 </template>
 
 <script>
+import { post, setUser } from "../bd/api";
 export default {
   components: {
     PublicToolbar: () => import("../components/PublicToolbar")
@@ -155,27 +161,66 @@ export default {
       { codigo: "V", texto: "Viudo" },
       { codigo: "D", texto: "Divorciado" }
     ],
-    estadoCivil: ""
+    estadoCivil: "",
+
+    respuesta: "",
+    snack: false
   }),
   methods: {
-    registrar() {},
-    limpiar() {
-      this.correo = "";
-      this.usuario = "";
-      this.password = "";
-      this.repeatPassword = "";
-      this.dni = "";
-      this.nombres = "";
-      this.paterno = "";
-      this.materno = "";
-      this.genero = "1";
-      this.fechaNacimiento = new Date().toISOString().substring(0, 10);
-      this.fecha = false;
-      this.celular = "";
-      this.estadoCivil = "";
+    validar() {
+      if (this.correo == "") {
+        this.respuesta = "Ingrese el correo";
+        this.snack = true;
+        return false;
+      }
+      if (this.usuario == "") {
+        this.respuesta = "Ingrese el nombre de usuario";
+        this.snack = true;
+        return false;
+      }
+      if (this.dni == "") {
+        this.respuesta = "Ingrese número de DNI";
+        this.snack = true;
+        return false;
+      }
+      if (this.password != this.repeatPassword) {
+        this.respuesta = "Las contraseñas no coinciden";
+        this.snack = true;
+        return false;
+      }
+      return true;
+    },
+    registrar() {
+      if (!this.validar()) return;
+      post("personas", {
+        dni: this.dni,
+        correo: this.correo,
+        usuario: this.usuario,
+        clave: this.password,
+        nombres: this.nombres,
+        paterno: this.paterno,
+        materno: this.materno,
+        genero: this.genero,
+        fecha: this.fechaNacimiento,
+        celular: this.celular,
+        estado: this.estadoCivil
+      }).then(res => {
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) {
+          post("usuarios/ingresar", {
+            nombre: this.usuario,
+            clave: this.password
+          }).then(res => {
+            if (res.estado == true) {
+              setUser(res.data);
+              this.$router.push("/login");
+            }
+          });
+        }
+      });
     }
-  },
-  created() {}
+  }
 };
 </script>
 
