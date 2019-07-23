@@ -1,5 +1,6 @@
 <?php
 
+use Psr\Http\Message\ServerRequestInterface as Request;
 $app->get('/api/departamentos', function () {
   $data = $this->db->query("SELECT codigo,nombre FROM departamento WHERE vigencia=1")->fetchAll();
   if ($data) {

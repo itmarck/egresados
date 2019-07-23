@@ -1,4 +1,6 @@
 <?php
+
+use Psr\Http\Message\ServerRequestInterface as Request;
 $app->get('/api/tiposPostgrado', function () {
   $data = $this->db->query("SELECT codigo,nombre,descripcion FROM tipoestudiopostgrado WHERE vigencia=1")->fetchAll();
   if ($data) {
@@ -9,7 +11,7 @@ $app->get('/api/tiposPostgrado', function () {
   }
 });
 
-$app->put('/api/tipoEstudioPostgrado/{codigo}', function (Request $request) {
+$app->put('/api/tiposPostgrado/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');
   $descripcion = $request->getParam('descripcion');
