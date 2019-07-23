@@ -10,7 +10,7 @@ $app->get('/api/personal', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
@@ -25,7 +25,7 @@ $app->get('/api/personal/{codigo}', function (Request $request) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
@@ -43,9 +43,9 @@ $app->post('/api/personal/add', function (Request $request) {
     $cantidad = $this->db->exec("INSERT INTO personal(nombres,apellidoPaterno,apellidoMaterno,genero,celular,correo,vigencia) 
                               Values('$nombres','$apellidoPaterno',$apellidoMaterno,$genero,$celular,$correo,1)");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Personal agregado correctamente'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido registrar el personal'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
@@ -72,9 +72,9 @@ $app->put('/api/personal/{codigo}', function (Request $request) {
                                 correo = '$correo'
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Personal actualizado correctamente'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han cambiado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));

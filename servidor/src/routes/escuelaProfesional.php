@@ -186,9 +186,9 @@ $app->delete('/api/escuelasProfesionales/{codigo}', function (Request $request) 
     $cantidad = $this->db->exec("DELETE FROM escuelaprofesional 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Escuela eliminada'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'Algo fallo'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha eliminado la escuela'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

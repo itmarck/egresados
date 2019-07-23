@@ -12,7 +12,7 @@ $app->get('/api/facultades', function () {
       }
       echo json_encode(array('estado' => true, 'data' => $nombres));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudieron obtener los datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -56,9 +56,9 @@ $app->post('/api/facultades/add', function (Request $request) {
     $cantidad = $this->db->exec("INSERT INTO facultad(nombre,siglas,estado,vigencia) 
                             Values('$nombre','$siglas',$estado,1)");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Facultad agregada'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha agregado la facultad'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -77,9 +77,9 @@ $app->put('/api/facultades/{codigo}', function (Request $request) {
                                 estado = '$estado' 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Actualizado'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Facultad actualizada'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han actualizado los datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han cambiado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
