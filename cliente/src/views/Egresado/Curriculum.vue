@@ -85,6 +85,21 @@
           </v-card>
         </v-flex>
         <v-flex xs12>
+          <v-select
+            :items="plantillas"
+            v-model="plantilla"
+            item-text="texto"
+            item-value="valor"
+            solo
+          ></v-select>
+          <v-select
+            :items="colores"
+            v-model="color"
+            item-text="texto"
+            item-value="valor"
+            placeholder="Color de énfasis"
+            solo
+          ></v-select>
           <v-btn block color="primary" type="submit">Generar Curriculum</v-btn>
         </v-flex>
       </v-layout>
@@ -98,8 +113,18 @@ import { mapState } from "vuex";
 import { generarPDF } from "../../pdf/index";
 export default {
   data: () => ({
+    plantillas: [{ texto: "Plantilla Básica", valor: 0 }],
+    plantilla: 0,
+    colores: [
+      { texto: "Gris", valor: "#424242" },
+      { texto: "Azul", valor: "#0D47A1" },
+      { texto: "Verde", valor: "#004D3B" },
+      { texto: "Rojo", valor: "#742129" }
+    ],
+    color: "",
     contratos: [],
     postgrados: [],
+    carreras: [],
     persona: {},
     titulo: "",
     direccion: ""
@@ -117,29 +142,49 @@ export default {
     getYear(string) {
       return string.substring(0, 4);
     },
+    getEdad(nace) {
+      return parseInt(new Date().getFullYear()) - parseInt(this.getYear(nace));
+    },
     generar() {
+      let educacion = this.postgradosSeleccionados.map(e => ({
+        fecha:
+          this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
+        nombre: e.nombre,
+        tipo: e.tipo,
+        anio: e.anioCertificacion ? "Certificada " + e.anioCertificacion : "",
+        lugar: e.lugar == "U" ? e.universidad : e.razonSocial
+      }));
+      educacion.push(
+        ...this.carreras.map(e => ({
+          fecha:
+            this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
+          nombre: e.nombreEscuela,
+          tipo: e.modalidadTitulacion
+            ? "Titulada el " + e.fechaTitulacion
+            : "No titulada",
+          anio: "",
+          lugar: e.universidad
+        }))
+      );
       let datos = {
         nombre: this.persona.nombres + " " + this.persona.apellidoPaterno,
         titulo: this.titulo,
         contacto: [this.persona.correo, this.persona.celular, this.direccion],
-        experiencia: this.contratosSeleccionados.map(e => {
-          return {
-            fecha:
-              this.getYear(e.fechaInicio) +
-              " - " +
-              this.getYear(e.fechaTermino),
-            centro: e.centroLaboral,
-            cargo: e.cargo,
-            descripcion: e.detalleFunciones,
-            tiempo: "(" + e.tiempo + " " + e.unidad + ")"
-          };
-        }),
-        contratos: this.contratosSeleccionados,
-        postgrados: this.postgradosSeleccionados,
-        persona: this.persona
+        personales: [
+          "DNI " + this.persona.dni,
+          this.getEdad(this.persona.fechaNacimiento) + " años"
+        ],
+        experiencia: this.contratosSeleccionados.map(e => ({
+          fecha:
+            this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
+          centro: e.centroLaboral,
+          cargo: e.cargo,
+          tiempo: "(" + e.tiempo + " " + e.unidad + ")",
+          descripcion: e.detalleFunciones
+        })),
+        educacion
       };
-      console.log(datos);
-      generarPDF(datos, 0);
+      generarPDF(datos, this.plantilla, this.color);
     },
     cargarPersona() {
       get("personas/" + this.user.dni).then(res => (this.persona = res.data));
@@ -153,12 +198,16 @@ export default {
       get("estudiosPostgrado/" + this.user.dni).then(
         res => (this.postgrados = res.data)
       );
+    },
+    cargarCarreras() {
+      get("carreras/" + this.user.dni).then(res => (this.carreras = res.data));
     }
   },
   created() {
     this.cargarContratos();
     this.cargarPostgrados();
     this.cargarPersona();
+    this.cargarCarreras();
   }
 };
 </script>

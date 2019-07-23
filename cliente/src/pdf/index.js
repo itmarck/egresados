@@ -1,9 +1,9 @@
-import { blancoNegro } from './blanco-negro';
+import { basica } from './basica';
 
-export function generarPDF(datos, plantilla) {
+export function generarPDF(datos, plantilla, color) {
   switch (plantilla) {
     case 0:
-      blancoNegro(datos);
+      basica(datos, color);
       break;
 
     default:

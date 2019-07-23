@@ -4,7 +4,7 @@ const margen = 10;
 const MARGEN = 15;
 const MAXWIDTH = 210;
 const MAXHEIGHT = 297;
-const COLOR = {
+var COLOR = {
   principal: '#424242',
   negro: '#000000',
   blanco: '#FFFFFF',
@@ -63,7 +63,7 @@ function subtituloPrincipal(texto) {
     });
 }
 
-function subtituloSecundario(texto, datos, y) {
+function subtituloSecundario(texto, y) {
   doc.setFillColor(COLOR.gris);
   doc.rect(
     SIZES.sidebar + margen,
@@ -73,17 +73,18 @@ function subtituloSecundario(texto, datos, y) {
     'F'
   );
   doc
+    .setFontSize(12)
     .setTextColor(COLOR.principal)
     .setFontStyle('bold')
     .text(texto, SIZES.sidebar + margen + 10, y + 4, {
       baseline: 'middle'
     });
   y += 20;
-  colocarDatos(datos, y);
   return y;
 }
 
-function colocarDatos(datos, y) {
+function datosExperiencia(datos, y) {
+  y = validarPagina(y);
   for (let i = 0; i < datos.length; i++) {
     doc
       .setFontSize(12)
@@ -99,35 +100,93 @@ function colocarDatos(datos, y) {
       .setFontStyle('normal')
       .setFontSize(8)
       .text(datos[i].tiempo, SIZES.sidebar + margen + 10, y + 4);
+    doc.setFontSize(10).setTextColor(COLOR.texto);
+
+    let descripcion = doc.splitTextToSize(
+      datos[i].descripcion,
+      MAXWIDTH - SIZES.sidebar - margen - 40 - MARGEN
+    );
+    y += 12;
+    descripcion.forEach((e, index) => {
+      y = validarPagina(y);
+      if (index > 0 && index < descripcion.length) y += 5;
+      doc.text(e, SIZES.sidebar + margen + 40, y);
+    });
+    y += 8;
+  }
+  return y;
+}
+
+function datosEducacion(datos, y) {
+  for (let i = 0; i < datos.length; i++) {
+    y = validarPagina(y);
+    doc
+      .setFontSize(12)
+      .setTextColor(COLOR.texto)
+      .setFontStyle('bold')
+      .text(datos[i].fecha, SIZES.sidebar + margen + 10, y);
+    let nombre = doc.splitTextToSize(
+      datos[i].nombre,
+      MAXWIDTH - SIZES.sidebar - margen - 40 - MARGEN
+    );
+    nombre.forEach((e, index) => {
+      if (index > 0 && index < nombre.length) y += 6;
+      doc.text(e, SIZES.sidebar + margen + 40, y);
+    });
+
+    doc.setFontSize(10).setFontStyle('italic');
+    doc
+      .setTextColor(COLOR.textoClaro)
+      .text(datos[i].tipo, SIZES.sidebar + margen + 40, y + 6);
+    doc
+      .setFontStyle('normal')
+      .setFontSize(8)
+      .text(datos[i].anio, SIZES.sidebar + margen + 10, y + 4);
     doc
       .setFontSize(10)
       .setTextColor(COLOR.texto)
-      .text(datos[i].descripcion, SIZES.sidebar + margen + 40, y + 12, {
+      .text(datos[i].lugar, SIZES.sidebar + margen + 40, y + 12, {
         maxWidth: MAXWIDTH - SIZES.sidebar - margen - 40 - MARGEN
       });
-    y += 30;
+    y += 20;
   }
+  return y;
 }
 
-export function blancoNegro(datos) {
-  init();
+function validarPagina(y) {
+  if (y > MAXHEIGHT - MARGEN - 20) {
+    doc.addPage();
+    sidebar();
+    return MARGEN;
+  } else return y;
+}
+
+export function basica(datos, color) {
+  init(color);
 
   // Sidebar
   sidebar();
   subtituloSidebar('CONTACTO', SIZES.sidebar);
   datosSidebar(datos.contacto, SIZES.sidebar);
+  subtituloSidebar('DATOS', SIZES.sidebar + 40);
+  datosSidebar(datos.personales, SIZES.sidebar + 40);
 
   // Main
   tituloPrincipal(datos.nombre);
   subtituloPrincipal(datos.titulo);
 
-  subtituloSecundario('EXPERIENCIA', datos.experiencia, 50);
+  let y = subtituloSecundario('EXPERIENCIA LABORAL', 50);
+  y = datosExperiencia(datos.experiencia, y);
+  y = subtituloSecundario('EDUCACIÓN', y);
+  y = datosEducacion(datos.educacion, y);
 
   save();
 }
 
-function init() {
+function init(color) {
+  doc = new jsPDF();
   doc.setFont('helvetica', 'normal');
+  COLOR.principal = color;
 }
 
 function save() {
