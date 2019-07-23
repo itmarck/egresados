@@ -21,7 +21,7 @@ $config['db']['dbname'] = 'egresados';
 $app = new \Slim\App(['settings' => $config]);
 
 $container = $app->getContainer();
-$container['upload_directory'] =  '../../../cliente/dist/assets/images';
+$container['upload_directory'] =  'images';
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
     $pdo = new PDO('mysql:host=' . $db['host'] . ';dbname=' . $db['dbname'],
