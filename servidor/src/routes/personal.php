@@ -32,23 +32,48 @@ $app->get('/api/personal/{codigo}', function (Request $request) {
   }
 });
 
-$app->post('/api/personal/add', function (Request $request) {
+$app->post('/api/personal', function (Request $request) {
   $nombres = $request->getParam('nombres');
-  $apellidoPaterno = $request->getParam('apellidoPaterno');
-  $apellidoMaterno = $request->getParam('apellidoMaterno');
+  $DNI = $request->getParam('dni');
+  $apellidoPaterno = $request->getParam('paterno');
+  $apellidoMaterno = $request->getParam('materno');
   $genero = $request->getParam('genero');
   $celular = $request->getParam('celular');
   $correo = $request->getParam('correo');
+  $usuario = $request->getParam('usuario');
+  $contraseña = $request->getParam('clave');
   try {
-    $cantidad = $this->db->exec("INSERT INTO personal(nombres,apellidoPaterno,apellidoMaterno,genero,celular,correo,vigencia) 
-                              Values('$nombres','$apellidoPaterno',$apellidoMaterno,$genero,$celular,$correo,1)");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Personal agregado correctamente'));
+    $dni = $this->db->query("SELECT dni FROM persona WHERE dni = '$DNI'")->fetchAll();
+    if (!$dni) {
+      $this->db->beginTransaction();
+      $cantidad = $this->db->exec("INSERT INTO personal(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,celular,correo,urlfoto,vigencia) 
+                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$celular','$correo','default.jpg',1)");
+      if ($cantidad > 0) {
+        $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
+        $codigo = $persona[0]->codigo;
+        $hash = password_hash(($contraseña) ? $contraseña : contraseña, PASSWORD_DEFAULT);
+        $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
+        if (!$nombre) {
+          $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia)
+                                  VALUES('$usuario','$hash','E',$codigo,1)");
+          if ($cantidad > 0) {
+            $this->db->commit();
+            echo json_encode(array('estado' => true, 'mensaje' => 'Personal registrado correctamente'));
+          } else {
+            $this->db->rollback();
+            echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar el usuario'));
+          }
+        } else {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Al parecer el nombre de usuario ya existe'));
+        }
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar la persona'));
+      }
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido registrar el personal'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Al parecer el DNI ya esta registrado'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
 

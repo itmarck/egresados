@@ -166,7 +166,7 @@ $app->patch('/api/usuarios/{codigo}', function (Request $request) {
       } else {
         echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la contraseña'));
       }
-    }else {
+    } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'la contraseña actual no coincide'));
     }
   } catch (PDOException $e) {
