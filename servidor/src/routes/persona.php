@@ -132,9 +132,9 @@ $app->put('/api/personas/{codigo}', function (Request $request) {
                                 dni = '$DNI'  
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Datos de persona actualizados'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Datos de persona actualizados.'));
     } else {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Uy. No se han cambiado los datos'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'No se han cambiado los datos personales.'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
