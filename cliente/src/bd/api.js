@@ -27,6 +27,16 @@ export async function patch(peticion, datos) {
   return call(peticion, datos, 'PATCH');
 }
 
+export async function uploadPhoto(peticion, foto) {
+  let data = new FormData();
+  data.append('profile', foto);
+  let res = await fetch(url + peticion, {
+    method: 'POST',
+    body: data
+  });
+  return res.json();
+}
+
 export function hash(string) {
   return string.split('').reduce(function(a, b) {
     a = (a << 5) - a + b.charCodeAt(0);

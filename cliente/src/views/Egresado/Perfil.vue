@@ -6,7 +6,9 @@
         <v-layout row wrap justify-center>
           <v-flex xs12 sm4 lg3 xl4>
             <v-card>
-              <v-img src="http://localhost/egresados/servidor/src/public/images/imagen.jpeg" />
+              <v-img
+                src="http://localhost/egresados/servidor/src/public/images/imagen.jpeg"
+              />
             </v-card>
           </v-flex>
           <v-flex xs12 sm8 lg9 xl8>
@@ -151,7 +153,7 @@
 </template>
 
 <script>
-import { get, put, patch, setUser, getUser } from "../../bd/api";
+import { get, put, patch, setUser, getUser, uploadPhoto } from "../../bd/api";
 import { mapState } from "vuex";
 export default {
   data: () => ({
@@ -204,6 +206,8 @@ export default {
           this.isEdit = false;
         }
       });
+      if (this.imageFile != "")
+        uploadPhoto("personas/images/" + this.user.codigo, this.imageFile);
     },
     actualizarUsuario() {
       let user = getUser();
