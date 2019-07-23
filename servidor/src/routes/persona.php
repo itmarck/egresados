@@ -81,7 +81,7 @@ $app->post('/api/personas', function (Request $request) {
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
-        $hash = password_hash(($contraseña) ? $contraseña : contraseña , PASSWORD_DEFAULT);
+        $hash = password_hash(($contraseña) ? $contraseña : contraseña, PASSWORD_DEFAULT);
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
           $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia)
@@ -174,3 +174,40 @@ $app->patch('/api/personas/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
+
+
+$app->post('/api/personas/images/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $directory = 'localhost/egresados/servidor/src/images';
+
+  $archivos = $request->getUploadedFiles();
+
+  // handle single input with single file upload
+  $imagen = $archivos->imagen;
+  if ($imagen->getError() === UPLOAD_ERR_OK) {
+    $filename = moveUploadedFile($directory, $imagen);
+    echo json_encode(array('estado' => true, 'mensaje' => 'Foto agregada'));
+    $this->db->exec("UPDATE persona SET urlfoto = '$directory . DIRECTORY_SEPARATOR . $filename' where codigo = $codigo");
+  } else {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al subir la imagen'));
+  }
+});
+
+/**
+ * Moves the uploaded file to the upload directory and assigns it a unique name
+ * to avoid overwriting an existing uploaded file.
+ *
+ * @param string $directory directory to which the file is moved
+ * @param UploadedFile $uploadedFile file uploaded file to move
+ * @return string filename of moved file
+ */
+function moveUploadedFile($directory, UploadedFile $uploadedFile)
+{
+  $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+  $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
+  $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+  $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+
+  return $filename;
+}
