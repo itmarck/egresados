@@ -22,7 +22,7 @@ $app->get('/api/personas', function () {
 $app->get('/api/personas/{DNI}', function (Request $request) {
   $DNI = $request->getAttribute('DNI');
   try {
-    $data = $this->db->query("SELECT codigo,dni,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil,vigencia,privacidad FROM persona WHERE DNI = $DNI ")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,dni,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil,vigencia,privacidad,urlFoto FROM persona WHERE DNI = $DNI ")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data[0]);
       echo json_encode($result);
@@ -77,8 +77,8 @@ $app->post('/api/personas', function (Request $request) {
     $dni = $this->db->query("SELECT dni FROM persona WHERE dni = '$DNI'")->fetchAll();
     if (!$dni) {
       $this->db->beginTransaction();
-      $cantidad = $this->db->exec("INSERT INTO persona(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,fechaNacimiento,celular,correo,estadoCivil,vigencia) 
-                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$fechaNacimiento','$celular','$correo','$estadoCivil',1)");
+      $cantidad = $this->db->exec("INSERT INTO persona(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,fechaNacimiento,celular,correo,estadoCivil,urlfoto,vigencia) 
+                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$fechaNacimiento','$celular','$correo','$estadoCivil','default.jpeg',1)");
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
@@ -134,7 +134,7 @@ $app->put('/api/personas/{codigo}', function (Request $request) {
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Datos de persona actualizados'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'Uy. No se han cambiado los datos'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Uy. No se han cambiado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
