@@ -147,15 +147,17 @@ export default {
       return parseInt(new Date().getFullYear()) - parseInt(this.getYear(nace));
     },
     obtenerEducacion() {
-      if (!this.postgrados) return null;
-      let educacion = this.postgradosSeleccionados.map(e => ({
-        fecha:
-          this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
-        nombre: e.nombre,
-        tipo: e.tipo,
-        anio: e.anioCertificacion ? "Certificada " + e.anioCertificacion : "",
-        lugar: e.lugar == "U" ? e.universidad : e.razonSocial
-      }));
+      let educacion = null;
+      if (this.postgradosSeleccionados) {
+        educacion = this.postgradosSeleccionados.map(e => ({
+          fecha:
+            this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
+          nombre: e.nombre,
+          tipo: e.tipo,
+          anio: e.anioCertificacion ? "Certificada " + e.anioCertificacion : "",
+          lugar: e.lugar == "U" ? e.universidad : e.razonSocial
+        }));
+      }
       if (!this.carreras) return educacion;
       educacion.push(
         ...this.carreras.map(e => ({
@@ -172,7 +174,7 @@ export default {
       return educacion;
     },
     obtenerExperiencia() {
-      if (!this.contratos) return null;
+      if (!this.contratosSeleccionados) return null;
       return this.contratosSeleccionados.map(e => ({
         fecha:
           this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
