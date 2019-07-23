@@ -15,7 +15,7 @@ $app->get('/api/centroEstudios', function () {
       $result = array('estado' => true, 'data' => $nombres);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado centro de estudios'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -30,7 +30,7 @@ $app->get('/api/centroEstudios/{codigo}', function (Request $request) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha encontrado el centro de estudios'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -43,9 +43,9 @@ $app->post('/api/centroEstudios/add', function (Request $request) {
     $cantidad = $this->db->exec("INSERT INTO centroestudios(razonSocial,vigencia) 
                             Values('$razonSocial',1)");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Centro de estudios agregado'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido registrar centro de estudios'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -62,9 +62,9 @@ $app->put('/api/centroEstudios/{codigo}', function (Request $request) {
                                 vigencia = '$vigencia',
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Centro de estudio actualizado'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido actualizar centro de estudios'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -76,11 +76,11 @@ $app->delete('/api/centroEstudios/{codigo}', function (Request $request) {
   try {
     $cantidad = $this->db->exec("DELETE FROM centroestudios 
                                 WHERE codigo = $codigo");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
-    } else {
-      echo json_encode(array('estado' => false));
-    }
+      if ($cantidad > 0) {
+        echo json_encode(array('estado' => true, 'mensaje' => 'Centro de estudio eliminado'));
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido eliminar centro de estudios'));
+      }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }

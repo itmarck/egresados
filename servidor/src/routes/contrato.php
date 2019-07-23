@@ -16,7 +16,7 @@ $app->get('/api/contratos', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -145,7 +145,7 @@ $app->put('/api/contratos/{codigo}', function (Request $request) {
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Contrato actualizado'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han actualizado los datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han cambiado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -158,9 +158,9 @@ $app->delete('/api/contratos/{codigo}', function (Request $request) {
     $cantidad = $this->db->exec("DELETE FROM contrato 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Contrato eliminado correctamente'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo eliminar el contrato'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

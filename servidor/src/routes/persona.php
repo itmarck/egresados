@@ -134,7 +134,7 @@ $app->put('/api/personas/{codigo}', function (Request $request) {
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Datos de persona actualizados'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'Uy. No se pudieron actualizar los datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'Uy. No se han cambiado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -187,7 +187,7 @@ $app->post('/api/personas/images/{codigo}', function (Request $request) {
   if ($imagen->getError() === UPLOAD_ERR_OK) {
     $filename = moveUploadedFile($directory, $imagen);
     echo json_encode(array('estado' => true, 'mensaje' => 'Foto agregada'));
-    $this->db->exec("UPDATE persona SET urlfoto = '$directory/$filename' where codigo = $codigo");
+    $this->db->exec("UPDATE persona SET urlfoto = '$filename' where codigo = $codigo");
   } else {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al subir la imagen'));
   }

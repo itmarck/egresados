@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-07-2019 a las 04:46:33
+-- Tiempo de generación: 23-07-2019 a las 21:53:16
 -- Versión del servidor: 10.1.40-MariaDB
 -- Versión de PHP: 7.3.5
 
@@ -548,7 +548,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (292, 31, 'JUSTO APU SAHUARAURA', 1),
 (293, 31, 'LUCRE', 1),
 (294, 31, 'POCOHUANCA', 1),
-(295, 31, 'SAN JUAN DE CHAC&Ntilde;A', 1),
+(295, 31, 'SAN JUAN DE CHACÃ‘A', 1),
 (296, 31, 'SA&Ntilde;AYCA', 1),
 (297, 31, 'SORAYA', 1),
 (298, 31, 'TAPAIRIHUA', 1),
@@ -617,7 +617,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (361, 36, 'MARIANO NICOLAS VALCARCEL', 1),
 (362, 36, 'MARISCAL CACERES', 1),
 (363, 36, 'NICOLAS DE PIEROLA', 1),
-(364, 36, 'OCO&Ntilde;A', 1),
+(364, 36, 'OCOÃ‘A', 1),
 (365, 36, 'QUILCA', 1),
 (366, 36, 'SAMUEL PASTOR', 1),
 (367, 37, 'CARAVELI', 1),
@@ -644,7 +644,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (388, 38, 'ORCOPAMPA', 1),
 (389, 38, 'PAMPACOLCA', 1),
 (390, 38, 'TIPAN', 1),
-(391, 38, 'U&Ntilde;ON', 1),
+(391, 38, 'UÃ‘ON', 1),
 (392, 38, 'URACA', 1),
 (393, 38, 'VIRACO', 1),
 (394, 39, 'CHIVAY', 1),
@@ -737,14 +737,14 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (481, 48, 'AUCARA', 1),
 (482, 48, 'CABANA', 1),
 (483, 48, 'CARMEN SALCEDO', 1),
-(484, 48, 'CHAVI&Ntilde;A', 1),
+(484, 48, 'CHAVIÃ‘A', 1),
 (485, 48, 'CHIPAO', 1),
 (486, 48, 'HUAC-HUAS', 1),
 (487, 48, 'LARAMATE', 1),
 (488, 48, 'LEONCIO PRADO', 1),
 (489, 48, 'LLAUTA', 1),
 (490, 48, 'LUCANAS', 1),
-(491, 48, 'OCA&Ntilde;A', 1),
+(491, 48, 'OCAÃ‘A', 1),
 (492, 48, 'OTOCA', 1),
 (493, 48, 'SAISA', 1),
 (494, 48, 'SAN CRISTOBAL', 1),
@@ -808,10 +808,10 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (552, 54, 'ASUNCION', 1),
 (553, 54, 'CHETILLA', 1),
 (554, 54, 'COSPAN', 1),
-(555, 54, 'ENCA&Ntilde;ADA', 1),
+(555, 54, 'ENCAÃ‘ADA', 1),
 (556, 54, 'JESUS', 1),
 (557, 54, 'LLACANORA', 1),
-(558, 54, 'LOS BA&Ntilde;OS DEL INCA', 1),
+(558, 54, 'LOS BAÃ‘OS DEL INCA', 1),
 (559, 54, 'MAGDALENA', 1),
 (560, 54, 'MATARA', 1),
 (561, 54, 'NAMORA', 1),
@@ -924,7 +924,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (668, 66, 'SANTA CRUZ', 1),
 (669, 66, 'ANDABAMBA', 1),
 (670, 66, 'CATACHE', 1),
-(671, 66, 'CHANCAYBA&Ntilde;OS', 1),
+(671, 66, 'CHANCAYBAÃ‘OS', 1),
 (672, 66, 'LA ESPERANZA', 1),
 (673, 66, 'NINABAMBA', 1),
 (674, 66, 'PULAN', 1),
@@ -1180,7 +1180,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (924, 91, 'MIRAFLORES', 1),
 (925, 91, 'MONZON', 1),
 (926, 91, 'PUNCHAO', 1),
-(927, 91, 'PU&Ntilde;OS', 1),
+(927, 91, 'PUÃ‘OS', 1),
 (928, 91, 'SINGA', 1),
 (929, 91, 'TANTAMAYO', 1),
 (930, 92, 'RUPA-RUPA', 1),
@@ -1202,7 +1202,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (946, 95, 'TOURNAVISTA', 1),
 (947, 95, 'YUYAPICHIS', 1),
 (948, 96, 'JESUS', 1),
-(949, 96, 'BA&Ntilde;OS', 1),
+(949, 96, 'BAÃ‘OS', 1),
 (950, 96, 'JIVIA', 1),
 (951, 96, 'QUEROPALCA', 1),
 (952, 96, 'RONDOS', 1),
@@ -1282,7 +1282,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1026, 103, 'QUILCAS', 1),
 (1027, 103, 'SAN AGUSTIN', 1),
 (1028, 103, 'SAN JERONIMO DE TUNAN', 1),
-(1029, 103, 'SA&Ntilde;O', 1),
+(1029, 103, 'SAÃ‘O', 1),
 (1030, 103, 'SAPALLANGA', 1),
 (1031, 103, 'SICAYA', 1),
 (1032, 103, 'SANTO DOMINGO DE ACOBAMBA', 1),
@@ -1320,7 +1320,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1064, 106, 'HUERTAS', 1),
 (1065, 106, 'JANJAILLO', 1),
 (1066, 106, 'JULCAN', 1),
-(1067, 106, 'LEONOR ORDO&Ntilde;EZ', 1),
+(1067, 106, 'LEONOR ORDOÃ‘EZ', 1),
 (1068, 106, 'LLOCLLAPAMPA', 1),
 (1069, 106, 'MARCO', 1),
 (1070, 106, 'MASMA', 1),
@@ -1480,14 +1480,14 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1224, 124, 'PIMENTEL', 1),
 (1225, 124, 'REQUE', 1),
 (1226, 124, 'SANTA ROSA', 1),
-(1227, 124, 'SA&Ntilde;A', 1),
+(1227, 124, 'SAÃ‘A', 1),
 (1228, 124, 'CAYALTI', 1),
 (1229, 124, 'PATAPO', 1),
 (1230, 124, 'POMALCA', 1),
 (1231, 124, 'PUCALA', 1),
 (1232, 124, 'TUMAN', 1),
-(1233, 125, 'FERRE&Ntilde;AFE', 1),
-(1234, 125, 'CA&Ntilde;ARIS', 1),
+(1233, 125, 'FERREÃ‘AFE', 1),
+(1234, 125, 'CAÃ‘ARIS', 1),
 (1235, 125, 'INCAHUASI', 1),
 (1236, 125, 'MANUEL ANTONIO MESONES MURO', 1),
 (1237, 125, 'PITIPO', 1),
@@ -1564,7 +1564,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1308, 130, 'LACHAQUI', 1),
 (1309, 130, 'SAN BUENAVENTURA', 1),
 (1310, 130, 'SANTA ROSA DE QUIVES', 1),
-(1311, 131, 'SAN VICENTE DE CA&Ntilde;ETE', 1),
+(1311, 131, 'SAN VICENTE DE CAÃ‘ETE', 1),
 (1312, 131, 'ASIA', 1),
 (1313, 131, 'CALANGO', 1),
 (1314, 131, 'CERRO AZUL', 1),
@@ -1658,7 +1658,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1402, 136, 'HUANCAYA', 1),
 (1403, 136, 'HUANGASCAR', 1),
 (1404, 136, 'HUANTAN', 1),
-(1405, 136, 'HUA&Ntilde;EC', 1),
+(1405, 136, 'HUAÃ‘EC', 1),
 (1406, 136, 'LARAOS', 1),
 (1407, 136, 'LINCHA', 1),
 (1408, 136, 'MADEAN', 1),
@@ -1673,7 +1673,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1417, 136, 'TAURIPAMPA', 1),
 (1418, 136, 'TOMAS', 1),
 (1419, 136, 'TUPE', 1),
-(1420, 136, 'VI&Ntilde;AC', 1),
+(1420, 136, 'VIÃ‘AC', 1),
 (1421, 136, 'VITIS', 1),
 (1422, 137, 'IQUITOS', 1),
 (1423, 137, 'ALTO NANAY', 1),
@@ -1732,7 +1732,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1476, 144, 'FITZCARRALD', 1),
 (1477, 144, 'MADRE DE DIOS', 1),
 (1478, 144, 'HUEPETUHE', 1),
-(1479, 145, 'I&Ntilde;APARI', 1),
+(1479, 145, 'IÃ‘APARI', 1),
 (1480, 145, 'IBERIA', 1),
 (1481, 145, 'TAHUAMANU', 1),
 (1482, 146, 'MOQUEGUA', 1),
@@ -1835,7 +1835,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1579, 157, 'MIGUEL CHECA', 1),
 (1580, 157, 'QUERECOTILLO', 1),
 (1581, 157, 'SALITRAL', 1),
-(1582, 158, 'PARI&Ntilde;AS', 1),
+(1582, 158, 'PARIÃ‘AS', 1),
 (1583, 158, 'EL ALTO', 1),
 (1584, 158, 'LA BREA', 1),
 (1585, 158, 'LOBITOS', 1),
@@ -1869,7 +1869,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1613, 161, 'CAMINACA', 1),
 (1614, 161, 'CHUPA', 1),
 (1615, 161, 'JOSE DOMINGO CHOQUEHUANCA', 1),
-(1616, 161, 'MU&Ntilde;ANI', 1),
+(1616, 161, 'MUÃ‘ANI', 1),
 (1617, 161, 'POTONI', 1),
 (1618, 161, 'SAMAN', 1),
 (1619, 161, 'SAN ANTON', 1),
@@ -1982,7 +1982,7 @@ INSERT INTO `distrito` (`codigo`, `codigoProvincia`, `nombre`, `vigencia`) VALUE
 (1726, 177, 'ALONSO DE ALVARADO', 1),
 (1727, 177, 'BARRANQUITA', 1),
 (1728, 177, 'CAYNARACHI', 1),
-(1729, 177, 'CU&Ntilde;UMBUQUI', 1),
+(1729, 177, 'CUÃ‘UNBUQUI', 1),
 (1730, 177, 'PINTO RECODO', 1),
 (1731, 177, 'RUMISAPA', 1),
 (1732, 177, 'SAN ROQUE DE CUMBAZA', 1),
@@ -2299,9 +2299,9 @@ INSERT INTO `persona` (`codigo`, `nombres`, `apellidoMaterno`, `apellidoPaterno`
 (160012, 'Christian Robert', 'Flores', 'Torres', 0, '1998-12-10', '98534656', 'cflores@unprg.edu.pe', '65734654', 'V', 1, '0', 0),
 (165032, 'David', 'Paz', 'Rioja', 1, '1999-07-13', '93523622', 'drioja@unprg.edu.pe', '74575683', '1', 0, '0', 0),
 (165058, 'Marcelo', 'Villar', 'VelÃ¡squez', 1, '1999-02-18', '974657567', 'mvelasquez@unprg.edu.pe', '74813707', 'S', 1, '0', 0),
-(169025, 'Javier Arturo', 'Sialer', 'ChÃ¡vez', 1, '1999-06-12', '949912973', 'achavez@unprg.edu.pe', '70505538', 'C', 1, '../images/021a25082e2b72c3.jpeg', 0),
+(169025, 'Javier Arturo', 'Sialer', 'ChÃ¡vez', 1, '1999-06-12', '949912973', 'achavez@unprg.edu.pe', '70505538', 'C', 1, 'images/eabaf3777e0170fd1784.jpeg', 0),
 (169027, 'Fabian Andres', 'Bautista', 'Pacherres', 0, '1998-12-13', '953172725', 'fpacherres@gmail.com', '73860228', 'S', 1, '0', 0),
-(169028, 'Joan Bruno JesÃºs', 'Sandoval', 'SipiÃ³n', 1, '1997-09-17', '743291840', 'nglife@unprg.edu.pe', '16462834', 'C', 1, '0', 0);
+(169028, 'Joan Bruno JesÃºs', 'Sandoval', 'SipiÃ³n', 1, '1997-09-17', '918417432', 'nglife@unprg.edu.pe', '16462834', 'C', 1, '0', 0);
 
 -- --------------------------------------------------------
 
@@ -2342,7 +2342,7 @@ INSERT INTO `personal` (`codigo`, `apellidoPaterno`, `apellidoMaterno`, `dni`, `
 CREATE TABLE `provincia` (
   `codigo` int(11) NOT NULL,
   `codigoDepartamento` int(11) NOT NULL,
-  `nombre` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -2443,7 +2443,7 @@ INSERT INTO `provincia` (`codigo`, `codigoDepartamento`, `nombre`, `vigencia`) V
 (90, 10, 'HUACAYBAMBA', 1),
 (91, 10, 'HUAMALIES', 1),
 (92, 10, 'LEONCIO PRADO', 1),
-(93, 10, 'MARA&Ntilde;ON', 1),
+(93, 10, 'MARAÃ‘ON', 1),
 (94, 10, 'PACHITEA', 1),
 (95, 10, 'PUERTO INCA', 1),
 (96, 10, 'LAURICOCHA', 1),
@@ -2475,13 +2475,13 @@ INSERT INTO `provincia` (`codigo`, `codigoDepartamento`, `nombre`, `vigencia`) V
 (122, 13, 'GRAN CHIMU', 1),
 (123, 13, 'VIRU', 1),
 (124, 14, 'CHICLAYO', 1),
-(125, 14, 'FERRE&Ntilde;AFE', 1),
+(125, 14, 'FERREÃ‘AFE', 1),
 (126, 14, 'LAMBAYEQUE', 1),
 (127, 15, 'LIMA', 1),
 (128, 15, 'BARRANCA', 1),
 (129, 15, 'CAJATAMBO', 1),
 (130, 15, 'CANTA', 1),
-(131, 15, 'CA&Ntilde;ETE', 1),
+(131, 15, 'CAÃ‘ETE', 1),
 (132, 15, 'HUARAL', 1),
 (133, 15, 'HUAROCHIRI', 1),
 (134, 15, 'HUAURA', 1),
@@ -2490,17 +2490,17 @@ INSERT INTO `provincia` (`codigo`, `codigoDepartamento`, `nombre`, `vigencia`) V
 (137, 16, 'MAYNAS', 1),
 (138, 16, 'ALTO AMAZONAS', 1),
 (139, 16, 'LORETO', 1),
-(140, 16, 'MARISCAL RAMON CASTI', 1),
+(140, 16, 'MARISCAL RAMON CASTILLA', 1),
 (141, 16, 'REQUENA', 1),
 (142, 16, 'UCAYALI', 1),
 (143, 17, 'TAMBOPATA', 1),
 (144, 17, 'MANU', 1),
 (145, 17, 'TAHUAMANU', 1),
 (146, 18, 'MARISCAL NIETO', 1),
-(147, 18, 'GENERAL SANCHEZ CERR', 1),
+(147, 18, 'GENERAL SANCHEZ CERRO', 1),
 (148, 18, 'ILO', 1),
 (149, 19, 'PASCO', 1),
-(150, 19, 'DANIEL ALCIDES CARRI', 1),
+(150, 19, 'DANIEL ALCIDES CARRION', 1),
 (151, 19, 'OXAPAMPA', 1),
 (152, 20, 'PIURA', 1),
 (153, 20, 'AYABACA', 1),
@@ -2519,7 +2519,7 @@ INSERT INTO `provincia` (`codigo`, `codigoDepartamento`, `nombre`, `vigencia`) V
 (166, 21, 'LAMPA', 1),
 (167, 21, 'MELGAR', 1),
 (168, 21, 'MOHO', 1),
-(169, 21, 'SAN ANTONIO DE PUTIN', 1),
+(169, 21, 'SAN ANTONIO DE PUTINA', 1),
 (170, 21, 'SAN ROMAN', 1),
 (171, 21, 'SANDIA', 1),
 (172, 21, 'YUNGUYO', 1),
@@ -2563,7 +2563,7 @@ CREATE TABLE `tipoestudiopostgrado` (
 --
 
 INSERT INTO `tipoestudiopostgrado` (`codigo`, `nombre`, `descripcion`, `vigencia`) VALUES
-(1, 'Curso', 'Cursos de corta duraciÃ³n para conocer mejor un nuevo Ã¡mbito espec&iacute;fico.', 1),
+(1, 'Curso', 'Cursos de corta duraciÃ³n para conocer mejor un nuevo Ã¡mbito especÃ­fico.', 1),
 (2, 'Diplomado', 'Curso de corta o mediana duraciÃ³n.', 1),
 (3, 'Doctorado', 'Es la mÃ¡xima formaciÃ³n acadÃ©mica a la que se puede optar.', 1),
 (4, 'Segunda Especialidad', 'FormaciÃ³n de investigadores, docentes universitarios y especialistas.', 1),
@@ -2850,7 +2850,7 @@ ALTER TABLE `colegiatura`
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `departamento`
@@ -2880,7 +2880,7 @@ ALTER TABLE `escuelaprofesional`
 -- AUTO_INCREMENT de la tabla `estudiospostgrado`
 --
 ALTER TABLE `estudiospostgrado`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `facultad`
@@ -2934,7 +2934,7 @@ ALTER TABLE `titulacion`
 -- AUTO_INCREMENT de la tabla `universidad`
 --
 ALTER TABLE `universidad`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

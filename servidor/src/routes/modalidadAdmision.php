@@ -8,7 +8,7 @@ $app->get('/api/modalidadesAdmision', function () {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
   } else {
-    echo json_encode(array('estado' => false));
+    echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
   }
 });
 
@@ -23,9 +23,9 @@ $app->put('/api/modadlidadAdmision/{codigo}', function (Request $request) {
                                 vigencia= 1  
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Modalidad actualizado'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Modalidad actualizada'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar '));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han cambiado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

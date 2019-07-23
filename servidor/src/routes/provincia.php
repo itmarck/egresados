@@ -8,7 +8,7 @@ $app->get('/api/provincias/{departamento}', function (Request $request) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
   } else {
-    echo json_encode(array('estado' => false));
+    echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
   }
 });
 
@@ -23,7 +23,7 @@ $app->put('/api/provincias/{codigo}', function (Request $request) {
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Departamento actualizado'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar '));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han cambiado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

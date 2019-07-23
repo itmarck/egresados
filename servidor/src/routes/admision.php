@@ -14,7 +14,7 @@ $app->get('/api/admisiones', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado admisiones'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));

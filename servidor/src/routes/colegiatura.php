@@ -15,7 +15,7 @@ $app->get('/api/colegiaturas', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
@@ -35,7 +35,7 @@ $app->get('/api/colegiaturas/{codigoEgresado}', function (Request $request) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
@@ -48,11 +48,11 @@ $app->post('/api/colegiaturas/add', function (Request $request) {
   try {
     $cantidad = $this->db->exec("INSERT INTO colegiatura(codigoEgresado,fecha,vigencia) 
                             Values('$codigoEgresado','$fecha',1)");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
-    } else {
-      echo json_encode(array('estado' => false));
-    }
+      if ($cantidad > 0) {
+        echo json_encode(array('estado' => true, 'mensaje' => 'Colegiatura agregada'));
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido agregar colegiatura'));
+      }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
@@ -68,7 +68,7 @@ $app->put('/api/colegiaturas/{codigoEgresado}', function (Request $request) {
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han cambiado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));

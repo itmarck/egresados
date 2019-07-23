@@ -52,20 +52,6 @@ $app->get('/api/universidades/{codigo}', function (Request $request) {
   }
 });
 
-$app->post('/api/universidades/{nombre}', function (Request $request) {
-  $nombre = $request->getAttribute('nombre');
-  try {
-    $cantidad = $this->db->exec("INSERT INTO universidad(nombre,vigencia) 
-                            Values('$nombre',1)");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
-    } else {
-      echo json_encode(array('estado' => false));
-    }
-  } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
-  }
-});
 
 $app->post('/api/universidades', function (Request $request) {
   $nombre = $request->getParam('nombre');
@@ -111,9 +97,9 @@ $app->delete('/api/universidades/{codigo}', function (Request $request) {
     $cantidad = $this->db->exec("DELETE FROM universidad 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Universidad eliminada'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido eliminar la universidad'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
