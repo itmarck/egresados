@@ -12,12 +12,6 @@ $app->get('/api/modalidadesAdmision', function () {
   }
 });
 
-$app->put('/api/modalidadesAdmision/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
-  $nombre = $request->getParam('nombre');
-  $nombre = $request->getParam('descripcion');
-});
-
 $app->put('/api/modadlidadAdmision/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');
