@@ -2,12 +2,20 @@
   <v-container grid-list-xs>
     <v-toolbar app dark color="primary">
       <v-toolbar-side-icon @click="drawer = !drawer" class="hidden-md-and-up" />
-      <v-toolbar-title>
+      <v-toolbar-title class="hidden-sm-and-down">
         <span class="font-weight-black text-uppercase">
           {{ user.nombres }}
         </span>
         <span class="font-weight-light text-uppercase">
           {{ user.apellidoPaterno }} {{ user.apellidoMaterno }}
+        </span>
+      </v-toolbar-title>
+      <v-toolbar-title class="hidden-md-and-up">
+        <span class="font-weight-black text-uppercase">
+          UNPRG
+        </span>
+        <span class="font-weight-light text-uppercase">
+          EGRESADOS
         </span>
       </v-toolbar-title>
       <v-spacer />
@@ -24,7 +32,11 @@
       </v-toolbar-items>
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on"> <v-icon>more_vert</v-icon> </v-btn>
+          <v-btn icon v-on="on">
+            <v-avatar size="35">
+              <img :src="urlFoto" alt="Perfil" />
+            </v-avatar>
+          </v-btn>
         </template>
         <v-list>
           <v-list-tile to="perfil">
@@ -40,13 +52,18 @@
       </v-menu>
     </v-toolbar>
     <v-navigation-drawer app v-model="drawer" hide-overlay temporary>
-      <v-flex xs12 class="px-4 grey lighten-5">
-        <v-img :src="require('@/assets/epici.svg')">
-          <v-layout slot="placeholder">
-            <v-progress-circular
-              indeterminate
-              color="grey lighten-5"
-            ></v-progress-circular>
+      <v-flex xs12>
+        <v-img :src="urlFoto" gradient="to bottom, transparent 50%, black">
+          <v-layout pa-3 column fill-height class="lightbox white--text">
+            <v-spacer></v-spacer>
+            <v-flex shrink class="title">
+              <div class="font-weight-black text-uppercase">
+                {{ user.nombres }}
+              </div>
+              <div class="font-weight-light text-uppercase">
+                {{ user.apellidoPaterno }} {{ user.apellidoMaterno }}
+              </div>
+            </v-flex>
           </v-layout>
         </v-img>
       </v-flex>
@@ -88,6 +105,7 @@
 <script>
 import { mapState } from "vuex";
 import { removeUser } from "../../bd/api";
+import { urlImage } from "../../bd/config";
 export default {
   data: () => ({
     drawer: false,
@@ -100,7 +118,10 @@ export default {
     ]
   }),
   computed: {
-    ...mapState(["user"])
+    ...mapState(["user"]),
+    urlFoto() {
+      return urlImage + this.user.urlFoto;
+    }
   },
   methods: {
     cerrarSesion() {
