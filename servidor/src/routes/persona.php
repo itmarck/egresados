@@ -72,7 +72,7 @@ $app->post('/api/personas', function (Request $request) {
   $correo = $request->getParam('correo');
   $estadoCivil = $request->getParam('estado');
   $usuario = $request->getParam('usuario');
-  $contraseña = $request->getParam('contraseña');
+  $contraseña = $request->getParam('clave');
   try {
     $dni = $this->db->query("SELECT dni FROM persona WHERE dni = '$DNI'")->fetchAll();
     if (!$dni) {
