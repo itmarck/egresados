@@ -48,11 +48,11 @@ $app->post('/api/centroLaboral/add', function (Request $request) {
   try {
     $cantidad = $this->db->exec("INSERT INTO centrolaboral(codigoActividad,codigoDistrito,RUC,razonSocial,vigencia) 
                             Values('$codigoActividad','$codigoDistrito',$RUC,$razonSocial,1)");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
-    } else {
-      echo json_encode(array('estado' => false));
-    }
+      if ($cantidad > 0) {
+        echo json_encode(array('estado' => true, 'mensaje' => 'Centro laboral agregado'));
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido agregar centro laboral'));
+      }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
@@ -72,9 +72,9 @@ $app->put('/api/centroLaboral/{codigo}', function (Request $request) {
                                 razonSocial = '$razonSocial'  
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Centro laboral actualizado'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han actualizado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -87,9 +87,9 @@ $app->delete('/api/centroLaboral/{codigo}', function (Request $request) {
     $cantidad = $this->db->exec("DELETE FROM centrolaboral 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Centro laboral eliminado'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido eliminar centro laboral'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

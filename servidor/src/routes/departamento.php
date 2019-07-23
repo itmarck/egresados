@@ -7,7 +7,7 @@ $app->get('/api/departamentos', function () {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
   } else {
-    echo json_encode(array('estado' => false));
+    echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
   }
 });
 

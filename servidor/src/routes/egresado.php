@@ -187,7 +187,7 @@ $app->put('/api/carreras/{codigo}', function (Request $request) {
           if ($cantidad > 0) {
             echo json_encode(array('estado' => true, 'mensaje' => 'Carrera actualizada satisfactoriamente'));
           } else {
-            echo json_encode(array('estado' => false, 'mensaje' => 'No se han actualizado los datos'));
+            echo json_encode(array('estado' => false, 'mensaje' => 'No se han cambiado los datos'));
           }
         }
       } else {
@@ -209,9 +209,9 @@ $app->delete('/api/carreras/{codigo}', function (Request $request) {
     $cantidad = $this->db->exec("DELETE FROM egresado 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Carrera eliminada'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha eliminado la carrera'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -231,7 +231,7 @@ $app->get('/api/carreras/{admision}/{escuelaProfesional}', function (Request $re
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo '{"Error": { "mensaje": ' . $e->getMessage() . '}';
@@ -250,7 +250,7 @@ $app->get('/api/carreras/actividadEconomica/{codigo}', function (Request $reques
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
