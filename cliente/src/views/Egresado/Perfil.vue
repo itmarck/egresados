@@ -6,7 +6,7 @@
         <v-layout row wrap justify-center>
           <v-flex xs12 sm4 lg3 xl4>
             <v-card>
-              <v-img src="http://lorempixel.com/400/400" />
+              <v-img src="http://localhost/egresados/servidor/src/public/images/imagen.jpeg" />
             </v-card>
           </v-flex>
           <v-flex xs12 sm8 lg9 xl8>
