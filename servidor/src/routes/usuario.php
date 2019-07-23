@@ -13,7 +13,7 @@ $app->get('/api/usuarios', function () {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -47,7 +47,7 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
       echo json_encode($result);
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -62,7 +62,7 @@ $app->get('/api/usuarios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -92,7 +92,7 @@ $app->post('/api/usuarios/add', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'Nombre de usuario ya existe'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -124,7 +124,7 @@ $app->put('/api/usuarios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -139,23 +139,37 @@ $app->delete('/api/usuarios/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
 $app->patch('/api/usuarios/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
-  $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  $codigoP = $request->getAttribute('codigo');
+  $pass = $request->getParam('nueva');
+  $old = $request->getParam('antigua');
+  $tipo = $request->getParam('tipo');
   try {
-    $cantidad = $this->db->exec("UPDATE usuario set
-                                vigencia = $vigencia
-                                WHERE codigo = $codigo");
-    if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+    if ($tipo == "persona") {
+      $codigo = $this->db->query("SELECT U.codigo, U.clave FROM usuario U INNER JOIN persona P on P.codigo = U.codigoPersona  WHERE codigoPersona = '$codigoP' ")->fetchAll();
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+      $codigo = $this->db->query("SELECT U.codigo, U.clave FROM usuario U INNER JOIN personal P on P.codigo = U.codigoPersonal  WHERE codigoPersonal = '$codigoP' ")->fetchAll();
+    }
+    if (password_verify($old, $codigo[0]->clave)) {
+
+      $codigo = $codigo[0]->codigo;
+      $hash = password_hash($pass, PASSWORD_DEFAULT);
+      $cantidad = $this->db->exec("UPDATE usuario set
+                                clave = '$hash'
+                                WHERE codigo = $codigo");
+      if ($cantidad > 0) {
+        echo json_encode(array('estado' => true, 'mensaje' => 'Contraseña actualizada'));
+      } else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la contraseña'));
+      }
+    }else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'la contraseña actual no coincide'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });

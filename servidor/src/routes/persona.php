@@ -1,6 +1,7 @@
 <?php
 
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\UploadedFile;
 
 const contraseña = "3P1CI*2019";
 
@@ -21,7 +22,7 @@ $app->get('/api/personas', function () {
 $app->get('/api/personas/{DNI}', function (Request $request) {
   $DNI = $request->getAttribute('DNI');
   try {
-    $data = $this->db->query("SELECT codigo,dni,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil,vigencia FROM persona WHERE DNI = $DNI ")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,dni,nombres,apellidoPaterno,apellidoMaterno, genero,fechaNacimiento,celular,correo,estadoCivil,vigencia,privacidad FROM persona WHERE DNI = $DNI ")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data[0]);
       echo json_encode($result);
@@ -81,7 +82,7 @@ $app->post('/api/personas', function (Request $request) {
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
-        $hash = password_hash(($contraseña) ? $contraseña : contraseña , PASSWORD_DEFAULT);
+        $hash = password_hash(($contraseña) ? $contraseña : contraseña, PASSWORD_DEFAULT);
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
           $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia)
@@ -174,3 +175,33 @@ $app->patch('/api/personas/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
+
+
+$app->post('/api/personas/images/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $directory = $this->get('upload_directory');
+
+  $archivo = $request->getUploadedFiles();
+
+  $imagen = $archivo['profile'];
+  if ($imagen->getError() === UPLOAD_ERR_OK) {
+      $filename = moveUploadedFile($directory, $imagen);
+      echo json_encode(array('estado' => true, 'mensaje' => 'Foto agregada'));
+      $this->db->exec("UPDATE persona SET urlfoto = '$directory/$filename' where codigo = $codigo");
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'Error al subir la imagen'));
+    }
+
+});
+
+
+function moveUploadedFile($directory, UploadedFile $imagen)
+{
+  $extension = pathinfo($imagen->getClientFilename(), PATHINFO_EXTENSION);
+  $basename = bin2hex(random_bytes(10)); 
+  $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+  $imagen->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+
+  return $filename;
+}

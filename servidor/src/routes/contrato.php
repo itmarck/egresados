@@ -145,7 +145,7 @@ $app->put('/api/contratos/{codigo}', function (Request $request) {
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Contrato actualizado'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Algo fallo'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han actualizado los datos'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

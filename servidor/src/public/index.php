@@ -1,13 +1,14 @@
 <?php
+
+require '../../vendor/autoload.php';
+
 use Slim\Container;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
+use Slim\Http\UploadedFile;
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH");
-
-require '../../vendor/autoload.php';
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
@@ -20,7 +21,7 @@ $config['db']['dbname'] = 'egresados';
 $app = new \Slim\App(['settings' => $config]);
 
 $container = $app->getContainer();
-
+$container['upload_directory'] =  '../images';
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
     $pdo = new PDO('mysql:host=' . $db['host'] . ';dbname=' . $db['dbname'],
