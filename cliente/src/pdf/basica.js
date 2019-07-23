@@ -177,9 +177,9 @@ export function basica(datos, color) {
   tituloPrincipal(datos.nombre);
   subtituloPrincipal(datos.titulo);
 
-  let y;
+  let y = 50;
   if (datos.experiencia) {
-    y = subtituloSecundario('EXPERIENCIA LABORAL', 50);
+    y = subtituloSecundario('EXPERIENCIA LABORAL', y);
     y = datosExperiencia(datos.experiencia, y);
   }
   if (datos.educacion) {
