@@ -37,8 +37,10 @@ function datosSidebar(datos = [], y) {
     doc
       .setFontSize(10)
       .setTextColor(COLOR.blanco)
-      .setFontStyle('normal')
-      .text(datos[i], MARGEN, y, { maxWidth: SIZES.sidebar - MARGEN * 2 });
+      .setFontStyle('normal');
+    let options = { maxWidth: SIZES.sidebar - MARGEN * 2 };
+    if (i == 0) options = {};
+    doc.text(datos[i], MARGEN, y, options);
     y += 6;
   }
 }
@@ -175,10 +177,15 @@ export function basica(datos, color) {
   tituloPrincipal(datos.nombre);
   subtituloPrincipal(datos.titulo);
 
-  let y = subtituloSecundario('EXPERIENCIA LABORAL', 50);
-  y = datosExperiencia(datos.experiencia, y);
-  y = subtituloSecundario('EDUCACIÓN', y);
-  y = datosEducacion(datos.educacion, y);
+  let y;
+  if (datos.experiencia) {
+    y = subtituloSecundario('EXPERIENCIA LABORAL', 50);
+    y = datosExperiencia(datos.experiencia, y);
+  }
+  if (datos.educacion) {
+    y = subtituloSecundario('EDUCACIÓN', y);
+    y = datosEducacion(datos.educacion, y);
+  }
 
   save();
 }
@@ -190,5 +197,5 @@ function init(color) {
 }
 
 function save() {
-  doc.save('cv.pdf');
+  doc.save('curriculum.pdf');
 }

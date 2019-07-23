@@ -116,12 +116,13 @@ export default {
     plantillas: [{ texto: "Plantilla Básica", valor: 0 }],
     plantilla: 0,
     colores: [
+      { texto: "Negro", valor: "#181818" },
       { texto: "Gris", valor: "#424242" },
       { texto: "Azul", valor: "#0D47A1" },
       { texto: "Verde", valor: "#004D3B" },
       { texto: "Rojo", valor: "#742129" }
     ],
-    color: "",
+    color: "#181818",
     contratos: [],
     postgrados: [],
     carreras: [],
@@ -132,10 +133,10 @@ export default {
   computed: {
     ...mapState(["user"]),
     contratosSeleccionados() {
-      return this.contratos.filter(e => e.select);
+      if (this.contratos) return this.contratos.filter(e => e.select);
     },
     postgradosSeleccionados() {
-      return this.postgrados.filter(e => e.select);
+      if (this.postgrados) return this.postgrados.filter(e => e.select);
     }
   },
   methods: {
@@ -145,7 +146,8 @@ export default {
     getEdad(nace) {
       return parseInt(new Date().getFullYear()) - parseInt(this.getYear(nace));
     },
-    generar() {
+    obtenerEducacion() {
+      if (!this.postgrados) return null;
       let educacion = this.postgradosSeleccionados.map(e => ({
         fecha:
           this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
@@ -154,6 +156,7 @@ export default {
         anio: e.anioCertificacion ? "Certificada " + e.anioCertificacion : "",
         lugar: e.lugar == "U" ? e.universidad : e.razonSocial
       }));
+      if (!this.carreras) return educacion;
       educacion.push(
         ...this.carreras.map(e => ({
           fecha:
@@ -166,6 +169,20 @@ export default {
           lugar: e.universidad
         }))
       );
+      return educacion;
+    },
+    obtenerExperiencia() {
+      if (!this.contratos) return null;
+      return this.contratosSeleccionados.map(e => ({
+        fecha:
+          this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
+        centro: e.centroLaboral,
+        cargo: e.cargo,
+        tiempo: "(" + e.tiempo + " " + e.unidad + ")",
+        descripcion: e.detalleFunciones
+      }));
+    },
+    generar() {
       let datos = {
         nombre: this.persona.nombres + " " + this.persona.apellidoPaterno,
         titulo: this.titulo,
@@ -174,15 +191,8 @@ export default {
           "DNI " + this.persona.dni,
           this.getEdad(this.persona.fechaNacimiento) + " años"
         ],
-        experiencia: this.contratosSeleccionados.map(e => ({
-          fecha:
-            this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
-          centro: e.centroLaboral,
-          cargo: e.cargo,
-          tiempo: "(" + e.tiempo + " " + e.unidad + ")",
-          descripcion: e.detalleFunciones
-        })),
-        educacion
+        experiencia: this.obtenerExperiencia(),
+        educacion: this.obtenerEducacion()
       };
       generarPDF(datos, this.plantilla, this.color);
     },
