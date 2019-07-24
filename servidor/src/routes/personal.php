@@ -154,13 +154,4 @@ $app->post('/api/personal/images/{codigo}', function (Request $request) {
   }
 });
 
-function moveUploadedFile($directory, UploadedFile $imagen)
-{
-  $extension = pathinfo($imagen->getClientFilename(), PATHINFO_EXTENSION);
-  $basename = bin2hex(random_bytes(10));
-  $filename = sprintf('%s.%0.8s', $basename, $extension);
 
-  $imagen->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-
-  return $filename;
-}
