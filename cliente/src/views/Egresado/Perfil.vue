@@ -6,9 +6,7 @@
         <v-layout row wrap justify-center>
           <v-flex xs12 sm4 lg3 xl4>
             <v-card>
-              <v-img
-                src="http://localhost/egresados/servidor/src/public/images/imagen.jpeg"
-              />
+              <v-img :src="urlFoto" aspect-ratio="1" />
             </v-card>
           </v-flex>
           <v-flex xs12 sm8 lg9 xl8>
@@ -19,13 +17,31 @@
                 </span>
                 <v-spacer></v-spacer>
                 <v-btn flat icon @click="cambiarPrivacidad">
-                  <v-icon v-if="persona.privacidad">public</v-icon>
+                  <v-icon v-if="!privacidad">public</v-icon>
                   <v-icon v-else>lock</v-icon>
                 </v-btn>
               </v-card-title>
               <v-card-text>
-                DNI: {{ persona.dni }} <br />
-                Aca van los datos de la persona
+                <div class="body-1">
+                  <v-icon small left>featured_video</v-icon>
+                  <span class="font-weight-medium"> DNI </span>
+                  <span class="font-weight-light"> {{ persona.dni }}</span>
+                </div>
+                <div class="body-1">
+                  <v-icon small left>email</v-icon>
+                  <span class="font-weight-light"> {{ persona.correo }}</span>
+                </div>
+                <div class="body-2">
+                  <v-icon small left>event</v-icon>
+                  <span class="font-weight-medium"> Fecha de nacimiento </span>
+                  <span class="font-weight-light">
+                    {{ persona.fechaNacimiento }}
+                  </span>
+                </div>
+                <div class="body-1">
+                  <v-icon small left>phone_android</v-icon>
+                  <span class="font-weight-light"> {{ persona.celular }}</span>
+                </div>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -154,6 +170,7 @@
 
 <script>
 import { get, put, patch, setUser, getUser, uploadPhoto } from "../../bd/api";
+import { urlImage } from "../../bd/config";
 import { mapState } from "vuex";
 export default {
   data: () => ({
@@ -183,7 +200,13 @@ export default {
     imageFile: ""
   }),
   computed: {
-    ...mapState(["user"])
+    ...mapState(["user"]),
+    urlFoto() {
+      return urlImage + this.user.urlFoto;
+    },
+    privacidad() {
+      if (this.persona) return parseInt(this.persona.privacidad);
+    }
   },
   methods: {
     guardar() {
@@ -200,14 +223,23 @@ export default {
       };
       put("personas/" + this.persona.codigo, datos).then(res => {
         this.respuesta = res.mensaje;
-        this.snack = true;
+        let respuesta = res.mensaje;
+
         if (res.estado == true) {
+          if (this.imageFile != "")
+            uploadPhoto(
+              "personas/images/" + this.user.codigo,
+              this.imageFile
+            ).then(res => {
+              this.cargarDatos();
+              this.respuesta = respuesta + " " + res.mensaje;
+              this.snack = true;
+            });
           this.cargarDatos();
           this.isEdit = false;
         }
+        this.snack = true;
       });
-      if (this.imageFile != "")
-        uploadPhoto("personas/images/" + this.user.codigo, this.imageFile);
     },
     actualizarUsuario() {
       let user = getUser();
@@ -222,7 +254,7 @@ export default {
           this.persona.apellidoPaterno +
           " " +
           this.persona.apellidoMaterno,
-        urlFoto: this.foto
+        urlFoto: this.persona.urlFoto
       };
       setUser(newUser);
     },
@@ -248,7 +280,13 @@ export default {
       });
     },
     cambiarPrivacidad() {
-      // Falta campo privacidad en la bd
+      patch("personas/privacidad/" + this.user.codigo, {
+        privacidad: this.persona.privacidad
+      }).then(res => {
+        this.respuesta = res.mensaje;
+        this.snack = true;
+        if (res.estado == true) this.cargarDatos();
+      });
     },
     onFilePicked(e) {
       const files = e.target.files;
