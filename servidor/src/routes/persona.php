@@ -78,7 +78,7 @@ $app->post('/api/personas', function (Request $request) {
     if (!$dni) {
       $this->db->beginTransaction();
       $cantidad = $this->db->exec("INSERT INTO persona(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,fechaNacimiento,celular,correo,estadoCivil,urlfoto,vigencia) 
-                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$fechaNacimiento','$celular','$correo','$estadoCivil','default.jpeg',1)");
+                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$fechaNacimiento','$celular','$correo','$estadoCivil','default.jpg',1)");
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
@@ -183,7 +183,7 @@ $app->patch('/api/personas/privacidad/{codigo}', function (Request $request) {
                                 privacidad = $privacidad
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => (!$privacidad) ? 'Ahora tu perfil es privado' : 'Ahora tu perfil es publico'));
+      echo json_encode(array('estado' => true, 'mensaje' => (!$privacidad) ?  'Ahora tu perfil es publico': 'Ahora tu perfil es privado'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la privacidad'));
     }

@@ -26,7 +26,7 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
     if ($usuario) {
       if (password_verify($clave, $usuario[0]->clave)) {
         $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre'  and vigencia=1")->fetchAll();
-        $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno, CONCAT(P.nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre,urlFoto FROM usuario ";
+        $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno, CONCAT(P.nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre FROM usuario ";
         $codigoPersona = $user[0]->codigoPersona;
         if (!$codigoPersona) {
           $sql = $sql . "INNER JOIN personal P on P.codigo = usuario.codigoPersonal
@@ -166,7 +166,7 @@ $app->patch('/api/usuarios/{codigo}', function (Request $request) {
       } else {
         echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la contraseña'));
       }
-    }else {
+    } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'la contraseña actual no coincide'));
     }
   } catch (PDOException $e) {
