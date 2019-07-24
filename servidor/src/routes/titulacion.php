@@ -76,7 +76,7 @@ $app->put('/api/titulaciones/{codigoEgresado}', function (Request $request) {
     if ($codigoColegiado) {
       $exist = $this->db->query("SELECT codigo FROM colegiatura WHERE codigoEgresado= $codigoEgresado")->fetchAll();
       if ($exist) {
-        $cantidad2 = $this->db->exec("UPDATE colegiatura SET codigo = $codigoColegiado, fecha = '$fechaColegiatura', vigencia = 1 WHERE codigoEgresado = $codigoEgresado");
+        $cantidad2 = $this->db->exec("UPDATE colegiatura SET codigo = '$codigoColegiado', fecha = '$fechaColegiatura', vigencia = 1 WHERE codigoEgresado = $codigoEgresado");
       } else {
         $cantidad2 = $this->db->exec("INSERT INTO colegiatura(codigoEgresado,codigo,fecha,vigencia) 
         Values($codigoEgresado,'$codigoColegiado','$fechaColegiatura',1)");
