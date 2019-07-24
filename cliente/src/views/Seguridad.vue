@@ -62,8 +62,8 @@ export default {
   },
   methods: {
     cambiar() {
-      let datos = { tipo: "personal" };
-      if (this.user.tipo == "E") datos = { tipo: "persona" };
+      let datos = { tipo: "personal", actual: this.actual, nueva: this.nueva };
+      if (this.user.tipo == "E") datos = { ...datos, tipo: "persona" };
       patch("usuarios/" + this.user.codigo, datos).then(res => {
         this.respuesta = res.mensaje;
         this.snack = true;
@@ -72,7 +72,7 @@ export default {
     },
     limpiar() {
       this.actual = "";
-      this.nuevo = "";
+      this.nueva = "";
     }
   }
 };
