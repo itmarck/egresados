@@ -1,9 +1,9 @@
 <template>
   <v-container grid-list-lg>
-    <v-form @submit.prevent="">
-      <v-layout row wrap>
-        <!-- Registro -->
-        <v-flex xs12 md6>
+    <v-layout row wrap>
+      <!-- Registro -->
+      <v-flex xs12 md6>
+        <v-form @submit.prevent="">
           <v-layout row wrap>
             <v-flex xs12>
               <v-card>
@@ -55,24 +55,34 @@
                             label="Escriba la actividad económica"
                             placeholder="Actividad economica"
                           ></v-combobox>
-                          <v-combobox
+                          <v-select
                             v-model="departamento"
                             :items="departamentos"
+                            item-value="codigo"
+                            item-text="nombre"
                             label="Seleccione departamento"
                             placeholder="Departamento"
-                          ></v-combobox>
-                          <v-combobox
+                            @change="cargarProvincias"
+                          ></v-select>
+                          <v-select
                             v-model="provincia"
                             :items="provincias"
+                            item-value="codigo"
+                            item-text="nombre"
                             label="Seleccione provincia"
                             placeholder="Provincia"
-                          ></v-combobox>
-                          <v-combobox
+                            @change="cargarDistritos"
+                            :disabled="departamento == ''"
+                          ></v-select>
+                          <v-select
                             v-model="distrito"
                             :items="distritos"
-                            label="Seleccione distritos"
+                            item-value="codigo"
+                            item-text="nombre"
+                            label="Seleccione distrito"
                             placeholder="Distrito"
-                          ></v-combobox>
+                            :disabled="provincia == ''"
+                          ></v-select>
                         </section>
                       </v-card-text>
                     </v-card>
@@ -152,36 +162,35 @@
             </v-btn>
             <v-btn color="primary" outline @click="nuevo">Limpiar</v-btn>
           </v-layout>
-        </v-flex>
-
-        <!-- Lista -->
-        <v-flex xs12 md6>
-          <v-card>
-            <v-list three-line>
-              <v-list-tile
-                v-for="contrato of contratos"
-                :key="contrato.codigo"
-                @click="copiarDatos(contrato)"
-              >
-                <v-list-tile-content>
-                  <v-list-tile-title v-html="contrato.centroLaboral" />
-                  <v-list-tile-sub-title v-html="contrato.cargo" />
-                  <v-list-tile-sub-title>
-                    {{ contrato.fechaInicio.toString().substring(0, 4) }}
-                    ({{ contrato.tiempo }} {{ contrato.unidad }})
-                  </v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-          </v-card>
-        </v-flex>
-      </v-layout>
+        </v-form>
+      </v-flex>
+      <!-- Lista -->
+      <v-flex xs12 md6>
+        <v-card v-if="contratos.length != 0">
+          <v-list three-line>
+            <v-list-tile
+              v-for="contrato of contratos"
+              :key="contrato.codigo"
+              @click="copiarDatos(contrato)"
+            >
+              <v-list-tile-content>
+                <v-list-tile-title v-html="contrato.centroLaboral" />
+                <v-list-tile-sub-title v-html="contrato.cargo" />
+                <v-list-tile-sub-title>
+                  {{ contrato.fechaInicio.toString().substring(0, 4) }}
+                  ({{ contrato.tiempo }} {{ contrato.unidad }})
+                </v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </v-flex>
       <!-- Snackbar -->
       <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
         {{ respuesta }}
         <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
       </v-snackbar>
-    </v-form>
+    </v-layout>
   </v-container>
 </template>
 <script>
@@ -214,6 +223,7 @@ export default {
     distrito: "",
     ruc: "",
     razonSocial: "",
+
     respuesta: "",
     snack: false
   }),
@@ -245,7 +255,7 @@ export default {
         datos = {
           ...datos,
           actividadEconomica: this.actividadEconomica,
-          distrito: this.codigo,
+          distrito: this.distrito,
           ruc: this.ruc,
           razonSocial: this.razonSocial
         };
@@ -270,8 +280,8 @@ export default {
       if (this.addCentro) {
         datos = {
           ...datos,
-          actividadEconomica: this.actividadEconomica,
-          distrito: this.codigo,
+          actividadEconomica: this.actividad,
+          distrito: this.distrito,
           ruc: this.ruc,
           razonSocial: this.razonSocial
         };
@@ -293,14 +303,25 @@ export default {
       this.codigo = "";
       this.carrera = "";
       this.centro = "";
+      this.cargo = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
       this.fechaTermino = new Date().toISOString().substring(0, 10);
-      this.cargo = "";
       this.detalles = "";
+      this.ruc = "";
+      this.razonSocial = "";
+      this.actividad = "";
+      this.departamento = "";
+      this.provincia = "";
+      this.distrito = "";
     },
     cargarTodo() {
       this.cargarContratos();
       this.cargarCentros();
+      this.cargarActividades();
+      this.cargarDepartamentos();
+    },
+    cargarActividades() {
+      get("actividadesEconomica").then(res => (this.actividades = res.data));
     },
     cargarCarreras() {
       get("carreras/" + this.user.dni).then(res => (this.carreras = res.data));
@@ -312,6 +333,22 @@ export default {
     },
     cargarCentros() {
       get("centroLaboral").then(res => (this.centros = res.data));
+    },
+    cargarDepartamentos() {
+      get("departamentos").then(res => (this.departamentos = res.data));
+    },
+    cargarProvincias(departamento) {
+      this.provincia = "";
+      this.distrito = "";
+      this.provincias = [];
+      get("provincias/" + departamento).then(
+        res => (this.provincias = res.data)
+      );
+    },
+    cargarDistritos(provincia) {
+      this.distrito = "";
+      this.distritos = [];
+      get("distritos/" + provincia).then(res => (this.distritos = res.data));
     }
   },
   created() {

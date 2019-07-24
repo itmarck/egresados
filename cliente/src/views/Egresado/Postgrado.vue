@@ -1,11 +1,11 @@
 <template>
   <v-container grid-list-lg>
-    <v-form @submit.prevent="">
-      <v-layout row wrap>
-        <!-- Registro -->
-        <v-flex xs12 md6>
+    <v-layout row wrap>
+      <!-- Registro -->
+      <v-flex xs12 md6>
+        <v-form @submit.prevent="">
           <v-layout row wrap>
-            <!-- Carrera card -->
+            <!-- Formulario -->
             <v-flex xs12>
               <v-card>
                 <v-card-title class="title font-weight-light" primary-title>
@@ -123,6 +123,7 @@
                 </v-card-text>
               </v-card>
             </v-flex>
+            <!-- Botones -->
             <v-btn color="primary" v-if="isEdit" @click="editar" type="submit">
               Editar
             </v-btn>
@@ -131,43 +132,42 @@
             </v-btn>
             <v-btn color="primary" outline @click="nuevo">Limpiar</v-btn>
           </v-layout>
-        </v-flex>
-
-        <!-- Lista card -->
-        <v-flex xs12 md6>
-          <v-card>
-            <v-list three-line>
-              <v-list-tile
-                v-for="postgrado of lista"
-                :key="postgrado.codigo"
-                @click="copiarDatos(postgrado)"
-              >
-                <v-list-tile-content>
-                  <v-list-tile-title v-html="postgrado.nombre" />
-                  <v-list-tile-sub-title>
-                    <span v-if="postgrado.lugar == 'U'">
-                      {{ postgrado.universidad }}
-                    </span>
-                    <span else>{{ postgrado.razonSocial }}</span>
-                    {{
-                      `(${postgrado.fechaInicio.substring(0, 4)} - 
+        </v-form>
+      </v-flex>
+      <!-- Lista card -->
+      <v-flex xs12 md6>
+        <v-card v-if="lista.length != 0">
+          <v-list three-line>
+            <v-list-tile
+              v-for="postgrado of lista"
+              :key="postgrado.codigo"
+              @click="copiarDatos(postgrado)"
+            >
+              <v-list-tile-content>
+                <v-list-tile-title v-html="postgrado.nombre" />
+                <v-list-tile-sub-title>
+                  <span v-if="postgrado.lugar == 'U'">
+                    {{ postgrado.universidad }}
+                  </span>
+                  <span else>{{ postgrado.razonSocial }}</span>
+                  {{
+                    `(${postgrado.fechaInicio.substring(0, 4)} - 
                     ${postgrado.fechaTermino.substring(0, 4)})`
-                    }}
-                  </v-list-tile-sub-title>
+                  }}
+                </v-list-tile-sub-title>
 
-                  <v-list-tile-sub-title v-html="postgrado.tipo" />
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-          </v-card>
-        </v-flex>
-      </v-layout>
+                <v-list-tile-sub-title v-html="postgrado.tipo" />
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </v-flex>
       <!-- Snackbar -->
       <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
         {{ respuesta }}
         <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
       </v-snackbar>
-    </v-form>
+    </v-layout>
   </v-container>
 </template>
 

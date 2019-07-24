@@ -2,6 +2,7 @@
   <v-container grid-list-lg>
     <v-form @submit.prevent="generar">
       <v-layout row wrap>
+        <!-- Datos adicionales -->
         <v-flex xs12>
           <v-card>
             <v-list three-line subheader>
@@ -29,7 +30,7 @@
         </v-flex>
         <!-- Postgrados -->
         <v-flex xs12 md6>
-          <v-card>
+          <v-card v-if="postgrados.length != 0">
             <v-list three-line subheader>
               <v-subheader>Postgrados</v-subheader>
               <v-list-tile
@@ -62,7 +63,7 @@
         </v-flex>
         <!-- Contratos -->
         <v-flex xs12 md6>
-          <v-card>
+          <v-card v-if="contratos.length != 0">
             <v-list three-line subheader>
               <v-subheader>Experiencia</v-subheader>
               <v-list-tile v-for="contrato of contratos" :key="contrato.codigo">
@@ -84,6 +85,7 @@
             </v-list>
           </v-card>
         </v-flex>
+        <!-- Seleccion de opciones -->
         <v-flex xs12>
           <v-select
             :items="plantillas"

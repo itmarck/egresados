@@ -83,7 +83,6 @@
                 </v-card-text>
               </v-card>
             </v-flex>
-
             <!-- Admision card -->
             <v-flex xs12 v-if="universidad != '' && escuela != ''">
               <v-card>
@@ -181,7 +180,6 @@
                 </v-card-text>
               </v-card>
             </v-flex>
-
             <!-- Titulacion card -->
             <v-flex xs12 v-if="titulacion.modalidadTitulacion">
               <v-card>
@@ -193,11 +191,14 @@
                     Carrera titulada el
                     <span class="font-weight-medium">
                       {{
-                        new Date(titulacion.fechaTitulacion).toLocaleDateString("es-ES", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric"
-                        })
+                        new Date(titulacion.fechaTitulacion).toLocaleDateString(
+                          "es-ES",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                          }
+                        )
                       }}
                     </span>
                     por la modalidad
@@ -209,7 +210,9 @@
                     Colegiada el
                     <span class="font-weight-medium">
                       {{
-                        new Date(titulacion.fechaColegiatura).toLocaleDateString("es-ES", {
+                        new Date(
+                          titulacion.fechaColegiatura
+                        ).toLocaleDateString("es-ES", {
                           year: "numeric",
                           month: "long",
                           day: "numeric"
@@ -224,7 +227,7 @@
                 </v-card-text>
               </v-card>
             </v-flex>
-
+            <!-- Botones -->
             <v-btn color="primary" v-if="isEdit" @click="dialog = true">
               <v-icon v-if="modalidadTitulacion" small left>create</v-icon>
               <v-icon v-else left>add</v-icon>
@@ -240,10 +243,9 @@
           </v-layout>
         </v-form>
       </v-flex>
-
       <!-- Lista card -->
-      <v-flex xs12 md6>
-        <v-card>
+      <v-flex xs12 md6 >
+        <v-card v-if="listaCarreras.length != 0">
           <v-list two-line>
             <v-list-tile
               v-for="carrera of listaCarreras"
@@ -344,7 +346,11 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn flat @click="cerrarDialog">Cerrar</v-btn>
-            <v-btn v-if="titulacion.modalidadTitulacion" flat @click="editarTitulacion">
+            <v-btn
+              v-if="titulacion.modalidadTitulacion"
+              flat
+              @click="editarTitulacion"
+            >
               Editar
             </v-btn>
             <v-btn v-else flat @click="agregarTitulacion">Agregar</v-btn>
@@ -411,7 +417,9 @@ export default {
     },
     nombreModalidad() {
       if (this.titulacion.modalidadTitulacion) {
-        return this.modalidadesTitulacion[this.titulacion.modalidadTitulacion - 1].nombre;
+        return this.modalidadesTitulacion[
+          this.titulacion.modalidadTitulacion - 1
+        ].nombre;
       }
     }
   },
