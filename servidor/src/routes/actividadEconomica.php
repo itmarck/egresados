@@ -1,8 +1,12 @@
 <?php
 
 $app->get('/api/actividadesEconomica', function () {
-  $data = $this->db->query("SELECT codigo,nombre,descripcion FROM actividadeconomica WHERE vigencia=1")->fetchAll();
-  if ($data) {
+  $nombres = $this->db->query("SELECT nombre FROM actividadeconomica WHERE vigencia=1")->fetchAll();
+  $data = [];
+  if ($nombres) {
+    foreach ($nombres as $key => $value) {
+      array_push($data, $value->nombre);
+    }
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
   } else {
