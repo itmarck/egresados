@@ -194,7 +194,8 @@ export default {
           this.getEdad(this.persona.fechaNacimiento) + " años"
         ],
         experiencia: this.obtenerExperiencia(),
-        educacion: this.obtenerEducacion()
+        educacion: this.obtenerEducacion(),
+        foto: this.user.urlFoto
       };
       generarPDF(datos, this.plantilla, this.color);
     },
