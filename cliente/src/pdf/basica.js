@@ -1,4 +1,5 @@
 import * as jsPDF from 'jspdf';
+import { urlImage } from '../bd/config';
 
 const margen = 10;
 const MARGEN = 15;
@@ -21,6 +22,20 @@ var doc = new jsPDF();
 function sidebar() {
   doc.setFillColor(COLOR.principal);
   doc.rect(0, 0, SIZES.sidebar, MAXHEIGHT, 'F');
+}
+
+function fotoPerfil(foto) {
+  let img = new Image();
+  img.src = urlImage + foto;
+
+  doc.addImage(
+    img,
+    'JPEG',
+    MARGEN,
+    MARGEN,
+    SIZES.sidebar - MARGEN * 2,
+    SIZES.sidebar - MARGEN * 2
+  );
 }
 
 function subtituloSidebar(texto, y) {
@@ -168,6 +183,7 @@ export function basica(datos, color) {
 
   // Sidebar
   sidebar();
+  fotoPerfil(datos.foto);
   subtituloSidebar('CONTACTO', SIZES.sidebar);
   datosSidebar(datos.contacto, SIZES.sidebar);
   subtituloSidebar('DATOS', SIZES.sidebar + 40);
