@@ -146,7 +146,7 @@ $app->delete('/api/usuarios/{codigo}', function (Request $request) {
 $app->patch('/api/usuarios/{codigo}', function (Request $request) {
   $codigoP = $request->getAttribute('codigo');
   $pass = $request->getParam('nueva');
-  $old = $request->getParam('antigua');
+  $old = $request->getParam('actual');
   $tipo = $request->getParam('tipo');
   try {
     if ($tipo == "persona") {
