@@ -108,14 +108,13 @@
                           ).toLocaleDateString("es-ES", {
                             month: "long",
                             day: "numeric",
-                            year: "numeric",
                             timeZone: "America/New_York"
                           }) +
                           ")"
                       }}
                     </template>
                     <template slot="selection" slot-scope="data">
-                      {{ data.item.nombre }}
+                      {{ data.item.ciclo }}
                       {{ data.item.modalidad }}
                       {{
                         "(" +
@@ -191,14 +190,13 @@
                     Carrera titulada el
                     <span class="font-weight-medium">
                       {{
-                        new Date(titulacion.fechaTitulacion).toLocaleDateString(
-                          "es-ES",
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric"
-                          }
-                        )
+                        new Date(
+                          titulacion.fechaTitulacion.replace(/-/g, "\/")
+                        ).toLocaleDateString("es-ES", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric"
+                        })
                       }}
                     </span>
                     por la modalidad
@@ -211,7 +209,7 @@
                     <span class="font-weight-medium">
                       {{
                         new Date(
-                          titulacion.fechaColegiatura
+                          titulacion.fechaColegiatura.replace(/-/g, "\/")
                         ).toLocaleDateString("es-ES", {
                           year: "numeric",
                           month: "long",
@@ -228,23 +226,23 @@
               </v-card>
             </v-flex>
             <!-- Botones -->
-            <v-btn color="primary" v-if="isEdit" @click="dialog = true">
-              <v-icon v-if="modalidadTitulacion" small left>create</v-icon>
-              <v-icon v-else left>add</v-icon>
-              Titulacion
-            </v-btn>
             <v-btn color="primary" v-if="isEdit" @click="editar" type="submit">
               Editar
             </v-btn>
             <v-btn color="primary" v-else @click="agregar" type="submit">
               Agregar
             </v-btn>
+            <v-btn color="primary" v-if="isEdit" @click="dialog = true">
+              <v-icon v-if="modalidadTitulacion" small left>create</v-icon>
+              <v-icon v-else left>add</v-icon>
+              Titulacion
+            </v-btn>
             <v-btn color="primary" outline @click="nuevo">Limpiar</v-btn>
           </v-layout>
         </v-form>
       </v-flex>
       <!-- Lista card -->
-      <v-flex xs12 md6 >
+      <v-flex xs12 md6>
         <v-card v-if="listaCarreras.length != 0">
           <v-list two-line>
             <v-list-tile
@@ -329,7 +327,7 @@
                   <template v-slot:activator="{ on }">
                     <v-text-field
                       v-model="fechaColegiatura"
-                      label="Fecha de titulación"
+                      label="Fecha de colegiatura"
                       prepend-icon="event"
                       readonly
                       v-on="on"
@@ -424,6 +422,31 @@ export default {
     }
   },
   methods: {
+    snackbar(texto) {
+      this.respuesta = texto;
+      this.snack = true;
+    },
+    validar() {
+      if (this.universidad == "") {
+        this.snackbar("Ingrese nombre de Universidad");
+        return false;
+      }
+      if (this.escuela == "") {
+        this.snackbar("Ingrese nombre de Escuela");
+        return false;
+      }
+      if (this.admision == "" && !this.addAdmision) {
+        this.snackbar("Seleccione admisión");
+        return false;
+      }
+      if (this.addAdmision) {
+        if (this.ciclo == "" || this.modalidad == null) {
+          this.snackbar("Complete todos los datos de admisión");
+          return false;
+        }
+      }
+      return true;
+    },
     nuevo() {
       this.addAdmision = false;
       this.addColegiatura = false;
@@ -436,6 +459,8 @@ export default {
       this.fechaTermino = new Date().toISOString().substring(0, 10);
       this.fechaAdmision = new Date().toISOString().substring(0, 10);
       this.admision = "";
+      this.ciclo = "";
+      this.modalidad = "";
       this.modalidadTitulacion = "";
       this.fechaTitulacion = new Date().toISOString().substring(0, 10);
       this.codigoColegiado = "";
@@ -457,6 +482,9 @@ export default {
             this.fechaInicio = carrera.fechaInicio;
             this.fechaTermino = carrera.fechaTermino;
             this.admision = carrera.codigoAdmision;
+            this.fechaAdmision = new Date().toISOString().substring(0, 10);
+            this.ciclo = "";
+            this.modalidad = "";
             this.fechaTitulacion = carrera.fechaTitulacion;
             this.fechaColegiatura = carrera.fechaColegiatura;
             this.codigoColegiado = carrera.codigoColegiatura;
@@ -480,6 +508,7 @@ export default {
       });
     },
     editar() {
+      if (!this.validar()) return;
       let datos = {
         nombreUniversidad: this.universidad,
         nombreEscuela: this.escuela,
@@ -505,6 +534,7 @@ export default {
       });
     },
     agregar() {
+      if (!this.validar()) return;
       let datos = {
         nombreUniversidad: this.universidad,
         nombreEscuela: this.escuela,

@@ -214,7 +214,38 @@ export default {
     }
   },
   methods: {
+    snackbar(texto) {
+      this.respuesta = texto;
+      this.snack = true;
+    },
+    validar() {
+      if (this.carrera == "") {
+        this.snackbar("Ingrese nombre de la Carrera");
+        return false;
+      }
+      if (this.tipo == "") {
+        this.snackbar("Seleccione tipo de Postgrado");
+        return false;
+      }
+      if (this.nombre == "") {
+        this.snackbar("Ingrese nombre de Postgrado");
+        return false;
+      }
+      if (this.lugar == "U") {
+        if (this.universidad == "") {
+          this.snackbar("Ingrese nombre de Universidad");
+          return false;
+        }
+      } else {
+        if (this.centro == "") {
+          this.snackbar("Ingrese nombre de su Centro de estudios");
+          return false;
+        }
+      }
+      return true;
+    },
     editar() {
+      if (!this.validar()) return;
       let datos = {
         codigoEgresado: this.carrera,
         codigoTipo: this.tipo,
@@ -235,6 +266,7 @@ export default {
       });
     },
     agregar() {
+      if (!this.validar()) return;
       let datos = {
         codigoEgresado: this.carrera,
         codigoTipo: this.tipo,

@@ -104,6 +104,17 @@
           ></v-select>
           <v-btn block color="primary" type="submit">Generar Curriculum</v-btn>
         </v-flex>
+        <!-- Snackbar -->
+        <v-snackbar
+          v-model="snack"
+          bottom
+          left
+          :timeout="6000"
+          color="secondary"
+        >
+          {{ respuesta }}
+          <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
+        </v-snackbar>
       </v-layout>
     </v-form>
   </v-container>
@@ -118,19 +129,21 @@ export default {
     plantillas: [{ texto: "Plantilla Básica", valor: 0 }],
     plantilla: 0,
     colores: [
-      { texto: "Negro", valor: "#181818" },
       { texto: "Gris", valor: "#424242" },
+      { texto: "Negro", valor: "#181818" },
       { texto: "Azul", valor: "#0D47A1" },
       { texto: "Verde", valor: "#004D3B" },
       { texto: "Rojo", valor: "#742129" }
     ],
-    color: "#181818",
+    color: "#424242",
     contratos: [],
     postgrados: [],
     carreras: [],
     persona: {},
     titulo: "",
-    direccion: ""
+    direccion: "",
+    respuesta: "",
+    snack: false
   }),
   computed: {
     ...mapState(["user"]),
@@ -142,6 +155,23 @@ export default {
     }
   },
   methods: {
+    snackbar(texto) {
+      this.respuesta = texto;
+      this.snack = true;
+    },
+    validar() {
+      if (this.titulo == "") {
+        this.snackbar(
+          "Ingrese el título profesional que se mostrará en el Curriculum"
+        );
+        return false;
+      }
+      if (this.direccion == "") {
+        this.snackbar("La dirección también se mostrará en el Curriculum");
+        return false;
+      }
+      return true;
+    },
     getYear(string) {
       return string.substring(0, 4);
     },
@@ -187,6 +217,7 @@ export default {
       }));
     },
     generar() {
+      if (!this.validar()) return;
       let datos = {
         nombre: this.persona.nombres + " " + this.persona.apellidoPaterno,
         titulo: this.titulo,

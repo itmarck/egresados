@@ -209,7 +209,23 @@ export default {
     }
   },
   methods: {
+    snackbar(texto) {
+      this.respuesta = texto;
+      this.snack = true;
+    },
+    validar() {
+      if (this.nombre == "" || this.paterno == "" || this.materno == "") {
+        this.snackbar("Ingrese los nombres completos");
+        return false;
+      }
+      if (this.correo == "") {
+        this.snackbar("Ingrese correo");
+        return false;
+      }
+      return true;
+    },
     guardar() {
+      if (!this.validar()) return;
       let datos = {
         dni: this.persona.dni,
         nombres: this.nombres,

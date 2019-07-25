@@ -231,6 +231,46 @@ export default {
     ...mapState(["user"])
   },
   methods: {
+    snackbar(texto) {
+      this.respuesta = texto;
+      this.snack = true;
+    },
+    validar() {
+      if (this.carrera == "") {
+        this.snackbar("Ingrese nombre de la Carrera");
+        return false;
+      }
+      if (this.centro == "") {
+        this.snackbar("Seleccione su Centro laboral");
+        return false;
+      }
+      if (this.addCentro) {
+        if (this.razonSocial == "") {
+          this.snackbar("Ingrese el nombre del Centro laboral");
+          return false;
+        }
+        if (this.actividad == "") {
+          this.snackbar("Ingresa la actividad económica del Centro laboral");
+          return false;
+        }
+        if (this.distrito == "") {
+          this.snackbar("¿Dónde está ubicado tu Centro laboral?");
+          return false;
+        }
+      }
+      if (this.cargo == "") {
+        this.snackbar("Ingrese cargo dentro de la empresa");
+        return false;
+      }
+      if (this.detalles == "") {
+        let centro = this.centros.filter(e => e.codigo == this.centro)[0]
+          .razonSocial;
+        if (this.addCentro) centro = this.razonSocial;
+        this.snackbar("Cuéntanos un poco sobre tu trabajo en " + centro);
+        return false;
+      }
+      return true;
+    },
     copiarDatos(contrato) {
       this.isEdit = true;
       this.addCentro = false;
@@ -243,6 +283,7 @@ export default {
       this.detalles = contrato.detalleFunciones;
     },
     editar() {
+      if (!this.validar()) return;
       let datos = {
         codigoEgresado: this.carrera,
         carrera: this.carrera,
@@ -269,6 +310,7 @@ export default {
       });
     },
     agregar() {
+      if (!this.validar()) return;
       let datos = {
         codigoEgresado: this.carrera,
         carrera: this.carrera,
