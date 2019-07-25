@@ -1,54 +1,68 @@
 <template>
   <v-container grid-list-lg>
-    <v-layout row wrap>
+    <v-layout row wrap justify-center v-if="persona != null">
       <!-- Vista del perfil -->
       <v-flex xs12 xl7>
         <v-layout row wrap justify-center>
-          <v-flex xs12 sm4 lg3 xl4>
+          <v-flex>
             <v-card>
               <v-img :src="urlFoto" aspect-ratio="1" />
             </v-card>
           </v-flex>
           <v-flex xs12 sm8 lg9 xl8>
             <v-card>
-              <v-card-title class="title font-weight-light">
-                <span>
-                  {{ persona.nombres + " " + persona.apellidoPaterno }}
-                </span>
-                <v-spacer></v-spacer>
-                <v-btn flat icon @click="cambiarPrivacidad">
-                  <v-icon v-if="!privacidad">public</v-icon>
-                  <v-icon v-else>lock</v-icon>
-                </v-btn>
-              </v-card-title>
-              <v-card-text>
-                <div class="body-1">
-                  <v-icon small left>featured_video</v-icon>
-                  <span class="font-weight-medium"> DNI </span>
-                  <span class="font-weight-light"> {{ persona.dni }}</span>
-                </div>
-                <div class="body-1">
-                  <v-icon small left>email</v-icon>
-                  <span class="font-weight-light"> {{ persona.correo }}</span>
-                </div>
-                <div class="body-2">
-                  <v-icon small left>event</v-icon>
-                  <span class="font-weight-medium"> Fecha de nacimiento </span>
-                  <span class="font-weight-light">
-                    {{ persona.fechaNacimiento }}
+              <v-container>
+                <v-card-title class="title font-weight-light">
+                  <span>
+                    {{ persona.nombres }} <br />
+                    {{ persona.apellidoPaterno }}
+                    {{ persona.apellidoMaterno }}
                   </span>
-                </div>
-                <div class="body-1">
-                  <v-icon small left>phone_android</v-icon>
-                  <span class="font-weight-light"> {{ persona.celular }}</span>
-                </div>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn flat color="primary" @click="editar">
-                  Editar perfil
-                </v-btn>
-              </v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn flat icon @click="editar">
+                    <v-icon>edit</v-icon>
+                  </v-btn>
+                  <v-btn flat icon @click="cambiarPrivacidad">
+                    <v-icon v-if="!privacidad">public</v-icon>
+                    <v-icon v-else>lock</v-icon>
+                  </v-btn>
+                </v-card-title>
+                <v-card-text>
+                  <v-layout column align-start pl-2 pb-3>
+                    <p class="body-1">
+                      <span class="font-weight-medium"> DNI </span>
+                      <span class="font-weight-light"> {{ persona.dni }}</span>
+                      <!-- <v-icon small left>featured_video</v-icon> -->
+                    </p>
+                    <div class="body-1">
+                      <v-icon small left>email</v-icon>
+                      <span class="font-weight-light">
+                        {{ persona.correo }}
+                      </span>
+                    </div>
+                    <div class="body-2">
+                      <v-icon small left>event</v-icon>
+                      <span class="font-weight-light">
+                        {{
+                          new Date(
+                            persona.fechaNacimiento.replace(/-/g, "\/")
+                          ).toLocaleDateString("es-ES", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                          })
+                        }}
+                      </span>
+                    </div>
+                    <div class="body-1">
+                      <v-icon small left>phone_android</v-icon>
+                      <span class="font-weight-light">
+                        {{ persona.celular }}
+                      </span>
+                    </div>
+                  </v-layout>
+                </v-card-text>
+              </v-container>
             </v-card>
           </v-flex>
         </v-layout>
@@ -170,7 +184,7 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data: () => ({
     isEdit: false,
-    persona: {},
+    persona: null,
     correo: "",
     nombres: "",
     paterno: "",
