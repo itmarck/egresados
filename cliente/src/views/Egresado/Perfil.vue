@@ -159,11 +159,6 @@
           </v-layout>
         </v-form>
       </v-flex>
-      <!-- Snackbar -->
-      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
-        {{ respuesta }}
-        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-      </v-snackbar>
     </v-layout>
   </v-container>
 </template>
@@ -171,13 +166,10 @@
 <script>
 import { get, put, patch, setUser, getUser, uploadPhoto } from "../../bd/api";
 import { urlImage } from "../../bd/config";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   data: () => ({
     isEdit: false,
-    respuesta: "",
-    snack: false,
-
     persona: {},
     correo: "",
     nombres: "",
@@ -188,13 +180,14 @@ export default {
     fecha: false,
     celular: "",
     estados: [
-      { codigo: "C", texto: "Casado" },
       { codigo: "S", texto: "Soltero" },
-      { codigo: "V", texto: "Viudo" },
-      { codigo: "D", texto: "Divorciado" }
+      { codigo: "C", texto: "Casado" },
+      { codigo: "N", texto: "Conviviente" },
+      { codigo: "D", texto: "Divorciado" },
+      { codigo: "P", texto: "Separado" },
+      { codigo: "V", texto: "Viudo" }
     ],
     estadoCivil: "",
-
     imageName: "",
     imageUrl: "",
     imageFile: ""
@@ -209,10 +202,7 @@ export default {
     }
   },
   methods: {
-    snackbar(texto) {
-      this.respuesta = texto;
-      this.snack = true;
-    },
+    ...mapMutations(["snackbar"]),
     validar() {
       if (this.nombre == "" || this.paterno == "" || this.materno == "") {
         this.snackbar("Ingrese los nombres completos");
@@ -238,9 +228,7 @@ export default {
         estado: this.estadoCivil
       };
       put("personas/" + this.persona.codigo, datos).then(res => {
-        this.respuesta = res.mensaje;
         let respuesta = res.mensaje;
-
         if (res.estado == true) {
           if (this.imageFile != "")
             uploadPhoto(
@@ -248,13 +236,12 @@ export default {
               this.imageFile
             ).then(res => {
               this.cargarDatos();
-              this.respuesta = respuesta + " " + res.mensaje;
-              this.snack = true;
+              this.snackbar(res.mensaje + " " + respuesta);
             });
           this.cargarDatos();
           this.isEdit = false;
         }
-        this.snack = true;
+        this.snackbar(respuesta);
       });
     },
     actualizarUsuario() {
@@ -299,8 +286,7 @@ export default {
       patch("personas/privacidad/" + this.user.codigo, {
         privacidad: this.persona.privacidad
       }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) this.cargarDatos();
       });
     },

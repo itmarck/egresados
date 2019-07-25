@@ -109,12 +109,6 @@
         </v-layout>
       </v-form>
     </v-flex>
-
-    <!-- Snackbar -->
-    <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
-      {{ respuesta }}
-      <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-    </v-snackbar>
     <!-- Dialog para eliminar -->
     <v-dialog v-model="dialog" persistent max-width="360">
       <v-card>
@@ -146,14 +140,13 @@
 
 <script>
 import { get, post, patch } from "../bd/api";
+import { mapMutations } from "vuex";
 export default {
   components: {
     MantSelect: () => import("./MantSelect")
   },
   data: () => ({
     isEdit: false,
-    snack: false,
-    respuesta: "",
     estados: [
       { texto: "Habilitada", valor: 1 },
       { texto: "No habilitada", valor: 0 }
@@ -191,6 +184,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["snackbar"]),
     copiarDatos() {
       if (this.escuela) {
         this.isEdit = true;
@@ -316,10 +310,6 @@ export default {
     },
     cargarFacultades() {
       get("facultades").then(res => (this.facultades = res.data));
-    },
-    snackbar(mensaje) {
-      this.respuesta = mensaje;
-      this.snack = true;
     }
   },
   created() {

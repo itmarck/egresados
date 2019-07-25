@@ -104,17 +104,6 @@
           ></v-select>
           <v-btn block color="primary" type="submit">Generar Curriculum</v-btn>
         </v-flex>
-        <!-- Snackbar -->
-        <v-snackbar
-          v-model="snack"
-          bottom
-          left
-          :timeout="6000"
-          color="secondary"
-        >
-          {{ respuesta }}
-          <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-        </v-snackbar>
       </v-layout>
     </v-form>
   </v-container>
@@ -122,7 +111,7 @@
 
 <script>
 import { get } from "../../bd/api";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { generarPDF } from "../../pdf/index";
 export default {
   data: () => ({
@@ -141,9 +130,7 @@ export default {
     carreras: [],
     persona: {},
     titulo: "",
-    direccion: "",
-    respuesta: "",
-    snack: false
+    direccion: ""
   }),
   computed: {
     ...mapState(["user"]),
@@ -155,10 +142,7 @@ export default {
     }
   },
   methods: {
-    snackbar(texto) {
-      this.respuesta = texto;
-      this.snack = true;
-    },
+    ...mapMutations(["snackbar"]),
     validar() {
       if (this.titulo == "") {
         this.snackbar(
@@ -231,6 +215,7 @@ export default {
         foto: this.user.urlFoto
       };
       generarPDF(datos, this.plantilla, this.color);
+      this.snackbar("Descargando PDF");
     },
     cargarPersona() {
       get("personas/" + this.user.dni).then(res => (this.persona = res.data));

@@ -162,18 +162,13 @@
           </v-list>
         </v-card>
       </v-flex>
-      <!-- Snackbar -->
-      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
-        {{ respuesta }}
-        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-      </v-snackbar>
     </v-layout>
   </v-container>
 </template>
 
 <script>
 import { get, post, put } from "../../bd/api";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   data: () => ({
     codigo: "",
@@ -193,9 +188,7 @@ export default {
     termino: false,
     certificacion: "2019",
     lista: [],
-    isEdit: false,
-    snack: false,
-    respuesta: "Algo falló"
+    isEdit: false
   }),
   computed: {
     ...mapState(["user"]),
@@ -214,10 +207,7 @@ export default {
     }
   },
   methods: {
-    snackbar(texto) {
-      this.respuesta = texto;
-      this.snack = true;
-    },
+    ...mapMutations(["snackbar"]),
     validar() {
       if (this.carrera == "") {
         this.snackbar("Ingrese nombre de la Carrera");
@@ -258,8 +248,7 @@ export default {
         datos = { ...datos, universidad: this.universidad };
       else datos = { ...datos, centroEstudios: this.centro };
       put("estudiosPostgrado/" + this.codigo, datos).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
         }
@@ -280,8 +269,7 @@ export default {
       else datos = { ...datos, centroEstudios: this.centro };
 
       post("estudiosPostgrado/add", datos).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();

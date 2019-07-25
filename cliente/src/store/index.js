@@ -7,11 +7,20 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user: getUser()
+    user: getUser(),
+    mensaje: '',
+    snack: false
   },
   mutations: {
     updateUser(state) {
       state.user = getUser();
+    },
+    snackbar(state, payload) {
+      state.mensaje = payload;
+      state.snack = true;
+    },
+    hideSnack(state) {
+      state.snack = false;
     }
   },
   modules: {

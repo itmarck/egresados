@@ -102,11 +102,6 @@
         </v-layout>
       </v-form>
     </v-flex>
-    <!-- Snackbar -->
-    <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
-      {{ respuesta }}
-      <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-    </v-snackbar>
     <!-- Dialog para eliminar -->
     <v-dialog v-model="dialog" persistent max-width="360">
       <v-card>
@@ -138,6 +133,7 @@
 
 <script>
 import { get, post, put, patch } from "../bd/api";
+import { mapMutations } from 'vuex';
 export default {
   components: {
     MantSelect: () => import("./MantSelect")
@@ -172,6 +168,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['snackbar']),
     copiarDatos() {
       if (this.universidad) {
         this.isEdit = true;
@@ -187,8 +184,7 @@ export default {
         siglas: this.siglas.toUpperCase(),
         estado: this.estado
       }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -201,8 +197,7 @@ export default {
         siglas: this.siglas.toUpperCase(),
         estado: this.estado
       }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
         }
@@ -221,8 +216,7 @@ export default {
         vigencia: true,
         universidad: this.dialogSelect
       }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.vigencia = false;
           this.dialog = false;
@@ -234,8 +228,7 @@ export default {
       patch("universidades/" + this.universidad.codigo, {
         vigencia: false
       }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.vigencia = true;
           this.cargarTodo();

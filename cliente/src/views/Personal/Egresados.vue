@@ -166,11 +166,6 @@
           v-if="isEdit && vigencia == true"
         />
       </v-flex>
-      <!-- Snackbar -->
-      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
-        {{ respuesta }}
-        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-      </v-snackbar>
       <!-- Dialog para eliminar -->
       <v-dialog v-model="dialog" persistent max-width="360">
         <v-card>
@@ -196,15 +191,13 @@
 
 <script>
 import { get, post, put, patch } from "../../bd/api";
+import { mapMutations } from 'vuex';
 export default {
   components: {
     EgresadosCarreras: () => import("../../components/EgreCarreras")
   },
   data: () => ({
     isEdit: false,
-    snack: false,
-    respuesta: "",
-    estados: [{ texto: "Abierta", valor: 1 }, { texto: "Cerrada", valor: 0 }],
     dialog: false,
     dialogSelect: 0,
 
@@ -223,10 +216,12 @@ export default {
     fecha: false,
     celular: "",
     estados: [
-      { codigo: "C", texto: "Casado" },
       { codigo: "S", texto: "Soltero" },
+      { codigo: "C", texto: "Casado" },
+      { codigo: "N", texto: "Conviviente" },
+      { codigo: "D", texto: "Divorciado" },
+      { codigo: "P", texto: "Separado" },
       { codigo: "V", texto: "Viudo" },
-      { codigo: "D", texto: "Divorciado" }
     ],
     estadoCivil: ""
   }),
@@ -245,6 +240,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['snackbar']),
     copiarDatos() {
       if (this.egresado) {
         get("personas/" + this.egresado.dni).then(res => {
@@ -286,8 +282,7 @@ export default {
         celular: this.celular,
         estado: this.estadoCivil
       }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -306,8 +301,7 @@ export default {
         celular: this.celular,
         estado: this.estadoCivil
       }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
         }
@@ -330,8 +324,7 @@ export default {
     },
     eliminar() {
       patch("personas/" + this.codigo, { vigencia: true }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         this.dialog = false;
         if (res.estado == true) {
           this.vigencia = false;
@@ -341,8 +334,7 @@ export default {
     },
     recuperar() {
       patch("personas/" + this.codigo, { vigencia: false }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.vigencia = true;
           this.cargarTodo();

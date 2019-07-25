@@ -41,16 +41,6 @@
             </v-layout>
           </v-form>
         </v-flex>
-        <v-snackbar
-          v-model="snack"
-          bottom
-          left
-          :timeout="6000"
-          color="secondary"
-        >
-          {{ respuesta }}
-          <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-        </v-snackbar>
       </v-layout>
     </v-container>
   </v-content>
@@ -58,24 +48,23 @@
 
 <script>
 import { post, setUser } from "../bd/api";
+import { mapMutations } from "vuex";
 export default {
   components: {
     PublicToolbar: () => import("../components/PublicToolbar")
   },
   data: () => ({
     usuario: "",
-    clave: "",
-    snack: false,
-    respuesta: "Algo falló"
+    clave: ""
   }),
   methods: {
+    ...mapMutations(["snackbar"]),
     ingresar() {
       post("usuarios/ingresar", {
         nombre: this.usuario,
         clave: this.clave
       }).then(res => {
-        this.snack = true;
-        this.respuesta = res.mensaje;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           setUser(res.data);
           this.$router.push("/registro");

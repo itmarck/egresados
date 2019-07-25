@@ -127,17 +127,13 @@
           </v-flex>
         </v-layout>
       </v-form>
-      <!-- Snackbar -->
-      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
-        {{ respuesta }}
-        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-      </v-snackbar>
     </v-container>
   </v-content>
 </template>
 
 <script>
 import { post, setUser } from "../bd/api";
+import { mapMutations } from "vuex";
 export default {
   components: {
     PublicToolbar: () => import("../components/PublicToolbar")
@@ -156,36 +152,36 @@ export default {
     fecha: false,
     celular: "",
     estados: [
-      { codigo: "C", texto: "Casado" },
       { codigo: "S", texto: "Soltero" },
-      { codigo: "V", texto: "Viudo" },
-      { codigo: "D", texto: "Divorciado" }
+      { codigo: "C", texto: "Casado" },
+      { codigo: "N", texto: "Conviviente" },
+      { codigo: "D", texto: "Divorciado" },
+      { codigo: "P", texto: "Separado" },
+      { codigo: "V", texto: "Viudo" }
     ],
-    estadoCivil: "",
-
-    respuesta: "",
-    snack: false
+    estadoCivil: ""
   }),
   methods: {
+    ...mapMutations(["snackbar"]),
     validar() {
       if (this.correo == "") {
-        this.respuesta = "Ingrese el correo";
-        this.snack = true;
+        this.snackbar("Ingrese el correo");
         return false;
       }
       if (this.usuario == "") {
-        this.respuesta = "Ingrese el nombre de usuario";
-        this.snack = true;
+        this.snackbar("Ingrese el nombre de usuario");
+        return false;
+      }
+      if (this.password.length < 6) {
+        this.snackbar("La contraseña debe tener como mínimo 6 caracteres");
         return false;
       }
       if (this.dni == "") {
-        this.respuesta = "Ingrese número de DNI";
-        this.snack = true;
+        this.snackbar("Ingrese número de DNI");
         return false;
       }
       if (this.password != this.repeatPassword) {
-        this.respuesta = "Las contraseñas no coinciden";
-        this.snack = true;
+        this.snackbar("Las contraseñas no coinciden");
         return false;
       }
       return true;
@@ -205,8 +201,7 @@ export default {
         celular: this.celular,
         estado: this.estadoCivil
       }).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           post("usuarios/ingresar", {
             nombre: this.usuario,

@@ -38,35 +38,35 @@
         </v-flex>
       </v-layout>
     </v-form>
-    <!-- Snackbar -->
-    <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
-      {{ respuesta }}
-      <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 
 <script>
 import { patch } from "../bd/api";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   data: () => ({
     actual: "",
-    nueva: "",
-
-    respuesta: "",
-    snack: false
+    nueva: ""
   }),
   computed: {
     ...mapState(["user"])
   },
   methods: {
+    ...mapMutations(["snackbar"]),
+    validar() {
+      if (this.nueva.length < 6) {
+        this.snackbar("La contraseña debe tener como mínimo 6 caracteres");
+        return false;
+      }
+      return true;
+    },
     cambiar() {
+      if (!this.validar()) return;
       let datos = { tipo: "personal", actual: this.actual, nueva: this.nueva };
       if (this.user.tipo == "E") datos = { ...datos, tipo: "persona" };
       patch("usuarios/" + this.user.codigo, datos).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje);
         if (res.estado == true) this.limpiar();
       });
     },

@@ -264,11 +264,6 @@
           </v-list>
         </v-card>
       </v-flex>
-      <!-- Snackbar -->
-      <v-snackbar v-model="snack" bottom left :timeout="6000" color="secondary">
-        {{ respuesta }}
-        <v-btn color="bright" flat @click="snack = false">Cerrar</v-btn>
-      </v-snackbar>
       <!-- Dialog para titulación -->
       <v-dialog v-model="dialog" persistent max-width="400">
         <v-card>
@@ -361,12 +356,10 @@
 
 <script>
 import { get, post, put } from "../../bd/api";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   data: () => ({
     isEdit: false,
-    snack: false,
-    respuesta: "",
     dialog: false,
 
     codigo: "",
@@ -422,10 +415,7 @@ export default {
     }
   },
   methods: {
-    snackbar(texto) {
-      this.respuesta = texto;
-      this.snack = true;
-    },
+    ...mapMutations(["snackbar"]),
     validar() {
       if (this.universidad == "") {
         this.snackbar("Ingrese nombre de Universidad");
@@ -525,8 +515,7 @@ export default {
         };
       } else datos = { ...datos, codigoAdmision: this.admision };
       put("carreras/" + this.codigo, datos).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje)
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -551,8 +540,7 @@ export default {
         };
       } else datos = { ...datos, codigoAdmision: this.admision };
       post("carreras/add", datos).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje)
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -573,8 +561,7 @@ export default {
         };
       }
       put("titulaciones/" + this.codigo, datos).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje)
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -595,8 +582,7 @@ export default {
         };
       }
       post("titulaciones", datos).then(res => {
-        this.respuesta = res.mensaje;
-        this.snack = true;
+        this.snackbar(res.mensaje)
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
