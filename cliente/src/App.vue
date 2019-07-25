@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { get, getUser, removeUser } from "./bd/api";
+import { get, getUser, setUser, removeUser } from "./bd/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   computed: {
@@ -26,9 +26,17 @@ export default {
     ...mapMutations(["hideSnack"])
   },
   created() {
-    if (!getUser()) return;
-    get("personas/" + getUser().dni).then(res => {
+    let user = getUser();
+    if (!user) return;
+    get("personas/" + user.dni).then(res => {
       if (res.estado == true) {
+        setUser({
+          ...user,
+          nombres: res.data.nombres,
+          apellidoPaterno: res.data.apellidoPaterno,
+          apellidoMaterno: res.data.apellidoMaterno,
+          urlFoto: res.data.urlFoto
+        });
         if (parseInt(res.data.vigencia) == 0) {
           removeUser();
           this.$router.push("/login");
