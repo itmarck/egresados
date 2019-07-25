@@ -12,74 +12,72 @@
                   Datos de carrera
                 </v-card-title>
                 <v-card-text>
-                  <v-form>
-                    <v-combobox
-                      v-model="universidad"
-                      label="Seleccione universidad"
-                      :items="universidades"
-                      placeholder="Universidad"
-                      @change="cargarEscuelas(universidad)"
-                    ></v-combobox>
-                    <v-combobox
-                      v-model="escuela"
-                      label="Seleccione escuela"
-                      :items="escuelas"
-                      item-text="nombre"
-                      item-value="codigo"
-                      placeholder="Escuela"
-                      @change="cargarAdmisiones(escuela)"
-                    ></v-combobox>
-                    <v-layout row wrap>
-                      <v-flex xs6>
-                        <v-menu
-                          v-model="inicio"
-                          lazy
-                          offset-y
-                          full-width
-                          min-width="280px"
-                          :close-on-content-click="false"
-                        >
-                          <template v-slot:activator="{ on }">
-                            <v-text-field
-                              v-model="fechaInicio"
-                              label="Fecha de inicio"
-                              prepend-icon="event"
-                              readonly
-                              v-on="on"
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
+                  <v-combobox
+                    v-model="universidad"
+                    label="Seleccione universidad"
+                    :items="universidades"
+                    placeholder="Universidad"
+                    @change="cargarEscuelas(universidad)"
+                  ></v-combobox>
+                  <v-combobox
+                    v-model="escuela"
+                    label="Seleccione escuela"
+                    :items="escuelas"
+                    item-text="nombre"
+                    item-value="codigo"
+                    placeholder="Escuela"
+                    @change="cargarAdmisiones(escuela)"
+                  ></v-combobox>
+                  <v-layout row wrap>
+                    <v-flex xs6>
+                      <v-menu
+                        v-model="inicio"
+                        lazy
+                        offset-y
+                        full-width
+                        min-width="280px"
+                        :close-on-content-click="false"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
                             v-model="fechaInicio"
-                            @input="inicio = false"
-                          ></v-date-picker>
-                        </v-menu>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-menu
-                          v-model="termino"
-                          lazy
-                          offset-y
-                          full-width
-                          min-width="280px"
-                          :close-on-content-click="false"
-                        >
-                          <template v-slot:activator="{ on }">
-                            <v-text-field
-                              v-model="fechaTermino"
-                              label="Fecha de término"
-                              prepend-icon="event"
-                              readonly
-                              v-on="on"
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
+                            label="Fecha de inicio"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          v-model="fechaInicio"
+                          @input="inicio = false"
+                        ></v-date-picker>
+                      </v-menu>
+                    </v-flex>
+                    <v-flex xs6>
+                      <v-menu
+                        v-model="termino"
+                        lazy
+                        offset-y
+                        full-width
+                        min-width="280px"
+                        :close-on-content-click="false"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
                             v-model="fechaTermino"
-                            @input="termino = false"
-                          ></v-date-picker>
-                        </v-menu>
-                      </v-flex>
-                    </v-layout>
-                  </v-form>
+                            label="Fecha de término"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          v-model="fechaTermino"
+                          @input="termino = false"
+                        ></v-date-picker>
+                      </v-menu>
+                    </v-flex>
+                  </v-layout>
                 </v-card-text>
               </v-card>
             </v-flex>

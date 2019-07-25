@@ -218,7 +218,7 @@ export default {
   methods: {
     ...mapMutations(["snackbar"]),
     validar() {
-      if (this.nombre == "" || this.paterno == "" || this.materno == "") {
+      if (this.nombres == "" || this.paterno == "" || this.materno == "") {
         this.snackbar("Ingrese los nombres completos");
         return false;
       }

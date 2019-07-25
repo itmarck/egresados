@@ -10,9 +10,9 @@
               :items="egresados"
               placeholder="Seleccione Egresado"
               item-value="codigo"
+              item-text="nombre"
               hide-details
               return-object
-              clearable
               solo
               @change="seleccionarEgresado"
             >
@@ -191,7 +191,7 @@
 
 <script>
 import { get, post, put, patch } from "../../bd/api";
-import { mapMutations } from 'vuex';
+import { mapMutations } from "vuex";
 export default {
   components: {
     EgresadosCarreras: () => import("../../components/EgreCarreras")
@@ -221,7 +221,7 @@ export default {
       { codigo: "N", texto: "Conviviente" },
       { codigo: "D", texto: "Divorciado" },
       { codigo: "P", texto: "Separado" },
-      { codigo: "V", texto: "Viudo" },
+      { codigo: "V", texto: "Viudo" }
     ],
     estadoCivil: ""
   }),
@@ -240,7 +240,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['snackbar']),
+    ...mapMutations(["snackbar"]),
     copiarDatos() {
       if (this.egresado) {
         get("personas/" + this.egresado.dni).then(res => {
@@ -269,7 +269,23 @@ export default {
         this.isEdit = true;
       }, 10);
     },
+    validar() {
+      if (this.dni == "") {
+        this.snackbar("Ingrese el DNI");
+        return false;
+      }
+      if (this.nombres == "" || this.paterno == "" || this.materno == "") {
+        this.snackbar("Ingrese los nombres completos");
+        return false;
+      }
+      if (this.correo == "") {
+        this.snackbar("Ingrese correo");
+        return false;
+      }
+      return true;
+    },
     agregar() {
+      if (!this.validar()) return;
       post("personas", {
         dni: this.dni,
         correo: this.correo,
@@ -290,6 +306,7 @@ export default {
       });
     },
     editar() {
+      if (!this.validar()) return;
       put("personas/" + this.codigo, {
         dni: this.dni,
         correo: this.correo,
