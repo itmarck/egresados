@@ -551,7 +551,21 @@ export default {
         }
       });
     },
+    validarTitulacion() {
+      if (this.modalidadTitulacion == null) {
+        this.snackbar("Seleccione Modalidad de la titulación");
+        return false;
+      }
+      if (this.addColegiatura) {
+        if (this.codigoColegiado == null) {
+          this.snackbar("Ingrese el código de colegiado");
+          return false;
+        }
+      }
+      return true;
+    },
     editarTitulacion() {
+      if (!this.validarTitulacion()) return;
       let datos = {
         codigoEgresado: this.codigo,
         codigoModalidad: this.modalidadTitulacion,
@@ -573,6 +587,7 @@ export default {
       });
     },
     agregarTitulacion() {
+      if (!this.validarTitulacion()) return;
       let datos = {
         codigoEgresado: this.codigo,
         codigoModalidad: this.modalidadTitulacion,
