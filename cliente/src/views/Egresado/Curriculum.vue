@@ -36,12 +36,13 @@
               <v-list-tile
                 v-for="postgrado of postgrados"
                 :key="postgrado.codigo"
+                @click="postgrado.select = !postgrado.select"
               >
                 <v-list-tile-action>
-                  <v-checkbox
-                    color="primary"
-                    v-model="postgrado.select"
-                  ></v-checkbox>
+                  <v-icon v-if="postgrado.select" color="primary">
+                    check_box
+                  </v-icon>
+                  <v-icon v-else> check_box_outline_blank </v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
                   <v-list-tile-title v-html="postgrado.nombre" />
@@ -66,12 +67,16 @@
           <v-card v-if="contratos.length != 0">
             <v-list three-line subheader>
               <v-subheader>Experiencia</v-subheader>
-              <v-list-tile v-for="contrato of contratos" :key="contrato.codigo">
+              <v-list-tile
+                v-for="contrato of contratos"
+                :key="contrato.codigo"
+                @click="contrato.select = !contrato.select"
+              >
                 <v-list-tile-action>
-                  <v-checkbox
-                    color="primary"
-                    v-model="contrato.select"
-                  ></v-checkbox>
+                  <v-icon v-if="contrato.select" color="primary">
+                    check_box
+                  </v-icon>
+                  <v-icon v-else> check_box_outline_blank </v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
                   <v-list-tile-title v-html="contrato.centroLaboral" />
