@@ -479,6 +479,10 @@ export default {
             this.fechaColegiatura = carrera.fechaColegiatura;
             this.codigoColegiado = carrera.codigoColegiatura;
             this.modalidadTitulacion = carrera.modalidadTitulacion;
+            if (carrera.fechaColegiatura == null)
+              this.fechaColegiatura = new Date().toISOString().substring(0, 10);
+            if (carrera.fechaTitulacion == null)
+              this.fechaTitulacion = new Date().toISOString().substring(0, 10);
             if (this.codigoColegiado) this.addColegiatura = true;
             else this.addColegiatura = false;
             if (res.estado) this.admisiones = res.data;
@@ -487,10 +491,10 @@ export default {
               this.addAdmision = true;
             }
             this.titulacion = {
-              fechaTitulacion: carrera.fechaTitulacion,
-              fechaColegiatura: carrera.fechaColegiatura,
-              codigoColegiado: carrera.codigoColegiatura,
-              modalidadTitulacion: carrera.modalidadTitulacion
+              fechaTitulacion: this.fechaTitulacion,
+              fechaColegiatura: this.fechaColegiatura,
+              codigoColegiado: this.codigoColegiado,
+              modalidadTitulacion: this.modalidadTitulacion
             };
           });
           this.escuelas = res.data;
@@ -515,7 +519,7 @@ export default {
         };
       } else datos = { ...datos, codigoAdmision: this.admision };
       put("carreras/" + this.codigo, datos).then(res => {
-        this.snackbar(res.mensaje)
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -540,7 +544,7 @@ export default {
         };
       } else datos = { ...datos, codigoAdmision: this.admision };
       post("carreras/add", datos).then(res => {
-        this.snackbar(res.mensaje)
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -561,7 +565,7 @@ export default {
         };
       }
       put("titulaciones/" + this.codigo, datos).then(res => {
-        this.snackbar(res.mensaje)
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -582,7 +586,7 @@ export default {
         };
       }
       post("titulaciones", datos).then(res => {
-        this.snackbar(res.mensaje)
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
