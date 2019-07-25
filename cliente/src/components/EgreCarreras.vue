@@ -618,7 +618,9 @@ export default {
       get("modalidadesAdmision").then(res => (this.modalidades = res.data));
     },
     cargarLista() {
-      get("carreras/" + this.dni).then(res => (this.listaCarreras = res.data));
+      get("carreras/" + this.dni).then(res => {
+        if (res.estado == true) this.listaCarreras = res.data;
+      });
     },
     cargarUniversidades() {
       get("universidades").then(res => (this.universidades = res.data));

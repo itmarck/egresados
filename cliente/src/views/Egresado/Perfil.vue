@@ -32,7 +32,6 @@
                     <p class="body-1">
                       <span class="font-weight-medium"> DNI </span>
                       <span class="font-weight-light"> {{ persona.dni }}</span>
-                      <!-- <v-icon small left>featured_video</v-icon> -->
                     </p>
                     <div class="body-1">
                       <v-icon small left>email</v-icon>
