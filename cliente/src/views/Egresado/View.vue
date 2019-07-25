@@ -111,7 +111,7 @@ export default {
     drawer: false,
     links: [
       { text: "Inicio", to: "inicio", icon: "home" },
-      { text: "Carreras", to: "carreras", icon: "person" },
+      { text: "Carreras", to: "carreras", icon: "school" },
       { text: "Postgrado", to: "postgrado", icon: "account_balance" },
       { text: "Experiencia", to: "experiencia", icon: "list_alt" },
       { text: "Curriculum", to: "curriculum", icon: "library_books" }
