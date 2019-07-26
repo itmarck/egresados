@@ -61,6 +61,33 @@ $app->get('/api/personas/codigo/{codigo}', function (Request $request) {
   }
 });
 
+$app->get('/api/personas/', function () {
+  try {
+    $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.nombre, E.fechaTermino
+                              FROM persona P 
+                              INNER JOIN egresado E ON E.codigoPersona = P.codigo
+                              INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
+                              ORDER BY fechaTermino DESC
+                              LIMIT 15")->fetchAll();
+    $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.fechaTermino, EP.nombre
+                                    FROM persona P 
+                                    INNER JOIN egresado E ON E.codigoPersona = P.codigo
+                                    INNER JOIN estudiospostgrado EP on EP.codigoEgresado = E.codigo
+                                    ORDER BY fechaTermino DESC
+                                    LIMIT 15")->fetchAll();
+    $data = array_merge($carreras,$postgrados) ;
+    usort($data, 'ordenar');
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
 $app->post('/api/personas', function (Request $request) {
   $nombres = $request->getParam('nombres');
   $DNI = $request->getParam('dni');
@@ -220,4 +247,8 @@ function moveUploadedFile($directory, UploadedFile $imagen)
   $imagen->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
 
   return $filename;
+}
+
+function ordenar( $a, $b ) {
+  return strtotime($b->fechaTermino) - strtotime($a->fechaTermino) ; 
 }
