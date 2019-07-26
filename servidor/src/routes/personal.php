@@ -20,7 +20,7 @@ $app->get('/api/personal', function () {
 $app->get('/api/personal/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno,dni,genero,correo,celular FROM personal WHERE codigo = $codigo and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno,dni,genero,correo,celular,urlFoto FROM personal WHERE codigo = $codigo and vigencia=1")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
