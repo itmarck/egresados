@@ -5,7 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/centroLaboral', function () {
   try {
-    $data = $this->db->query("SELECT C.codigo as codigo ,codigoActividad,A.nombre as Actividad,codigoDistrito,D.nombre as Distrito,RUC,razonSocial 
+    $data = $this->db->query("SELECT C.codigo as codigo ,codigoActividad,A.nombre as Actividad ,codigoDistrito,D.nombre as Distrito,RUC,razonSocial 
                             FROM centrolaboral C
                             INNER JOIN actividadeconomica A on A.codigo=C.codigoActividad 
                             INNER JOIN distrito D on D.codigo = C.codigoDistrito  

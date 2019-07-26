@@ -22,28 +22,34 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
   $nombre = $request->getParam('nombre');
   $result = [];
   try {
-    $usuario = $this->db->query("SELECT nombre , clave FROM usuario WHERE nombre = '$nombre' and vigencia=1")->fetchAll();
+    $usuario = $this->db->query("SELECT nombre , clave,vigencia FROM usuario WHERE nombre = '$nombre'")->fetchAll();
     if ($usuario) {
-      if (password_verify($clave, $usuario[0]->clave)) {
-        $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre'  and vigencia=1")->fetchAll();
-        $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno, CONCAT(P.nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre FROM usuario ";
-        $codigoPersona = $user[0]->codigoPersona;
-        if (!$codigoPersona) {
-          $sql = $sql . "INNER JOIN personal P on P.codigo = usuario.codigoPersonal
-                WHERE nombre = '$nombre'  and usuario.vigencia=1";
+      if ($usuario[0]->vigencia == 1) {
+        if (password_verify($clave, $usuario[0]->clave)) {
+          $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre'  and vigencia=1")->fetchAll();
+          $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno, CONCAT(P.nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre FROM usuario ";
+          $codigoPersona = $user[0]->codigoPersona;
+          if (!$codigoPersona) {
+            $sql = $sql . "INNER JOIN personal P on P.codigo = usuario.codigoPersonal
+                  WHERE nombre = '$nombre'  and usuario.vigencia=1";
+          } else {
+            $sql = $sql . "INNER JOIN persona P on P.codigo = usuario.codigoPersona
+                  WHERE nombre = '$nombre'  and usuario.vigencia=1";
+          }
+          $data = $this->db->query($sql)->fetchAll();
+          $result = array('estado' => true, 'mensaje' => 'Ingresando...', 'data' => $data[0]);
+          echo json_encode($result);
         } else {
-          $sql = $sql . "INNER JOIN persona P on P.codigo = usuario.codigoPersona
-                WHERE nombre = '$nombre'  and usuario.vigencia=1";
+          $result = array('estado' => false, 'mensaje' => 'Contraseña Incorrecta');
+          echo json_encode($result);
         }
-        $data = $this->db->query($sql)->fetchAll();
-        $result = array('estado' => true, 'mensaje' => 'Ingresando...', 'data' => $data[0]);
-        echo json_encode($result);
       } else {
-        $result = array('estado' => false, 'mensaje' => 'Contraseña Incorrecta');
+        $result = array('estado' => false, 'mensaje' => 'Usuario inhabilitado');
         echo json_encode($result);
       }
+      
     } else {
-      $result = array('estado' => false, 'mensaje' => 'Usuario no existe o esta inhabilitado');
+      $result = array('estado' => false, 'mensaje' => 'Usuario no existe');
       echo json_encode($result);
     }
   } catch (PDOException $e) {
@@ -51,18 +57,25 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
   }
 });
 
-$app->get('/api/usuarios/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->get('/api/usuarios/{dni}', function (Request $request) {
+  $dni = $request->getAttribute('dni');
   try {
-    $data = $this->db->query("SELECT codigo,codigoPersonal,nombre,clave,tipo,codigoPersona FROM usuario WHERE codigo = $codigo and vigencia=1")->fetchAll();;
-    if ($data) {
+    $tipo= $this->db->query("SELECT codigoPersona FROM usuario U INNER JOIN persona P on P.codigo = codigoPersona 
+                            WHERE dni = $dni")->fetchAll();
+    if ($tipo) {
+      $data = $this->db->query("SELECT dni, P.codigo,tipo,nombres,apellidoPaterno,apellidoMaterno,urlFoto 
+      FROM usuario INNER JOIN persona P on P.codigo= codigoPersona  WHERE dni = $dni ")->fetchAll();
+    } else {
+      $data = $this->db->query("SELECT dni,P.codigo,nombres,apellidoPaterno,apellidoMaterno,urlFoto FROM usuario INNER JOIN personal P on P.codigo = codigoPersonal WHERE dni = $dni")->fetchAll();
+    }
+      if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ', $e->getMessage()));
   }
 });
 
