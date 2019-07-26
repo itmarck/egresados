@@ -7,7 +7,7 @@
           {{ user.nombres }}
         </span>
         <span class="font-weight-light text-uppercase">
-          {{ user.apellidoPaterno }} {{ user.apellidoMaterno }}
+          {{ user.paterno }} {{ user.materno }}
         </span>
       </v-toolbar-title>
       <v-toolbar-title class="hidden-md-and-up">
@@ -61,7 +61,7 @@
                 {{ user.nombres }}
               </div>
               <div class="font-weight-light text-uppercase">
-                {{ user.apellidoPaterno }} {{ user.apellidoMaterno }}
+                {{ user.paterno }} {{ user.materno }}
               </div>
             </v-flex>
           </v-layout>
