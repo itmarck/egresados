@@ -128,13 +128,16 @@ $app->patch('/api/personal/{codigo}', function (Request $request) {
     $cantidad = $this->db->exec("UPDATE personal set
                                 vigencia = $vigencia
                                 WHERE codigo = $codigo");
+    $cantidad = $this->db->exec("UPDATE usuario set 
+                                vigencia = $vigencia
+                                WHERE codigoPersonal = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Personal eliminado, siempre estará en nuestra memoria' : 'Personal rescatado del inframundo'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
 

@@ -65,7 +65,7 @@ $app->get('/api/usuarios/{dni}', function (Request $request) {
       $data = $this->db->query("SELECT dni, P.codigo,tipo,nombres,apellidoPaterno as paterno,apellidoMaterno as materno,urlFoto , usuario.vigencia
       FROM usuario INNER JOIN persona P on P.codigo= codigoPersona  WHERE dni = $dni ")->fetchAll();
     } else {
-      $data = $this->db->query("SELECT dni,P.codigo,nombres,apellidoPaterno as paterno,apellidoMaterno as materno,urlFoto,usuario.vigencia FROM usuario INNER JOIN personal P on P.codigo = codigoPersonal WHERE dni = $dni")->fetchAll();
+      $data = $this->db->query("SELECT dni,P.codigo,tipo,nombres,apellidoPaterno as paterno,apellidoMaterno as materno,urlFoto,usuario.vigencia FROM usuario INNER JOIN personal P on P.codigo = codigoPersonal WHERE dni = $dni")->fetchAll();
     }
     if ($data) {
       $result = array('estado' => true, 'data' => $data[0]);
