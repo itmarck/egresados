@@ -12,7 +12,7 @@ $app->get('/api/personas', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -27,7 +27,7 @@ $app->get('/api/personas/{DNI}', function (Request $request) {
       $result = array('estado' => true, 'data' => $data[0]);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -54,7 +54,7 @@ $app->get('/api/personas/codigo/{codigo}', function (Request $request) {
       $data = array('egresado' => $egresado, 'carreras' => $carreras, 'estudiosPost' => $estudiosPost);
       echo json_encode(array('estado' => true, 'data' => $data));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

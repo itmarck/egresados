@@ -15,7 +15,7 @@ $app->get('/api/universidades', function () {
       $result = array('estado' => true, 'data' => $nombres);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -30,7 +30,7 @@ $app->get('/api/universidades-objeto', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -45,7 +45,7 @@ $app->get('/api/universidades/{codigo}', function (Request $request) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

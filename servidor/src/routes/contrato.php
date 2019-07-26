@@ -16,33 +16,12 @@ $app->get('/api/contratos', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
-
-// $app->get('/api/contratos/{codigo}',function(Request $request){
-//    $codigo = $request->getAttribute('codigo');
-//   try {
-//     $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno) as Nombre,C.codigo,codigoEgresado,EP.nombre as Carrera,codigoCentroLaboral,Cen.razonSocial as Centrolaboral,cargo,C.fechaInicio,C.fechaTermino,detalleFunciones 
-//                               FROM contrato C
-//                               INNER JOIN egresado E on E.codigo = C.codigoEgresado
-//                               INNER JOIN persona P on P.codigo = E.codigoPersona
-//                               INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
-//                               INNER JOIN centrolaboral Cen on Cen.codigo  = C.codigoCentroLaboral
-//                               WHERE C.codigo = $codigo and C.vigencia=1")->fetchAll();
-//     if ($data) {
-//       $result = array('estado' => true, 'data' => $data);
-//       echo json_encode($result);
-//    }else {
-//      echo json_encode( array('estado' => false ));
-//    }
-//   } catch (PDOException $e) {
-//     echo '{"Error": { "mensaje": '. $e->getMessage().'}';
-//   }
-// });
 
 $app->get('/api/contratos/{dniPersona}', function (Request $request) {
   $codigo = $request->getAttribute('dniPersona');
@@ -79,7 +58,7 @@ $app->get('/api/contratos/{dniPersona}', function (Request $request) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));

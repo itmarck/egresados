@@ -14,10 +14,10 @@ $app->get('/api/admisiones', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado admisiones'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado admisiones', 'data' => []));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos', 'data' => []));
   }
 });
 
@@ -36,10 +36,10 @@ $app->get('/api/admisiones/{nombreEscuela}/{nombreUniversidad}', function (Reque
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'data' => []));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos', 'data' => []));
   }
 });
 
