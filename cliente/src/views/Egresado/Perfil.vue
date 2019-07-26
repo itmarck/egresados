@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import { get, put, patch, setUser, getUser, uploadPhoto } from "../../bd/api";
+import { get, put, patch, userFromServer, uploadPhoto } from "../../bd/api";
 import { urlImage } from "../../bd/config";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -257,23 +257,6 @@ export default {
         this.snackbar(respuesta);
       });
     },
-    actualizarUsuario() {
-      let user = getUser();
-      let newUser = {
-        ...user,
-        nombres: this.persona.nombres,
-        apellidoPaterno: this.persona.apellidoPaterno,
-        apellidoMaterno: this.persona.apellidoMaterno,
-        nombre:
-          this.persona.nombres +
-          " " +
-          this.persona.apellidoPaterno +
-          " " +
-          this.persona.apellidoMaterno,
-        urlFoto: this.persona.urlFoto
-      };
-      setUser(newUser);
-    },
     editar() {
       this.copiarDatos();
       this.isEdit = true;
@@ -292,7 +275,7 @@ export default {
     cargarDatos() {
       get("personas/" + this.user.dni).then(res => {
         this.persona = res.data;
-        this.actualizarUsuario();
+        userFromServer();
       });
     },
     cambiarPrivacidad() {

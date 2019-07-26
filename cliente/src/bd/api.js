@@ -44,6 +44,14 @@ export function hash(string) {
   }, 0);
 }
 
+export async function userFromServer() {
+  let user = getUser();
+  if (user == null) return 0;
+  let res = await get('usuarios/' + user.dni);
+  if (res.estado == true) setUser(res.data);
+  return parseInt(res.data.vigencia);
+}
+
 export function getUser() {
   let localUser = localStorage.getItem('user') || '';
   let localHash = localStorage.getItem('hash');
