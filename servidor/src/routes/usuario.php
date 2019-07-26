@@ -68,7 +68,7 @@ $app->get('/api/usuarios/{dni}', function (Request $request) {
       $data = $this->db->query("SELECT dni,P.codigo,nombres,apellidoPaterno as paterno,apellidoMaterno as materno,urlFoto,usuario.vigencia FROM usuario INNER JOIN personal P on P.codigo = codigoPersonal WHERE dni = $dni")->fetchAll();
     }
     if ($data) {
-      $result = array('estado' => true, 'data' => $data);
+      $result = array('estado' => true, 'data' => $data[0]);
       echo json_encode($result);
     } else {
       echo json_encode(array('estado' => false, 'data' => []));
