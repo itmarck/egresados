@@ -48,7 +48,7 @@ $app->get('/api/facultades/{codigo}', function (Request $request) {
   }
 });
 
-$app->post('/api/facultades/add', function (Request $request) {
+$app->post('/api/facultades', function (Request $request) {
   $nombre = $request->getParam('nombre');
   $siglas = $request->getParam('siglas');
   $estado = $request->getParam('estado');

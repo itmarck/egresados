@@ -37,7 +37,7 @@ $app->get('/api/centroEstudios/{codigo}', function (Request $request) {
   }
 });
 
-$app->post('/api/centroEstudios/add', function (Request $request) {
+$app->post('/api/centroEstudios', function (Request $request) {
   $razonSocial = $request->getParam('razonSocial');
   try {
     $cantidad = $this->db->exec("INSERT INTO centroestudios(razonSocial,vigencia) 
