@@ -5,7 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/personal', function () {
   try {
-    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni, vigencia FROM personal ")->fetchAll();
+    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni, correo, vigencia FROM personal ")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -13,7 +13,7 @@ $app->get('/api/personal', function () {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -28,7 +28,7 @@ $app->get('/api/personal/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -80,8 +80,8 @@ $app->post('/api/personal', function (Request $request) {
 $app->put('/api/personal/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $nombres = $request->getParam('nombres');
-  $apellidoPaterno = $request->getParam('apellidoPaterno');
-  $apellidoMaterno = $request->getParam('apellidoMaterno');
+  $apellidoPaterno = $request->getParam('paterno');
+  $apellidoMaterno = $request->getParam('materno');
   $genero = $request->getParam('genero');
 
   $celular = $request->getParam('celular');
@@ -102,7 +102,7 @@ $app->put('/api/personal/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => true, 'mensaje' => 'No se han cambiado los datos personales'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -117,7 +117,7 @@ $app->delete('/api/personal/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 
@@ -153,5 +153,3 @@ $app->post('/api/personal/images/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al subir la imagen'));
   }
 });
-
-
