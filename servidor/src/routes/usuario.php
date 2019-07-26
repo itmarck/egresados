@@ -27,7 +27,7 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
       if ($usuario[0]->vigencia == 1) {
         if (password_verify($clave, $usuario[0]->clave)) {
           $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre'  and vigencia=1")->fetchAll();
-          $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno,apellidoMaterno, CONCAT(P.nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre FROM usuario ";
+          $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno as paterno,apellidoMaterno as materno FROM usuario ";
           $codigoPersona = $user[0]->codigoPersona;
           if (!$codigoPersona) {
             $sql = $sql . "INNER JOIN personal P on P.codigo = usuario.codigoPersonal
@@ -47,7 +47,6 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
         $result = array('estado' => false, 'mensaje' => 'Usuario inhabilitado');
         echo json_encode($result);
       }
-      
     } else {
       $result = array('estado' => false, 'mensaje' => 'Usuario no existe');
       echo json_encode($result);
@@ -60,15 +59,15 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
 $app->get('/api/usuarios/{dni}', function (Request $request) {
   $dni = $request->getAttribute('dni');
   try {
-    $tipo= $this->db->query("SELECT codigoPersona FROM usuario U INNER JOIN persona P on P.codigo = codigoPersona 
+    $tipo = $this->db->query("SELECT codigoPersona FROM usuario U INNER JOIN persona P on P.codigo = codigoPersona 
                             WHERE dni = $dni")->fetchAll();
     if ($tipo) {
-      $data = $this->db->query("SELECT dni, P.codigo,tipo,nombres,apellidoPaterno,apellidoMaterno,urlFoto 
+      $data = $this->db->query("SELECT dni, P.codigo,tipo,nombres,apellidoPaterno as paterno,apellidoMaterno as materno,urlFoto , usuario.vigencia
       FROM usuario INNER JOIN persona P on P.codigo= codigoPersona  WHERE dni = $dni ")->fetchAll();
     } else {
-      $data = $this->db->query("SELECT dni,P.codigo,nombres,apellidoPaterno,apellidoMaterno,urlFoto,vigencia FROM usuario INNER JOIN personal P on P.codigo = codigoPersonal WHERE dni = $dni")->fetchAll();
+      $data = $this->db->query("SELECT dni,P.codigo,nombres,apellidoPaterno as paterno,apellidoMaterno as materno,urlFoto,usuario.vigencia FROM usuario INNER JOIN personal P on P.codigo = codigoPersonal WHERE dni = $dni")->fetchAll();
     }
-      if ($data) {
+    if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
