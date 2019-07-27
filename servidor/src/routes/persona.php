@@ -67,16 +67,19 @@ $app->get('/api/personas/', function () {
                               FROM persona P 
                               INNER JOIN egresado E ON E.codigoPersona = P.codigo
                               INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
+                              WHERE P.privacidad = 0
                               ORDER BY fechaTermino DESC
-                              LIMIT 15")->fetchAll();
+                              LIMIT 25")->fetchAll();
     $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.fechaTermino, EP.nombre
                                     FROM persona P 
                                     INNER JOIN egresado E ON E.codigoPersona = P.codigo
                                     INNER JOIN estudiospostgrado EP on EP.codigoEgresado = E.codigo
+                                    WHERE P.privacidad = 0
                                     ORDER BY fechaTermino DESC
-                                    LIMIT 15")->fetchAll();
-    $data = array_merge($carreras,$postgrados) ;
+                                    LIMIT 25")->fetchAll();
+    $data = array_merge($carreras, $postgrados);
     usort($data, 'ordenar');
+    $data = array_slice($data, 0, 20);
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -210,7 +213,7 @@ $app->patch('/api/personas/privacidad/{codigo}', function (Request $request) {
                                 privacidad = $privacidad
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => (!$privacidad) ?  'Ahora tu perfil es publico': 'Ahora tu perfil es privado'));
+      echo json_encode(array('estado' => true, 'mensaje' => (!$privacidad) ?  'Ahora tu perfil es publico' : 'Ahora tu perfil es privado'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la privacidad'));
     }
@@ -231,7 +234,7 @@ $app->post('/api/personas/images/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => true, 'mensaje' => 'Foto agregada'));
     $file = $this->db->query("SELECT urlFoto FROM persona WHERE codigo = $codigo")->fetchAll();
     $file = $file[0]->urlFoto;
-    unlink("../public/images/".$file);
+    unlink("../public/images/" . $file);
     $this->db->exec("UPDATE persona SET urlfoto = '$filename' where codigo = $codigo");
   } else {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al subir la imagen'));
@@ -249,6 +252,7 @@ function moveUploadedFile($directory, UploadedFile $imagen)
   return $filename;
 }
 
-function ordenar( $a, $b ) {
-  return strtotime($b->fechaTermino) - strtotime($a->fechaTermino) ; 
+function ordenar($a, $b)
+{
+  return strtotime($b->fechaTermino) - strtotime($a->fechaTermino);
 }
