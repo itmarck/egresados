@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { getUser } from '../bd/api';
 import mantenimiento from './mantenimiento';
+import reportes from './reportes';
 
 Vue.use(Vuex);
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    mantenimiento
+    mantenimiento,
+    reportes
   }
 });
