@@ -27,6 +27,10 @@ export async function patch(peticion, datos) {
   return call(peticion, datos, 'PATCH');
 }
 
+export async function del(peticion, datos) {
+  return call(peticion, datos, 'DELETE');
+}
+
 export async function uploadPhoto(peticion, foto) {
   let data = new FormData();
   data.append('profile', foto);
