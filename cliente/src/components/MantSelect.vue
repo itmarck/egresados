@@ -10,7 +10,15 @@
 import { mapState } from "vuex";
 export default {
   data: () => ({
-    tablas: ["Universidades", "Escuelas", "Facultades", "Admisiones"]
+    tablas: [
+      "Universidades",
+      "Escuelas",
+      "Facultades",
+      "Centros de Estudio",
+      "Centros Laborales",
+      "Actividades Económicas",
+      "Distritos"
+    ]
   }),
   computed: {
     tabla: {
