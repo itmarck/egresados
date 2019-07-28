@@ -61,7 +61,7 @@ $app->get('/api/personas/codigo/{codigo}', function (Request $request) {
   }
 });
 
-$app->get('/api/personas/', function () {
+$app->get('/api/personas-publico', function () {
   try {
     $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.nombre, E.fechaTermino
                               FROM persona P 
