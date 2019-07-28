@@ -38,7 +38,6 @@ $app->post('/api/personal', function (Request $request) {
   $apellidoPaterno = $request->getParam('paterno');
   $apellidoMaterno = $request->getParam('materno');
   $genero = $request->getParam('genero');
-  $celular = $request->getParam('celular');
   $correo = $request->getParam('correo');
   $usuario = $request->getParam('usuario');
   $contraseña = $request->getParam('clave');
@@ -46,16 +45,16 @@ $app->post('/api/personal', function (Request $request) {
     $dni = $this->db->query("SELECT dni FROM persona WHERE dni = '$DNI'")->fetchAll();
     if (!$dni) {
       $this->db->beginTransaction();
-      $cantidad = $this->db->exec("INSERT INTO personal(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,celular,correo,urlfoto,vigencia) 
-                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$celular','$correo','default.jpg',1)");
+      $cantidad = $this->db->exec("INSERT INTO personal(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,correo,urlfoto,vigencia) 
+                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$correo','default.jpg',1)");
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
         $hash = password_hash(($contraseña) ? $contraseña : contraseña, PASSWORD_DEFAULT);
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
-          $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia)
-                                  VALUES('$usuario','$hash','E',$codigo,1)");
+          $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersonal,vigencia)
+                                  VALUES('$usuario','$hash','P',$codigo,1)");
           if ($cantidad > 0) {
             $this->db->commit();
             echo json_encode(array('estado' => true, 'mensaje' => 'Personal registrado correctamente'));
