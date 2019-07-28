@@ -186,7 +186,7 @@ $app->put('/api/personas/{codigo}', function (Request $request) {
 });
 
 $app->delete('/api/personas-objeto-disabled', function (Request $request) {
-  $DNI = $request->getParam('codigo');
+  $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM persona 
                                 WHERE codigo = $codigo");
