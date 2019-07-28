@@ -74,7 +74,7 @@ $app->put('/api/actividadEconomica/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/actividades-objeto-disable', function (Request $request) {
+$app->delete('/api/actividades-objeto-disabled', function (Request $request) {
   $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM actividadEconomica
