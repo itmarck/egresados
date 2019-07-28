@@ -99,8 +99,8 @@ $app->put('/api/centroLaboral/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/centroLaboral/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->delete('/api/centroLaboral-objeto-disabled', function (Request $request) {
+  $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM centrolaboral 
                                 WHERE codigo = $codigo");

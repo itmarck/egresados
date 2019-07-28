@@ -84,8 +84,8 @@ $app->put('/api/admisiones/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/admisiones/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->delete('/api/universidades-objeto-disabled', function (Request $request) {
+  $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM admision 
                                 WHERE codigo = $codigo");

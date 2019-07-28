@@ -185,11 +185,11 @@ $app->put('/api/personas/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/personas/{DNI}', function (Request $request) {
-  $DNI = $request->getAttribute('DNI');
+$app->delete('/api/personas-objeto-disabled', function (Request $request) {
+  $DNI = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM persona 
-                                WHERE dni = '$DNI'");
+                                WHERE codigo = $codigo");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Persona Eliminada, siempre estará en nuestra memoria'));
     } else {

@@ -38,6 +38,21 @@ $app->get('/api/distritos-objeto-disabled', function () {
   }
 });
 
+$app->delete('/api/distritos-objeto-disabled', function (Request $request) {
+  $codigo = $request->getParam('codigo');
+  try {
+    $cantidad = $this->db->exec("DELETE FROM distrito
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Distrito eliminado'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido eliminar distrito'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
 $app->put('/api/distritos/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $nombre = $request->getParam('nombre');

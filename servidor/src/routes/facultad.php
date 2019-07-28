@@ -100,8 +100,8 @@ $app->put('/api/facultades/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/facultades/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->delete('/api/facultades-objeto-disabled', function (Request $request) {
+  $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM facultad 
                                 WHERE codigo = $codigo");
