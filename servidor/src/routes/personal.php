@@ -20,7 +20,21 @@ $app->get('/api/personal', function () {
 $app->get('/api/personal/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno,dni,genero,correo,celular,urlFoto FROM personal WHERE codigo = $codigo and vigencia=1")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,nombres,apellidoPaterno,apellidoMaterno,dni,genero,correo,celular,urlFoto FROM personal WHERE codigo = $codigo")->fetchAll();;
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
+$app->get('/api/personal-objeto-disabled', function () {
+  try {
+    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni as descripcion FROM personal where vigencia = 0")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -105,8 +119,8 @@ $app->put('/api/personal/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/personal/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->delete('/api/personal-objeto-disabled', function (Request $request) {
+  $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM personal 
                                 WHERE codigo = $codigo");

@@ -37,6 +37,21 @@ $app->get('/api/universidades-objeto', function () {
   }
 });
 
+$app->get('/api/universidades-objeto-disabled', function () {
+  try {
+    $data = $this->db->query("SELECT codigo, nombre, siglas as descripcion FROM universidad where vigencia = 0")->fetchAll();
+    if ($data) {
+
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
 $app->get('/api/universidades/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
@@ -91,7 +106,7 @@ $app->put('/api/universidades/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/universidades/{codigo}', function (Request $request) {
+$app->delete('/api/universidades-objeto-disabled/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM universidad 
@@ -105,6 +120,7 @@ $app->delete('/api/universidades/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
+
 $app->patch('/api/universidades/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
@@ -114,10 +130,10 @@ $app->patch('/api/universidades/{codigo}', function (Request $request) {
       $estudios = $this->db->query("SELECT  E.codigo FROM universidad U INNER JOIN estudiosPostgrado E on E.codigoUniversidad = U.codigo WHERE U.codigo = $codigo")->fetchAll();
       $escuela  = $this->db->query("SELECT  E.codigo FROM universidad U INNER JOIN escuelaProfesional E on E.codigoUniversidad = U.codigo WHERE U.codigo = $codigo")->fetchAll();
       if ($universidad  == 0) {
-          if ($estudios || $escuela) {
-            echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge una universidad que la reemplace'));
-            exit;
-          }
+        if ($estudios || $escuela) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge una universidad que la reemplace'));
+          exit;
+        }
       } else {
         foreach ($estudios as $key => $E) {
           $this->db->exec("UPDATE estudiosPostgrado   SET codigoUniversidad = $universidad where codigo = $E->codigo ");

@@ -19,6 +19,20 @@ $app->get('/api/personas', function () {
   }
 });
 
+$app->get('/api/personas-objeto-disabled', function () {
+  try {
+    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni as descripcion FROM persona where vigencia = 0")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
 $app->get('/api/personas/{DNI}', function (Request $request) {
   $DNI = $request->getAttribute('DNI');
   try {
@@ -61,7 +75,7 @@ $app->get('/api/personas/codigo/{codigo}', function (Request $request) {
   }
 });
 
-$app->get('/api/personas/', function () {
+$app->get('/api/personas-publico', function () {
   try {
     $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.nombre, E.fechaTermino
                               FROM persona P 
@@ -171,11 +185,11 @@ $app->put('/api/personas/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/personas/{DNI}', function (Request $request) {
-  $DNI = $request->getAttribute('DNI');
+$app->delete('/api/personas-objeto-disabled', function (Request $request) {
+  $DNI = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM persona 
-                                WHERE dni = '$DNI'");
+                                WHERE codigo = $codigo");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Persona Eliminada, siempre estará en nuestra memoria'));
     } else {

@@ -14,6 +14,25 @@ $app->get('/api/actividadesEconomica', function () {
   }
 });
 
+$app->get('/api/actividad-objeto', function () {
+  $data = $this->db->query("SELECT codigo, nombre, descripcion FROM actividadeconomica ")->fetchAll();
+if ($data) {
+    $result = array('estado' => true, 'data' => $data);
+    echo json_encode($result);
+  } else {
+    echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado actividades economicas', 'data' => $data));
+  }
+});
+
+$app->get('/api/actividad-objeto-disabled', function () {
+  $data = $this->db->query("SELECT codigo, nombre, descripcion FROM actividadeconomica WHERE vigencia = 0")->fetchAll();
+if ($data) {
+    $result = array('estado' => true, 'data' => $data);
+    echo json_encode($result);
+  } else {
+    echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado actividades economicas', 'data' => $data));
+  }
+});
 
 $app->post('/api/actividadEconomica/add', function (Request $request) {
   $nombre = $request->getParam('nombre');
@@ -55,8 +74,8 @@ $app->put('/api/actividadEconomica/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/actividadEconomica/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->delete('/api/actividad-objeto-disable', function (Request $request) {
+  $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM actividadEconomica
                                 WHERE codigo = $codigo");

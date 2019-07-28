@@ -33,6 +33,20 @@ $app->get('/api/facultades-objeto', function () {
   }
 });
 
+$app->get('/api/facultades-objeto-disabled', function () {
+  try {
+    $data = $this->db->query("SELECT codigo,nombre,siglas as descripcion FROM facultad where vigencia = 0")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos', 'data' => []));
+  }
+});
+
 $app->get('/api/facultades/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
@@ -86,8 +100,8 @@ $app->put('/api/facultades/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/facultades/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->delete('/api/facultades-objeto-disabled', function (Request $request) {
+  $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM facultad 
                                 WHERE codigo = $codigo");
