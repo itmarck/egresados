@@ -35,18 +35,17 @@ $app->get('/api/centroLaboral/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos', 'data' => []));
   }
 });
 
 $app->get('/api/centroLaborales-objeto-disabled', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
   try {
     $data = $this->db->query("SELECT C.codigo , CONCAT(A.nombre,',',D.nombre ) as descripcion,razonSocial as nombre
                               FROM centrolaboral C
                               INNER JOIN actividadeconomica A on A.codigo=C.codigoActividad 
                               INNER JOIN distrito D on D.codigo = C.codigoDistrito  
-                              WHERE C.codigo = $codigo and C.vigencia = 0")->fetchAll();
+                              WHERE C.vigencia = 0")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -54,7 +53,7 @@ $app->get('/api/centroLaborales-objeto-disabled', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos', 'data' => []));
   }
 });
 
