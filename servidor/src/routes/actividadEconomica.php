@@ -14,7 +14,7 @@ $app->get('/api/actividadesEconomica', function () {
   }
 });
 
-$app->get('/api/actividad-objeto', function () {
+$app->get('/api/actividades-objeto', function () {
   $data = $this->db->query("SELECT codigo, nombre, descripcion FROM actividadeconomica ")->fetchAll();
 if ($data) {
     $result = array('estado' => true, 'data' => $data);
@@ -24,7 +24,7 @@ if ($data) {
   }
 });
 
-$app->get('/api/actividad-objeto-disabled', function () {
+$app->get('/api/actividades-objeto-disabled', function () {
   $data = $this->db->query("SELECT codigo, nombre, descripcion FROM actividadeconomica WHERE vigencia = 0")->fetchAll();
 if ($data) {
     $result = array('estado' => true, 'data' => $data);
@@ -74,7 +74,7 @@ $app->put('/api/actividadEconomica/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/actividad-objeto-disable', function (Request $request) {
+$app->delete('/api/actividades-objeto-disable', function (Request $request) {
   $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM actividadEconomica

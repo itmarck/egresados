@@ -20,6 +20,23 @@ $app->get('/api/escuelasProfesionales', function () {
   }
 });
 
+$app->get('/api/escuelas-objeto-disabled', function () {
+  try {
+    $data = $this->db->query("SELECT E.codigo,E.nombre,U.nombre as descripcion
+                              FROM escuelaprofesional E
+                              INNER JOIN universidad U on U.codigo = E.codigoUniversidad
+                              where E.vigencia = 0")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
 $app->get('/api/escuelasProfesionales/uni/{Nombre}', function (Request $request) {
   $codigo = $request->getAttribute('Nombre');
   try {
@@ -180,8 +197,8 @@ $app->put('/api/escuelasProfesionales/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/escuelasProfesionales/{codigo}', function (Request $request) {
-  $codigo = $request->getAttribute('codigo');
+$app->delete('/api/escuelas-objeto-disabled', function (Request $request) {
+  $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM escuelaprofesional 
                                 WHERE codigo = $codigo");

@@ -39,7 +39,7 @@ $app->get('/api/centroLaboral/{codigo}', function (Request $request) {
   }
 });
 
-$app->get('/api/centroLaboral-objeto-disabled', function (Request $request) {
+$app->get('/api/centroLaborales-objeto-disabled', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
     $data = $this->db->query("SELECT C.codigo , CONCAT(A.nombre,',',D.nombre ) as descripcion,razonSocial as nombre
@@ -99,7 +99,7 @@ $app->put('/api/centroLaboral/{codigo}', function (Request $request) {
   }
 });
 
-$app->delete('/api/centroLaboral-objeto-disabled', function (Request $request) {
+$app->delete('/api/centroLaborales-objeto-disabled', function (Request $request) {
   $codigo = $request->getParam('codigo');
   try {
     $cantidad = $this->db->exec("DELETE FROM centrolaboral 
