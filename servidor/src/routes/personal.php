@@ -37,6 +37,7 @@ $app->post('/api/personal', function (Request $request) {
   $DNI = $request->getParam('dni');
   $apellidoPaterno = $request->getParam('paterno');
   $apellidoMaterno = $request->getParam('materno');
+  $genero = $request->getParam('genero');
   $correo = $request->getParam('correo');
   $usuario = $request->getParam('usuario');
   $contraseña = $request->getParam('clave');
@@ -44,8 +45,8 @@ $app->post('/api/personal', function (Request $request) {
     $dni = $this->db->query("SELECT dni FROM persona WHERE dni = '$DNI'")->fetchAll();
     if (!$dni) {
       $this->db->beginTransaction();
-      $cantidad = $this->db->exec("INSERT INTO personal(nombres,DNI,apellidoPaterno,apellidoMaterno,correo,urlfoto,vigencia) 
-                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno','$correo','default.jpg',1)");
+      $cantidad = $this->db->exec("INSERT INTO personal(nombres,DNI,apellidoPaterno,apellidoMaterno,genero,correo,urlfoto,vigencia) 
+                            Values('$nombres','$DNI','$apellidoPaterno','$apellidoMaterno',$genero,'$correo','default.jpg',1)");
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
