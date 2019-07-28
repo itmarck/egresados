@@ -37,6 +37,34 @@ $app->get('/api/centroEstudios/{codigo}', function (Request $request) {
   }
 });
 
+$app->get('/api/centroEstudios-objeto', function () {
+  try {
+    $data = $this->db->query("SELECT codigo,razonSocial FROM centroestudios ")->fetchAll();;
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha encontrado el centro de estudios', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
+$app->get('/api/centroEstudios-objeto-disabled', function () {
+  try {
+    $data = $this->db->query("SELECT codigo,razonSocial, ' ' as descripcion  FROM centroestudios WHERE vigencia=0")->fetchAll();;
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha encontrado el centro de estudios', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
 $app->post('/api/centroEstudios', function (Request $request) {
   $razonSocial = $request->getParam('razonSocial');
   try {
