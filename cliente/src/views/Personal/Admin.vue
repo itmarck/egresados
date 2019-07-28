@@ -162,14 +162,16 @@
           <!-- Lista -->
           <v-flex>
             <v-card v-if="lista.length != 0">
-              <v-list>
+              <v-list two-line>
                 <v-list-tile
                   v-for="item of lista"
                   :key="item.codigo"
                   @click="seleccionarTabla(item)"
                 >
-                  <v-list-tile-title v-html="item.nombre" />
-                  <v-list-tile-sub-title v-html="item.descripcion" />
+                  <v-list-tile-content>
+                    <v-list-tile-title v-html="item.nombre" />
+                    <v-list-tile-sub-title v-html="item.descripcion" />
+                  </v-list-tile-content>
                 </v-list-tile>
               </v-list>
             </v-card>
@@ -235,15 +237,15 @@ export default {
     dialogPersonal: false,
 
     tablas: [
-      { nombre: "Egresados", api: "egresados" },
-      { nombre: "Personales", api: "personales" },
-      { nombre: "Universidades", api: "universidades" },
-      { nombre: "Escuelas", api: "escuelas" },
-      { nombre: "Facultades", api: "facultades-objeto" },
-      { nombre: "Centro de Estudios", api: "estudios" },
-      { nombre: "Centros Laborales", api: "laboral" },
-      { nombre: "Actividades Económicas", api: "actividades" },
-      { nombre: "Distritos", api: "distritos" }
+      { nombre: "Egresados", api: "personas-objeto-disabled" },
+      { nombre: "Personales", api: "personal-objeto-disabled" },
+      { nombre: "Universidades", api: "universidades-objeto-disabled" },
+      { nombre: "Escuelas", api: "escuelas-objeto-disabled" },
+      { nombre: "Facultades", api: "facultades-objeto-disabled" },
+      { nombre: "Centro de Estudios", api: "centroEstudios-objeto-disabled" },
+      { nombre: "Centros Laborales", api: "centroLaborales-objeto-disabled" },
+      { nombre: "Actividades Económicas", api: "actividades-objeto-disabled" },
+      { nombre: "Distritos", api: "distritos-objeto-disabled" }
     ],
     tabla: "",
     codigo: "",
