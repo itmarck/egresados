@@ -35,7 +35,7 @@
           to="admin"
           v-if="user.tipo == 'A'"
         >
-          Personal
+          Admin
         </v-btn>
       </v-toolbar-items>
       <v-menu offset-y>
@@ -96,7 +96,7 @@
           </v-list-tile-action>
 
           <v-list-tile-content>
-            <v-list-tile-title>Personal</v-list-tile-title>
+            <v-list-tile-title>Admin</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
