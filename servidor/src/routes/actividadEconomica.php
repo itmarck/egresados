@@ -82,9 +82,9 @@ $app->delete('/api/actividades-objeto-disabled', function (Request $request) {
     $cantidad = $this->db->exec("DELETE FROM actividadEconomica
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Actividad eliminada'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo eliminar'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));

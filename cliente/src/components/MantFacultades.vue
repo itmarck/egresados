@@ -225,7 +225,7 @@ export default {
       });
     },
     eliminar() {
-      patch("universidades/" + this.item.codigo, {
+      patch("facultades/" + this.item.codigo, {
         vigencia: true,
         facultad: this.dialogSelect
       }).then(res => {

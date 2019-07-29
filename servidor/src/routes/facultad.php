@@ -118,7 +118,23 @@ $app->delete('/api/facultades-objeto-disabled', function (Request $request) {
 $app->patch('/api/facultades/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  $facultad = $request->getParam('facultad');
   try {
+    if ($facultad != null) {
+      $escuelas = $this->db->query("SELECT C.codigo from facultad F INNER JOIN escuelaProfesional C on C.codigoFacultad = F.codigo WHERE F.codigo = $codigo ")->fetchAll();
+      if ($facultad == "0") {
+        if ($escuelas) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge una facultad que la reemplace'));
+          exit;
+        }
+      } else {
+        foreach ($escuelas as $key => $C) {
+          $this->db->exec("UPDATE escuelaprofesional SET codigoFacultad = $facultad where codigo = $C->codigo");
+        }
+      }
+    }
+
+
     $cantidad = $this->db->exec("UPDATE facultad set
                                 vigencia = $vigencia
                                 WHERE codigo = $codigo");

@@ -44,7 +44,7 @@ $app->get('/api/centroEstudios-objeto', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha encontrado el centro de estudios', 'data' => []));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
@@ -58,7 +58,7 @@ $app->get('/api/centroEstudios-objeto-disabled', function () {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha encontrado el centro de estudios', 'data' => []));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
