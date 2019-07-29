@@ -25,7 +25,7 @@ $app->get('/api/colegiaturas', function () {
 $app->get('/api/colegiaturas/{codigoEgresado}', function (Request $request) {
   $codigoEgresado = $request->getAttribute('codigoEgresado');
   try {
-    $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno)as Nombre,C.codigo,codigoEgresado,EP.nombre,fecha 
+    $data = $this->db->query("SELECT CONCAT(P.nombres,' ',P.apellidoPaterno,' ',P.apellidoPaterno)as Nombre,C.codigo,codigoEgresado,EP.nombre,fecha , C.vigencia
                               FROM colegiatura C
                               INNER JOIN egresado E on E.codigo = C.codigoEgresado
                               INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela

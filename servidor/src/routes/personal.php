@@ -34,7 +34,7 @@ $app->get('/api/personal/{codigo}', function (Request $request) {
 
 $app->get('/api/personal-objeto-disabled', function () {
   try {
-    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni as descripcion FROM personal where vigencia = 0")->fetchAll();
+    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni as descripcion, vigencia FROM personal where vigencia = 0")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);

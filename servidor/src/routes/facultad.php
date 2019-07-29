@@ -35,7 +35,7 @@ $app->get('/api/facultades-objeto', function () {
 
 $app->get('/api/facultades-objeto-disabled', function () {
   try {
-    $data = $this->db->query("SELECT codigo,nombre,siglas as descripcion FROM facultad where vigencia = 0")->fetchAll();
+    $data = $this->db->query("SELECT codigo,nombre,siglas as descripcion, vigencia FROM facultad where vigencia = 0")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);

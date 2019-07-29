@@ -15,7 +15,7 @@ $app->get('/api/actividadesEconomica', function () {
 });
 
 $app->get('/api/actividades-objeto', function () {
-  $data = $this->db->query("SELECT codigo, nombre, descripcion FROM actividadeconomica ")->fetchAll();
+  $data = $this->db->query("SELECT codigo, nombre, descripcion, vigencia FROM actividadeconomica ")->fetchAll();
 if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
@@ -25,7 +25,7 @@ if ($data) {
 });
 
 $app->get('/api/actividades-objeto-disabled', function () {
-  $data = $this->db->query("SELECT codigo, nombre, descripcion FROM actividadeconomica WHERE vigencia = 0")->fetchAll();
+  $data = $this->db->query("SELECT codigo, nombre, descripcion, vigencia FROM actividadeconomica WHERE vigencia = 0")->fetchAll();
 if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);

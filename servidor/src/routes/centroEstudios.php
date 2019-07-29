@@ -39,7 +39,7 @@ $app->get('/api/centroEstudios/{codigo}', function (Request $request) {
 
 $app->get('/api/centroEstudios-objeto', function () {
   try {
-    $data = $this->db->query("SELECT codigo,razonSocial FROM centroestudios ")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,razonSocial, vigencia FROM centroestudios ")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -53,7 +53,7 @@ $app->get('/api/centroEstudios-objeto', function () {
 
 $app->get('/api/centroEstudios-objeto-disabled', function () {
   try {
-    $data = $this->db->query("SELECT codigo,razonSocial, ' ' as descripcion  FROM centroestudios WHERE vigencia=0")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,razonSocial, ' ' as descripcion, vigencia  FROM centroestudios WHERE vigencia=0")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);

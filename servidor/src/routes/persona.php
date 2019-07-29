@@ -7,7 +7,7 @@ const contraseña = "3P1CI*2019";
 
 $app->get('/api/personas', function () {
   try {
-    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni FROM persona")->fetchAll();
+    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni, vigencia FROM persona")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -21,7 +21,7 @@ $app->get('/api/personas', function () {
 
 $app->get('/api/personas-objeto-disabled', function () {
   try {
-    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni as descripcion FROM persona where vigencia = 0")->fetchAll();
+    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni as descripcion, vigencia FROM persona where vigencia = 0")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);

@@ -22,7 +22,7 @@ $app->get('/api/escuelasProfesionales', function () {
 
 $app->get('/api/escuelas-objeto-disabled', function () {
   try {
-    $data = $this->db->query("SELECT E.codigo,E.nombre,U.nombre as descripcion
+    $data = $this->db->query("SELECT E.codigo,E.nombre,U.nombre, E.vigencia as descripcion
                               FROM escuelaprofesional E
                               INNER JOIN universidad U on U.codigo = E.codigoUniversidad
                               where E.vigencia = 0")->fetchAll();

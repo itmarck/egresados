@@ -23,7 +23,7 @@ $app->get('/api/centroLaboral', function () {
 $app->get('/api/centroLaboral/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
-    $data = $this->db->query("SELECT codigoActividad,A.nombre as Actividad,codigoDistrito,D.nombre as Distrito,RUC,razonSocial as nombre
+    $data = $this->db->query("SELECT codigoActividad,A.nombre as Actividad,codigoDistrito,D.nombre as Distrito,RUC,razonSocial as nombre, C.vigencia
                               FROM centrolaboral C
                               INNER JOIN actividadeconomica A on A.codigo=C.codigoActividad 
                               INNER JOIN distrito D on D.codigo = C.codigoDistrito  
@@ -41,7 +41,7 @@ $app->get('/api/centroLaboral/{codigo}', function (Request $request) {
 
 $app->get('/api/centroLaborales-objeto-disabled', function (Request $request) {
   try {
-    $data = $this->db->query("SELECT C.codigo , CONCAT(A.nombre,',',D.nombre ) as descripcion,razonSocial as nombre
+    $data = $this->db->query("SELECT C.codigo , CONCAT(A.nombre,',',D.nombre ) as descripcion,razonSocial as nombre, C.vigencia
                               FROM centrolaboral C
                               INNER JOIN actividadeconomica A on A.codigo=C.codigoActividad 
                               INNER JOIN distrito D on D.codigo = C.codigoDistrito  
