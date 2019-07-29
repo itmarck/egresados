@@ -5,10 +5,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/api/centroLaboral', function () {
   try {
-    $data = $this->db->query("SELECT C.codigo as codigo ,codigoActividad,A.nombre as Actividad ,codigoDistrito,D.nombre as Distrito,RUC,razonSocial 
+    $data = $this->db->query("SELECT C.codigo as codigo ,codigoActividad,A.nombre as Actividad,
+                            codigoDistrito,D.nombre as Distrito,RUC,
+                            D.codigoProvincia as provincia,
+                            P.codigoDepartamento as departamento,
+                            razonSocial as nombre, C.vigencia 
                             FROM centrolaboral C
                             INNER JOIN actividadeconomica A on A.codigo=C.codigoActividad 
-                            INNER JOIN distrito D on D.codigo = C.codigoDistrito ")->fetchAll();
+                            INNER JOIN distrito D on D.codigo = C.codigoDistrito
+                            INNER JOIN provincia P on P.codigo = D.codigoProvincia ")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -65,11 +70,11 @@ $app->post('/api/centroLaboral/add', function (Request $request) {
   try {
     $cantidad = $this->db->exec("INSERT INTO centrolaboral(codigoActividad,codigoDistrito,RUC,razonSocial,vigencia) 
                             Values('$codigoActividad','$codigoDistrito',$RUC,$razonSocial,1)");
-      if ($cantidad > 0) {
-        echo json_encode(array('estado' => true, 'mensaje' => 'Centro laboral agregado'));
-      } else {
-        echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido agregar centro laboral'));
-      }
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Centro laboral agregado'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido agregar centro laboral'));
+    }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }

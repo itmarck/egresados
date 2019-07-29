@@ -53,7 +53,7 @@ $app->get('/api/centroEstudios-objeto', function () {
 
 $app->get('/api/centroEstudios-objeto-disabled', function () {
   try {
-    $data = $this->db->query("SELECT codigo,razonSocial, ' ' as descripcion, vigencia  FROM centroestudios WHERE vigencia=0")->fetchAll();;
+    $data = $this->db->query("SELECT codigo,razonSocial as nombre, ' ' as descripcion, vigencia  FROM centroestudios WHERE vigencia=0")->fetchAll();;
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -83,11 +83,9 @@ $app->post('/api/centroEstudios', function (Request $request) {
 $app->put('/api/centroEstudios/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $razonSocial = $request->getParam('razonSocial');
-  $vigencia = $request->getParam('vigencia');
   try {
     $cantidad = $this->db->exec("UPDATE centroestudios set
-                                razonSocial ='$razonSocial',
-                                vigencia = '$vigencia',
+                                razonSocial ='$razonSocial'
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Centro de estudio actualizado'));
@@ -104,11 +102,11 @@ $app->delete('/api/centroEstudios-objeto-disabled', function (Request $request) 
   try {
     $cantidad = $this->db->exec("DELETE FROM centroestudios 
                                 WHERE codigo = $codigo");
-      if ($cantidad > 0) {
-        echo json_encode(array('estado' => true, 'mensaje' => 'Centro de estudio eliminado'));
-      } else {
-        echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido eliminar centro de estudios'));
-      }
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Centro de estudio eliminado'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido eliminar centro de estudios'));
+    }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }

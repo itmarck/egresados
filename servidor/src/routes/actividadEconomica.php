@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Http\Message\ServerRequestInterface as Request;
+
 $app->get('/api/actividadesEconomica', function () {
   $nombres = $this->db->query("SELECT nombre FROM actividadeconomica WHERE vigencia=1")->fetchAll();
   $data = [];
@@ -16,7 +18,7 @@ $app->get('/api/actividadesEconomica', function () {
 
 $app->get('/api/actividades-objeto', function () {
   $data = $this->db->query("SELECT codigo, nombre, descripcion, vigencia FROM actividadeconomica ")->fetchAll();
-if ($data) {
+  if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
   } else {
@@ -26,7 +28,7 @@ if ($data) {
 
 $app->get('/api/actividades-objeto-disabled', function () {
   $data = $this->db->query("SELECT codigo, nombre, descripcion, vigencia FROM actividadeconomica WHERE vigencia = 0")->fetchAll();
-if ($data) {
+  if ($data) {
     $result = array('estado' => true, 'data' => $data);
     echo json_encode($result);
   } else {
