@@ -8,9 +8,9 @@
         </v-flex>
         <v-flex xs12>
           <v-autocomplete
-            v-model="universidad"
-            :items="universidades"
-            placeholder="Seleccione Universidad"
+            v-model="item"
+            :items="lista"
+            placeholder="Seleccione Centro Laboral"
             item-value="codigo"
             item-text="nombre"
             hide-details
@@ -28,10 +28,13 @@
             <template v-slot:item="data">
               <template>
                 <v-list-tile-content
+                  class="text-capitalize"
                   :style="data.item.vigencia ? '' : 'opacity: .3'"
                 >
                   <v-list-tile-title v-html="data.item.nombre" />
-                  <v-list-tile-sub-title v-html="data.item.siglas" />
+                  <v-list-tile-sub-title
+                    v-html="data.item.Distrito.toLowerCase()"
+                  />
                 </v-list-tile-content>
               </template>
             </template>
@@ -52,32 +55,61 @@
                 <section v-if="vigencia == true">
                   <v-text-field
                     v-model="nombre"
-                    label="Nombre de la Universidad"
-                    placeholder="Universidad"
+                    label="Ingrese razon social del centro laboral"
+                    placeholder="CETI"
+                    append-icon="poll"
                   ></v-text-field>
                   <v-text-field
-                    v-model="siglas"
-                    label="Siglas de la Universidad"
-                    placeholder="Siglas"
+                    v-model="ruc"
+                    label="Ingrese RUC del centro laboral"
+                    placeholder="Este campo es opcional"
+                    append-icon="location_city"
                   ></v-text-field>
                   <v-select
-                    :items="estados"
-                    v-model="estado"
-                    item-text="texto"
-                    item-value="valor"
-                    label="Estado de la universidad"
+                    v-model="actividad"
+                    :items="actividades"
+                    label="Escriba la actividad económica"
+                    placeholder="Tecnología"
+                    item-text="nombre"
+                    item-value="codigo"
+                  ></v-select>
+                  <v-select
+                    v-model="departamento"
+                    :items="departamentos"
+                    item-value="codigo"
+                    item-text="nombre"
+                    label="Seleccione departamento"
+                    placeholder="Departamento"
+                    @change="cargarProvincias"
+                  ></v-select>
+                  <v-select
+                    v-model="provincia"
+                    :items="provincias"
+                    item-value="codigo"
+                    item-text="nombre"
+                    label="Seleccione provincia"
+                    placeholder="Provincia"
+                    @change="cargarDistritos"
+                    :disabled="departamento == ''"
+                  ></v-select>
+                  <v-select
+                    v-model="distrito"
+                    :items="distritos"
+                    item-value="codigo"
+                    item-text="nombre"
+                    label="Seleccione distrito"
+                    placeholder="Distrito"
+                    :disabled="provincia == ''"
                   ></v-select>
                 </section>
                 <section v-else>
                   <p>
-                    <span class="font-weight-medium">{{
-                      nombreUniversidad
-                    }}</span>
-                    está eliminada pero aún puedes recurperarla. Los vinculos a
-                    ésta Universidad ya no se podrán recuperar.
+                    <span class="font-weight-medium">{{ nombreItem }}</span>
+                    está eliminada pero aún puedes restaurarla. Los vinculos a
+                    ésta actividad económica ya no se podrán recuperar.
                   </p>
                   <v-btn flat block @click="recuperar">
-                    Recuperar Universidad
+                    Recuperar actividad económica
                   </v-btn>
                 </section>
               </v-card-text>
@@ -110,15 +142,17 @@
         </v-card-title>
         <v-card-text>
           <p>
-            Antes de eliminar, seleccione la Universidad que reemplazará a
-            <span class="font-weight-medium">{{ nombreUniversidad }}</span>
+            Antes de eliminar, seleccione la actividad económica que reemplazará
+            a
+            <span class="font-weight-medium">{{ nombreItem }}</span> en caso
+            ésta se esté usando.
           </p>
           <v-select
             :items="dialogSelects"
             v-model="dialogSelect"
             item-text="nombre"
             item-value="codigo"
-            label="Universidad"
+            label="Actividad económica"
           ></v-select>
         </v-card-text>
         <v-card-actions>
@@ -133,56 +167,102 @@
 
 <script>
 import { get, post, put, patch } from "../bd/api";
-import { mapMutations } from 'vuex';
+import { mapMutations } from "vuex";
 export default {
   components: {
     MantSelect: () => import("./MantSelect")
   },
   data: () => ({
     isEdit: false,
-    snack: false,
-    respuesta: "",
-    estados: [{ texto: "Abierta", valor: 1 }, { texto: "Cerrada", valor: 0 }],
     dialog: false,
     dialogSelect: "0",
 
-    universidad: undefined,
-    universidades: [],
+    lista: [],
+    item: undefined,
+
     nombre: "",
-    siglas: "",
-    estado: 1,
+    ruc: "",
+    actividades: [],
+    actividad: "",
+    departamentos: [],
+    departamento: "",
+    provincias: [],
+    provincia: "",
+    distritos: [],
+    distrito: "",
     vigencia: 1
   }),
   computed: {
     dialogSelects() {
-      if (!this.universidad) return;
-      let universidades = this.universidades.filter(
-        e => e.vigencia && e.codigo != this.universidad.codigo
+      if (!this.item) return;
+      let items = this.lista.filter(
+        e => e.vigencia && e.codigo != this.item.codigo
       );
-      universidades.unshift({ nombre: "Ninguna", codigo: "0" });
-      return universidades;
+      items.unshift({ nombre: "Ninguna", codigo: "0" });
+      return items;
     },
-    nombreUniversidad() {
-      if (this.universidad) return this.universidad.nombre;
+    nombreItem() {
+      if (this.item) return this.item.nombre;
       else return "";
     }
   },
   methods: {
-    ...mapMutations(['snackbar']),
+    ...mapMutations(["snackbar"]),
+    validar() {
+      if (this.nombre == "") {
+        this.snackbar("Ingrese nombre del centro laboral");
+        return false;
+      }
+      if (this.actividad == "") {
+        this.snackbar("Ingrese actividad económica");
+        return false;
+      }
+      if (this.distrito == "") {
+        this.snackbar("Indica el lugar donde se encuentra ubicado");
+        return false;
+      }
+      return true;
+    },
+    nuevo() {
+      this.isEdit = false;
+      this.item = undefined;
+      this.dialogSelect = "0";
+      this.nombre = "";
+      this.ruc = "";
+      this.actividad = "";
+      this.departamento = "";
+      this.provincia = "";
+      this.distrito = "";
+      this.vigencia = 1;
+    },
     copiarDatos() {
-      if (this.universidad) {
+      if (this.item) {
         this.isEdit = true;
-        this.nombre = this.universidad.nombre;
-        this.siglas = this.universidad.siglas;
-        this.estado = this.universidad.estado;
-        this.vigencia = this.universidad.vigencia;
+        this.dialogSelect = "0";
+        this.vigencia = this.item.vigencia;
+        this.nombre = this.item.nombre;
+        this.ruc = this.item.RUC;
+        this.actividad = this.item.codigoActividad;
+        this.departamento = this.item.departamento;
+        this.provincias = [];
+        get("provincias/" + this.item.departamento).then(res => {
+          this.provincias = res.data;
+          this.provincia = this.item.provincia;
+          this.distritos = [];
+          get("distritos/" + this.item.provincia).then(res => {
+            this.distritos = res.data;
+            this.distrito = this.item.codigoDistrito;
+          });
+        });
       } else this.nuevo();
     },
     agregar() {
-      post("universidades", {
-        nombre: this.nombre,
-        siglas: this.siglas.toUpperCase(),
-        estado: this.estado
+      if (!this.validar()) return;
+      post("centroLaboral/add", {
+        codigoActividad: this.actividad,
+        codigoDistrito: this.distrito,
+        RUC: this.ruc,
+        razonSocial: this.nombre
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -192,10 +272,12 @@ export default {
       });
     },
     editar() {
-      put("universidades/" + this.universidad.codigo, {
-        nombre: this.nombre,
-        siglas: this.siglas.toUpperCase(),
-        estado: this.estado
+      if (!this.validar()) return;
+      put("centroLaboral/" + this.item.codigo, {
+        codigoActividad: this.actividad,
+        codigoDistrito: this.distrito,
+        RUC: this.ruc,
+        razonSocial: this.nombre
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -203,18 +285,10 @@ export default {
         }
       });
     },
-    nuevo() {
-      this.isEdit = false;
-      this.universidad = undefined;
-      this.nombre = "";
-      this.siglas = "";
-      this.estado = 1;
-      this.vigencia = 1;
-    },
     eliminar() {
-      patch("universidades/" + this.universidad.codigo, {
+      patch("centroLaboral/" + this.item.codigo, {
         vigencia: true,
-        universidad: this.dialogSelect
+        centro: this.dialogSelect
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -225,7 +299,7 @@ export default {
       });
     },
     recuperar() {
-      patch("universidades/" + this.universidad.codigo, {
+      patch("centroLaboral/" + this.item.codigo, {
         vigencia: false
       }).then(res => {
         this.snackbar(res.mensaje);
@@ -235,17 +309,37 @@ export default {
         }
       });
     },
-    cargarTodo() {
-      this.cargarUniversidades();
-    },
-    cargarUniversidades() {
-      get("universidades-objeto").then(res => {
-        this.universidades = res.data.map(e => ({
+    cargarLista() {
+      get("centroLaboral").then(res => {
+        this.lista = res.data.map(e => ({
           ...e,
-          estado: parseInt(e.estado),
           vigencia: parseInt(e.vigencia)
         }));
       });
+    },
+    cargarActividades() {
+      get("actividades-objeto").then(res => (this.actividades = res.data));
+    },
+    cargarDepartamentos() {
+      get("departamentos").then(res => (this.departamentos = res.data));
+    },
+    cargarProvincias(departamento) {
+      this.provincia = "";
+      this.distrito = "";
+      this.provincias = [];
+      get("provincias/" + departamento).then(
+        res => (this.provincias = res.data)
+      );
+    },
+    cargarDistritos(provincia) {
+      this.distrito = "";
+      this.distritos = [];
+      get("distritos/" + provincia).then(res => (this.distritos = res.data));
+    },
+    cargarTodo() {
+      this.cargarLista();
+      this.cargarDepartamentos();
+      this.cargarActividades();
     }
   },
   created() {

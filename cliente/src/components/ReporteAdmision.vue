@@ -79,10 +79,12 @@
     <v-flex xs12 md6>
       <v-card v-if="lista.length != 0">
         <v-list three-line>
-          <v-list-tile>
+          <v-list-tile v-for="(item, i) of lista" :key="i">
             <v-list-tile-content>
-              <v-list-tile-title></v-list-tile-title>
-              <v-list-tile-sub-title></v-list-tile-sub-title>
+              <v-list-tile-title v-html="item.nombres" />
+              <v-list-tile-sub-title>
+                {{ item.Termino }}
+              </v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -113,6 +115,7 @@ export default {
     aceptar() {
       get("reporte/admision/" + this.admision).then(res => {
         this.snackbar(res.mensaje);
+        if (res.estado == true) this.lista = res.data;
       });
     },
     cargarUniversidades() {

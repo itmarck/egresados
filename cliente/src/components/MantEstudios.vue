@@ -8,11 +8,11 @@
         </v-flex>
         <v-flex xs12>
           <v-autocomplete
-            v-model="universidad"
-            :items="universidades"
-            placeholder="Seleccione Universidad"
+            v-model="item"
+            :items="lista"
+            placeholder="Seleccione Centro de Estudio"
             item-value="codigo"
-            item-text="nombre"
+            item-text="razonSocial"
             hide-details
             return-object
             clearable
@@ -23,15 +23,14 @@
               <v-icon left>school</v-icon>
             </template>
             <template v-slot:selection="data">
-              {{ data.item.nombre }}
+              {{ data.item.razonSocial }}
             </template>
             <template v-slot:item="data">
               <template>
                 <v-list-tile-content
                   :style="data.item.vigencia ? '' : 'opacity: .3'"
                 >
-                  <v-list-tile-title v-html="data.item.nombre" />
-                  <v-list-tile-sub-title v-html="data.item.siglas" />
+                  <v-list-tile-title v-html="data.item.razonSocial" />
                 </v-list-tile-content>
               </template>
             </template>
@@ -46,38 +45,24 @@
           <v-flex xs12>
             <v-card>
               <v-card-title class="title font-weight-light" primary-title>
-                Datos de centro de estudio
+                Datos del centro de estudio
               </v-card-title>
               <v-card-text>
                 <section v-if="vigencia == true">
                   <v-text-field
                     v-model="nombre"
-                    label="Nombre de la Universidad"
-                    placeholder="Universidad"
+                    label="Ingrese razon social del centro de estudio"
+                    placeholder="CETI"
                   ></v-text-field>
-                  <v-text-field
-                    v-model="siglas"
-                    label="Siglas de la Universidad"
-                    placeholder="Siglas"
-                  ></v-text-field>
-                  <v-select
-                    :items="estados"
-                    v-model="estado"
-                    item-text="texto"
-                    item-value="valor"
-                    label="Estado de la universidad"
-                  ></v-select>
                 </section>
                 <section v-else>
                   <p>
-                    <span class="font-weight-medium">{{
-                      nombreUniversidad
-                    }}</span>
-                    está eliminada pero aún puedes recurperarla. Los vinculos a
-                    ésta Universidad ya no se podrán recuperar.
+                    <span class="font-weight-medium">{{ nombreItem }}</span>
+                    está eliminado pero aún puedes restaurarlo. Los vínculos a
+                    éste centro de estudio ya no se podrán recuperar.
                   </p>
                   <v-btn flat block @click="recuperar">
-                    Recuperar Universidad
+                    Recuperar centro de estudio
                   </v-btn>
                 </section>
               </v-card-text>
@@ -110,15 +95,16 @@
         </v-card-title>
         <v-card-text>
           <p>
-            Antes de eliminar, seleccione la Universidad que reemplazará a
-            <span class="font-weight-medium">{{ nombreUniversidad }}</span>
+            Antes de eliminar, seleccione el centro de estudio que reemplazará a
+            <span class="font-weight-medium">{{ nombreItem }}</span> en caso
+            ésta se esté usando.
           </p>
           <v-select
             :items="dialogSelects"
             v-model="dialogSelect"
-            item-text="nombre"
+            item-text="razonSocial"
             item-value="codigo"
-            label="Universidad"
+            label="Centro de estudio"
           ></v-select>
         </v-card-text>
         <v-card-actions>
@@ -140,49 +126,58 @@ export default {
   },
   data: () => ({
     isEdit: false,
-    snack: false,
-    respuesta: "",
-    estados: [{ texto: "Abierta", valor: 1 }, { texto: "Cerrada", valor: 0 }],
     dialog: false,
     dialogSelect: "0",
 
-    universidad: undefined,
-    universidades: [],
+    lista: [],
+    item: undefined,
+
     nombre: "",
-    siglas: "",
-    estado: 1,
+    descripcion: "",
     vigencia: 1
   }),
   computed: {
     dialogSelects() {
-      if (!this.universidad) return;
-      let universidades = this.universidades.filter(
-        e => e.vigencia && e.codigo != this.universidad.codigo
+      if (!this.item) return;
+      let items = this.lista.filter(
+        e => e.vigencia && e.codigo != this.item.codigo
       );
-      universidades.unshift({ nombre: "Ninguna", codigo: "0" });
-      return universidades;
+      items.unshift({ razonSocial: "Ninguna", codigo: "0" });
+      return items;
     },
-    nombreUniversidad() {
-      if (this.universidad) return this.universidad.nombre;
+    nombreItem() {
+      if (this.item) return this.item.nombre;
       else return "";
     }
   },
   methods: {
     ...mapMutations(["snackbar"]),
+    validar() {
+      if (this.nombre == "") {
+        this.snackbar("Ingrese razon social del centro de estudio");
+        return false;
+      }
+      return true;
+    },
+    nuevo() {
+      this.isEdit = false;
+      this.item = undefined;
+      this.dialogSelect = "0";
+      this.nombre = "";
+      this.vigencia = 1;
+    },
     copiarDatos() {
-      if (this.universidad) {
+      if (this.item) {
         this.isEdit = true;
-        this.nombre = this.universidad.nombre;
-        this.siglas = this.universidad.siglas;
-        this.estado = this.universidad.estado;
-        this.vigencia = this.universidad.vigencia;
+        this.dialogSelect = "0";
+        this.nombre = this.item.razonSocial;
+        this.vigencia = this.item.vigencia;
       } else this.nuevo();
     },
     agregar() {
-      post("universidades", {
-        nombre: this.nombre,
-        siglas: this.siglas.toUpperCase(),
-        estado: this.estado
+      if (!this.validar()) return;
+      post("centroEstudios", {
+        razonSocial: this.nombre
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -192,10 +187,9 @@ export default {
       });
     },
     editar() {
-      put("universidades/" + this.universidad.codigo, {
-        nombre: this.nombre,
-        siglas: this.siglas.toUpperCase(),
-        estado: this.estado
+      if (!this.validar()) return;
+      put("centroEstudios/" + this.item.codigo, {
+        razonSocial: this.nombre
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -203,18 +197,10 @@ export default {
         }
       });
     },
-    nuevo() {
-      this.isEdit = false;
-      this.universidad = undefined;
-      this.nombre = "";
-      this.siglas = "";
-      this.estado = 1;
-      this.vigencia = 1;
-    },
     eliminar() {
-      patch("universidades/" + this.universidad.codigo, {
+      patch("centroEstudios/" + this.item.codigo, {
         vigencia: true,
-        universidad: this.dialogSelect
+        centroEstudios: this.dialogSelect
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -225,7 +211,7 @@ export default {
       });
     },
     recuperar() {
-      patch("universidades/" + this.universidad.codigo, {
+      patch("centroEstudios/" + this.item.codigo, {
         vigencia: false
       }).then(res => {
         this.snackbar(res.mensaje);
@@ -235,17 +221,16 @@ export default {
         }
       });
     },
-    cargarTodo() {
-      this.cargarUniversidades();
-    },
-    cargarUniversidades() {
-      get("universidades-objeto").then(res => {
-        this.universidades = res.data.map(e => ({
+    cargarLista() {
+      get("centroEstudios-objeto").then(res => {
+        this.lista = res.data.map(e => ({
           ...e,
-          estado: parseInt(e.estado),
           vigencia: parseInt(e.vigencia)
         }));
       });
+    },
+    cargarTodo() {
+      this.cargarLista();
     }
   },
   created() {
