@@ -140,8 +140,6 @@ export default {
   },
   data: () => ({
     isEdit: false,
-    snack: false,
-    respuesta: "",
     estados: [{ texto: "Abierta", valor: 1 }, { texto: "Cerrada", valor: 0 }],
     dialog: false,
     dialogSelect: "0",

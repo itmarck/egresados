@@ -8,9 +8,9 @@
         </v-flex>
         <v-flex xs12>
           <v-autocomplete
-            v-model="universidad"
-            :items="universidades"
-            placeholder="Seleccione Universidad"
+            v-model="item"
+            :items="lista"
+            placeholder="Seleccione Facultad"
             item-value="codigo"
             item-text="nombre"
             hide-details
@@ -52,12 +52,12 @@
                 <section v-if="vigencia == true">
                   <v-text-field
                     v-model="nombre"
-                    label="Nombre de la Universidad"
-                    placeholder="Universidad"
+                    label="Nombre de la Facultad"
+                    placeholder="Facultad"
                   ></v-text-field>
                   <v-text-field
                     v-model="siglas"
-                    label="Siglas de la Universidad"
+                    label="Siglas de la Facultad"
                     placeholder="Siglas"
                   ></v-text-field>
                   <v-select
@@ -65,19 +65,17 @@
                     v-model="estado"
                     item-text="texto"
                     item-value="valor"
-                    label="Estado de la universidad"
+                    label="Estado de la facultad"
                   ></v-select>
                 </section>
                 <section v-else>
                   <p>
-                    <span class="font-weight-medium">{{
-                      nombreUniversidad
-                    }}</span>
-                    está eliminada pero aún puedes recurperarla. Los vinculos a
-                    ésta Universidad ya no se podrán recuperar.
+                    <span class="font-weight-medium">{{ nombreItem }}</span>
+                    está eliminada pero aún puedes restaurarla. Los vinculos a
+                    ésta Facultad ya no se podrán recuperar.
                   </p>
                   <v-btn flat block @click="recuperar">
-                    Recuperar Universidad
+                    Recuperar Facultad
                   </v-btn>
                 </section>
               </v-card-text>
@@ -110,15 +108,16 @@
         </v-card-title>
         <v-card-text>
           <p>
-            Antes de eliminar, seleccione la Universidad que reemplazará a
-            <span class="font-weight-medium">{{ nombreUniversidad }}</span>
+            Antes de eliminar, seleccione la Facultad que reemplazará a
+            <span class="font-weight-medium">{{ nombreItem }}</span> en caso
+            ésta se esté usando.
           </p>
           <v-select
             :items="dialogSelects"
             v-model="dialogSelect"
             item-text="nombre"
             item-value="codigo"
-            label="Universidad"
+            label="Facultad"
           ></v-select>
         </v-card-text>
         <v-card-actions>
@@ -133,21 +132,20 @@
 
 <script>
 import { get, post, put, patch } from "../bd/api";
-import { mapMutations } from 'vuex';
+import { mapMutations } from "vuex";
 export default {
   components: {
     MantSelect: () => import("./MantSelect")
   },
   data: () => ({
     isEdit: false,
-    snack: false,
-    respuesta: "",
-    estados: [{ texto: "Abierta", valor: 1 }, { texto: "Cerrada", valor: 0 }],
     dialog: false,
     dialogSelect: "0",
+    estados: [{ texto: "Abierta", valor: 1 }, { texto: "Cerrada", valor: 0 }],
 
-    universidad: undefined,
-    universidades: [],
+    lista: [],
+    item: undefined,
+
     nombre: "",
     siglas: "",
     estado: 1,
@@ -155,31 +153,53 @@ export default {
   }),
   computed: {
     dialogSelects() {
-      if (!this.universidad) return;
-      let universidades = this.universidades.filter(
-        e => e.vigencia && e.codigo != this.universidad.codigo
+      if (!this.item) return;
+      let items = this.lista.filter(
+        e => e.vigencia && e.codigo != this.item.codigo
       );
-      universidades.unshift({ nombre: "Ninguna", codigo: "0" });
-      return universidades;
+      items.unshift({ nombre: "Ninguna", codigo: "0" });
+      return items;
     },
-    nombreUniversidad() {
-      if (this.universidad) return this.universidad.nombre;
+    nombreItem() {
+      if (this.item) return this.item.nombre;
       else return "";
     }
   },
   methods: {
-    ...mapMutations(['snackbar']),
+    ...mapMutations(["snackbar"]),
+    validar() {
+      if (this.nombre == "") {
+        this.snackbar("Ingrese nombre");
+        return false;
+      }
+      if (this.siglas == "") {
+        this.snackbar("Ingrese las siglas de la facultad");
+        return false;
+      }
+      return true;
+    },
+    nuevo() {
+      this.isEdit = false;
+      this.item = undefined;
+      this.dialogSelect = "0";
+      this.nombre = "";
+      this.siglas = "";
+      this.estado = 1;
+      this.vigencia = 1;
+    },
     copiarDatos() {
-      if (this.universidad) {
+      if (this.item) {
         this.isEdit = true;
-        this.nombre = this.universidad.nombre;
-        this.siglas = this.universidad.siglas;
-        this.estado = this.universidad.estado;
-        this.vigencia = this.universidad.vigencia;
+        this.dialogSelect = "0";
+        this.nombre = this.item.nombre;
+        this.siglas = this.item.siglas;
+        this.estado = this.item.estado;
+        this.vigencia = this.item.vigencia;
       } else this.nuevo();
     },
     agregar() {
-      post("universidades", {
+      if (!this.validar()) return;
+      post("facultades", {
         nombre: this.nombre,
         siglas: this.siglas.toUpperCase(),
         estado: this.estado
@@ -192,7 +212,8 @@ export default {
       });
     },
     editar() {
-      put("universidades/" + this.universidad.codigo, {
+      if (!this.validar()) return;
+      put("facultades/" + this.item.codigo, {
         nombre: this.nombre,
         siglas: this.siglas.toUpperCase(),
         estado: this.estado
@@ -203,18 +224,10 @@ export default {
         }
       });
     },
-    nuevo() {
-      this.isEdit = false;
-      this.universidad = undefined;
-      this.nombre = "";
-      this.siglas = "";
-      this.estado = 1;
-      this.vigencia = 1;
-    },
     eliminar() {
-      patch("universidades/" + this.universidad.codigo, {
+      patch("universidades/" + this.item.codigo, {
         vigencia: true,
-        universidad: this.dialogSelect
+        facultad: this.dialogSelect
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -225,7 +238,7 @@ export default {
       });
     },
     recuperar() {
-      patch("universidades/" + this.universidad.codigo, {
+      patch("facultades/" + this.item.codigo, {
         vigencia: false
       }).then(res => {
         this.snackbar(res.mensaje);
@@ -235,17 +248,17 @@ export default {
         }
       });
     },
-    cargarTodo() {
-      this.cargarUniversidades();
-    },
-    cargarUniversidades() {
-      get("universidades-objeto").then(res => {
-        this.universidades = res.data.map(e => ({
+    cargarLista() {
+      get("facultades-objeto").then(res => {
+        this.lista = res.data.map(e => ({
           ...e,
           estado: parseInt(e.estado),
           vigencia: parseInt(e.vigencia)
         }));
       });
+    },
+    cargarTodo() {
+      this.cargarLista();
     }
   },
   created() {

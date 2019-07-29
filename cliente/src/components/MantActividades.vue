@@ -8,9 +8,9 @@
         </v-flex>
         <v-flex xs12>
           <v-autocomplete
-            v-model="universidad"
-            :items="universidades"
-            placeholder="Seleccione Universidad"
+            v-model="item"
+            :items="lista"
+            placeholder="Seleccione Actividad Económica"
             item-value="codigo"
             item-text="nombre"
             hide-details
@@ -31,7 +31,7 @@
                   :style="data.item.vigencia ? '' : 'opacity: .3'"
                 >
                   <v-list-tile-title v-html="data.item.nombre" />
-                  <v-list-tile-sub-title v-html="data.item.siglas" />
+                  <v-list-tile-sub-title v-html="data.item.descripcion" />
                 </v-list-tile-content>
               </template>
             </template>
@@ -52,32 +52,23 @@
                 <section v-if="vigencia == true">
                   <v-text-field
                     v-model="nombre"
-                    label="Nombre de la Universidad"
-                    placeholder="Universidad"
+                    label="Ingrese nombre de la actividad"
+                    placeholder="Actividad Económica"
                   ></v-text-field>
                   <v-text-field
-                    v-model="siglas"
-                    label="Siglas de la Universidad"
-                    placeholder="Siglas"
+                    v-model="descripcion"
+                    label="Ingrese descripción de la actividad"
+                    placeholder="Descripción"
                   ></v-text-field>
-                  <v-select
-                    :items="estados"
-                    v-model="estado"
-                    item-text="texto"
-                    item-value="valor"
-                    label="Estado de la universidad"
-                  ></v-select>
                 </section>
                 <section v-else>
                   <p>
-                    <span class="font-weight-medium">{{
-                      nombreUniversidad
-                    }}</span>
-                    está eliminada pero aún puedes recurperarla. Los vinculos a
-                    ésta Universidad ya no se podrán recuperar.
+                    <span class="font-weight-medium">{{ nombreItem }}</span>
+                    está eliminada pero aún puedes restaurarla. Los vinculos a
+                    ésta actividad económica ya no se podrán recuperar.
                   </p>
                   <v-btn flat block @click="recuperar">
-                    Recuperar Universidad
+                    Recuperar actividad económica
                   </v-btn>
                 </section>
               </v-card-text>
@@ -110,15 +101,17 @@
         </v-card-title>
         <v-card-text>
           <p>
-            Antes de eliminar, seleccione la Universidad que reemplazará a
-            <span class="font-weight-medium">{{ nombreUniversidad }}</span>
+            Antes de eliminar, seleccione la actividad económica que reemplazará
+            a
+            <span class="font-weight-medium">{{ nombreItem }}</span> en caso
+            ésta se esté usando.
           </p>
           <v-select
             :items="dialogSelects"
             v-model="dialogSelect"
             item-text="nombre"
             item-value="codigo"
-            label="Universidad"
+            label="Actividad económica"
           ></v-select>
         </v-card-text>
         <v-card-actions>
@@ -140,49 +133,65 @@ export default {
   },
   data: () => ({
     isEdit: false,
-    snack: false,
-    respuesta: "",
-    estados: [{ texto: "Abierta", valor: 1 }, { texto: "Cerrada", valor: 0 }],
     dialog: false,
     dialogSelect: "0",
 
-    universidad: undefined,
-    universidades: [],
+    lista: [],
+    item: undefined,
+
     nombre: "",
-    siglas: "",
-    estado: 1,
+    descripcion: "",
     vigencia: 1
   }),
   computed: {
     dialogSelects() {
-      if (!this.universidad) return;
-      let universidades = this.universidades.filter(
-        e => e.vigencia && e.codigo != this.universidad.codigo
+      if (!this.item) return;
+      let items = this.lista.filter(
+        e => e.vigencia && e.codigo != this.item.codigo
       );
-      universidades.unshift({ nombre: "Ninguna", codigo: "0" });
-      return universidades;
+      items.unshift({ nombre: "Ninguna", codigo: "0" });
+      return items;
     },
-    nombreUniversidad() {
-      if (this.universidad) return this.universidad.nombre;
+    nombreItem() {
+      if (this.item) return this.item.nombre;
       else return "";
     }
   },
   methods: {
     ...mapMutations(["snackbar"]),
+    validar() {
+      if (this.nombre == "") {
+        this.snackbar("Ingrese nombre de la actividad económica");
+        return false;
+      }
+      if (this.descripcion == "") {
+        this.snackbar("Ingrese la descripción de la actividad económica");
+        return false;
+      }
+      return true;
+    },
+    nuevo() {
+      this.isEdit = false;
+      this.item = undefined;
+      this.dialogSelect = "0";
+      this.nombre = "";
+      this.descripcion = "";
+      this.vigencia = 1;
+    },
     copiarDatos() {
-      if (this.universidad) {
+      if (this.item) {
         this.isEdit = true;
-        this.nombre = this.universidad.nombre;
-        this.siglas = this.universidad.siglas;
-        this.estado = this.universidad.estado;
-        this.vigencia = this.universidad.vigencia;
+        this.dialogSelect = "0";
+        this.nombre = this.item.nombre;
+        this.descripcion = this.item.descripcion;
+        this.vigencia = this.item.vigencia;
       } else this.nuevo();
     },
     agregar() {
-      post("universidades", {
+      if (!this.validar()) return;
+      post("actividadEconomica/add", {
         nombre: this.nombre,
-        siglas: this.siglas.toUpperCase(),
-        estado: this.estado
+        descripcion: this.descripcion
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -192,10 +201,10 @@ export default {
       });
     },
     editar() {
-      put("universidades/" + this.universidad.codigo, {
+      if (!this.validar()) return;
+      put("actividadEconomica/" + this.item.codigo, {
         nombre: this.nombre,
-        siglas: this.siglas.toUpperCase(),
-        estado: this.estado
+        descripcion: this.descripcion
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -203,18 +212,10 @@ export default {
         }
       });
     },
-    nuevo() {
-      this.isEdit = false;
-      this.universidad = undefined;
-      this.nombre = "";
-      this.siglas = "";
-      this.estado = 1;
-      this.vigencia = 1;
-    },
     eliminar() {
-      patch("universidades/" + this.universidad.codigo, {
+      patch("actividadEconomica/" + this.item.codigo, {
         vigencia: true,
-        universidad: this.dialogSelect
+        actividad: this.dialogSelect
       }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) {
@@ -225,7 +226,7 @@ export default {
       });
     },
     recuperar() {
-      patch("universidades/" + this.universidad.codigo, {
+      patch("actividadEconomica/" + this.item.codigo, {
         vigencia: false
       }).then(res => {
         this.snackbar(res.mensaje);
@@ -235,17 +236,16 @@ export default {
         }
       });
     },
-    cargarTodo() {
-      this.cargarUniversidades();
-    },
-    cargarUniversidades() {
-      get("universidades-objeto").then(res => {
-        this.universidades = res.data.map(e => ({
+    cargarLista() {
+      get("actividades-objeto").then(res => {
+        this.lista = res.data.map(e => ({
           ...e,
-          estado: parseInt(e.estado),
           vigencia: parseInt(e.vigencia)
         }));
       });
+    },
+    cargarTodo() {
+      this.cargarLista();
     }
   },
   created() {
@@ -253,4 +253,3 @@ export default {
   }
 };
 </script>
-
