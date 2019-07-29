@@ -125,9 +125,9 @@ $app->delete('/api/personal-objeto-disabled', function (Request $request) {
     $cantidad = $this->db->exec("DELETE FROM personal 
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Personal eliminado correctamente'));
     } else {
-      echo json_encode(array('estado' => false));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo eliminar el personal'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
