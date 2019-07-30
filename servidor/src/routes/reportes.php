@@ -41,7 +41,7 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
                                       INNER JOIN egresado E on E.codigo =  Pt.codigoEgresado
                                       INNER JOIN persona P on E.codigoPersona = P.codigo
                                       WHERE (DNI = $codigo or P.codigo = $codigo)")->fetchAll();
-    $laboral = $this->db->query("SELECT CONCAT(A.nombre,',',D.nombre ) as descripcion,razonSocial as nombre
+    $laboral = $this->db->query("SELECT CONCAT(A.nombre,', ',D.nombre ) as descripcion, cargo, razonSocial as nombre
                                 FROM persona P
                                 INNER JOIN egresado E on E.codigoPersona = P.codigo
                                 INNER JOIN contrato C on C.codigoEgresado = E.codigo
