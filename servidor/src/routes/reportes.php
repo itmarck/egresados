@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $app->get('/api/reporte/admision/{admision}', function (Request $request) {
   $codigoAdmision = $request->getAttribute('admision');
   try {
-    $data = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre,urlFoto, YEAR(fechaTermino) as termino, T.fecha as titulacion,MT.nombre as modalidadTitulacion, C.codigo as colegiatura,C.fecha as fechaColegiatura 
+    $data = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, YEAR(fechaTermino) as termino, T.fecha as titulacion,MT.nombre as modalidadTitulacion, C.codigo as colegiatura,C.fecha as fechaColegiatura 
                               FROM egresado E 
                               INNER JOIN persona on persona.codigo = codigoPersona
                               INNER JOIN titulacion T on E.codigo= T.codigoEgresado
