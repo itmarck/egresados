@@ -85,6 +85,9 @@
                           <v-date-picker
                             v-model="fechaInicio"
                             @input="inicio = false"
+                            locale="es-MX"
+                            :show-current="false"
+                            :max="new Date().toISOString().substr(0, 10)"
                           ></v-date-picker>
                         </v-menu>
                       </v-flex>
@@ -109,6 +112,9 @@
                           <v-date-picker
                             v-model="fechaTermino"
                             @input="termino = false"
+                            locale="es-MX"
+                            :show-current="false"
+                            :max="new Date().toISOString().substr(0, 10)"
                           ></v-date-picker>
                         </v-menu>
                       </v-flex>
