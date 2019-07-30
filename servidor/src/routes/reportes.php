@@ -28,7 +28,7 @@ $app->get('/api/reporte/admision/{admision}', function (Request $request) {
 $app->get('/api/reporte/dni/{dni}', function (Request $request) {
   $codigo = $request->getAttribute('dni');
   try {
-    $egresado = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo
+    $egresado = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo,urlFoto
     FROM persona WHERE (DNI = $codigo or codigo = $codigo) and vigencia=1")->fetchAll();
     $carreras = $this->db->query("SELECT E.nombre, A.nombre as admision, YEAR(Eg.fechaTermino) as FechaEgreso, C.codigo as colegiatura 
               FROM egresado Eg INNER JOIN escuelaProfesional E ON Eg.codigoEscuela = E.codigo
@@ -51,7 +51,7 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
                                 WHERE (DNI = $codigo or P.codigo = $codigo) and C.fechatermino is null ")->fetchAll();
     if ($egresado || $carreras || $estudiosPost) {
       $data = array('egresado' => $egresado, 'carreras' => $carreras, 'estudiosPost' => $estudiosPost, 'laboral' => $laboral);
-      echo json_encode(array('estado' => true, 'data' => $data));
+      echo json_encode(array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado '. count($carreras) .' carrera(s) y '. count($estudiosPost) .' postgrado(s)'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
