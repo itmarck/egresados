@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $app->get('/api/reporte/admision/{admision}', function (Request $request) {
   $codigoAdmision = $request->getAttribute('admision');
   try {
-    $data = $this->db->query("SELECT nombres, YEAR(fechaTermino) as Termino, T.codigoEgresado as Titulacion, C.codigoEgresado as Colegiatura
+    $data = $this->db->query("SELECT nombres, YEAR(fechaTermino) as Termino, T.fecha as Titulacion, C.codigoEgresado as Colegiatura
                               FROM egresado E 
                               INNER JOIN persona on persona.codigo = codigoPersona
                               INNER JOIN titulacion T on E.codigo= T.codigoEgresado
@@ -14,7 +14,7 @@ $app->get('/api/reporte/admision/{admision}', function (Request $request) {
                               INNER JOIN admision A on A.codigoEscuela = E.codigoEscuela
                               WHERE E.codigoAdmision = $codigoAdmision")->fetchAll();
     if ($data) {
-      $result = array('estado' => true, 'data' => $data);
+      $result = array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado '. count($data) .' egresado(s)');
       echo json_encode($result);
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
@@ -41,8 +41,16 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
                                       INNER JOIN egresado E on E.codigo =  Pt.codigoEgresado
                                       INNER JOIN persona P on E.codigoPersona = P.codigo
                                       WHERE (DNI = $codigo or P.codigo = $codigo)")->fetchAll();
+    $laboral = $this->db->query("SELECT CONCAT(A.nombre,',',D.nombre ) as descripcion,razonSocial as nombre
+                                FROM persona P
+                                INNER JOIN egresado E on E.codigoPersona = P.codigo
+                                INNER JOIN contrato C on C.codigoEgresado = E.codigo
+                                INNER JOIN centroLaboral CL on CL.codigo = C.codigoCentroLaboral
+                                INNER JOIN actividadeconomica A on A.codigo=CL.codigoActividad 
+                                INNER JOIN distrito D on D.codigo = CL.codigoDistrito  
+                                WHERE (DNI = $codigo or P.codigo = $codigo) and C.fechatermino is null ")->fetchAll();
     if ($egresado || $carreras || $estudiosPost) {
-      $data = array('egresado' => $egresado, 'carreras' => $carreras, 'estudiosPost' => $estudiosPost);
+      $data = array('egresado' => $egresado, 'carreras' => $carreras, 'estudiosPost' => $estudiosPost, 'laboral' => $laboral);
       echo json_encode(array('estado' => true, 'data' => $data));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
@@ -55,9 +63,14 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
 $app->get('/api/reporte/distrito/{distrito}', function (Request $request) {
   $codigo = $request->getAttribute('distrito');
   try {
-
-    if ($codigo) {
-      //echo json_encode(array('estado' => true, 'data' => $data));
+    $egresado = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo
+                                  FROM persona P
+                                  INNER JOIN egresado E on E.codigoPersona = P.codigo
+                                  INNER JOIN contrato C on C.codigoEgresado = E.codigo
+                                  INNER JOIN centroLaboral CL on CL.codigo = C.codigoCentroLaboral
+                                  WHERE CL.codigoDistrito = $codigo and C.fechatermino is null")->fetchAll();
+    if ($egresado) {
+      echo json_encode(array('estado' => true, 'data' => $egresado, 'mensaje' => 'Se han encontrado '. count($egresado) .' egresado(s)'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
@@ -69,9 +82,14 @@ $app->get('/api/reporte/distrito/{distrito}', function (Request $request) {
 $app->get('/api/reporte/actividad/{actividad}', function (Request $request) {
   $codigo = $request->getAttribute('actividad');
   try {
-
+    $egresado = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo,CL.razonsocial,C.cargo,C.detalleFunciones
+                                  FROM persona P
+                                  INNER JOIN egresado E on E.codigoPersona = P.codigo
+                                  INNER JOIN contrato C on C.codigoEgresado = E.codigo
+                                  INNER JOIN centroLaboral CL on CL.codigo = C.codigoCentroLaboral
+                                  WHERE CL.codigoActividad = $codigo and C.fechatermino is null")->fetchAll();
     if ($codigo) {
-      //echo json_encode(array('estado' => true, 'data' => $data));
+      echo json_encode(array('estado' => true, 'data' => $egresado, 'mensaje' => 'Se han encontrado '. count($egresado) .' egresado(s)'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }

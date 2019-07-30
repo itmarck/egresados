@@ -50,7 +50,7 @@ $app->post('/api/admisiones/add', function (Request $request) {
   $codigoModalidad = $request->getParam('codigoModalidad');
   try {
     $cantidad = $this->db->exec("INSERT INTO admision(codigoEscuela,fechaAdmision,nombre,codigoModalidad,vigencia) 
-                            Values('$codigoEscuela','$fechaAdmision',$nombre,$codigoModalidad,1)");
+                            Values($codigoEscuela,'$fechaAdmision',$nombre,$codigoModalidad,1)");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true));
     } else {
