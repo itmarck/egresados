@@ -35,7 +35,7 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
                                   FROM egresado Eg INNER JOIN escuelaProfesional E ON Eg.codigoEscuela = E.codigo
                                   INNER JOIN admision A ON Eg.codigoAdmision = A.codigo 
                                   INNER JOIN modalidadAdmision MA on MA.codigo= A.codigoModalidad
-                                  INNER JOIN colegiatura C ON C.codigoEgresado = Eg.codigo
+                                  LEFT JOIN colegiatura C ON C.codigoEgresado = Eg.codigo
                                   INNER JOIN persona P on Eg.codigoPersona = P.codigo
                                   WHERE (DNI = $codigo or P.codigo = $codigo) ")->fetchAll();
     $estudiosPost = $this->db->query("SELECT Pt.nombre, CONCAT(YEAR(Pt.fechaInicio),' - ',YEAR(Pt.fechaTermino)) as fecha, IF(CE.razonSocial is null ,U.nombre,CE.razonSocial) as lugar
