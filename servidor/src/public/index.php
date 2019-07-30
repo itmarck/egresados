@@ -17,7 +17,7 @@ $config['addContentLengthHeader'] = false;
 $config['db']['host']   = 'localhost';
 $config['db']['user']   = 'root';
 $config['db']['pass']   = '';
-$config['db']['dbname'] = 'egresados';
+$config['db']['dbname'] = 'prueba';
 
 $app = new \Slim\App(['settings' => $config]);
 
