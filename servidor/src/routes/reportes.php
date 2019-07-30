@@ -55,7 +55,7 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
                                 WHERE (DNI = $codigo or P.codigo = $codigo) and C.fechatermino is null ")->fetchAll();
     if ($egresado || $carreras || $estudiosPost) {
       $data = array('egresado' => $egresado[0], 'carreras' => $carreras, 'estudiosPost' => $estudiosPost, 'laboral' => $laboral);
-      echo json_encode(array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado ' . count($carreras) . ' carrera(s) y ' . count($estudiosPost) . ' postgrado(s)'));
+      echo json_encode(array('estado' => true, 'data' => $data, 'mensaje' => 'Se ha encontrado un egresado'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
