@@ -1,3 +1,3 @@
 module.exports = {
-   publicPath: '/egresados/cliente/dist'
+   // publicPath: '/egresados/cliente/dist'
 };

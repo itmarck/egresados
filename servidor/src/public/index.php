@@ -14,7 +14,7 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH");
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
-$config['db']['host']   = '35.238.236.181';
+$config['db']['host']   = 'localhost';
 $config['db']['user']   = 'root';
 $config['db']['pass']   = '';
 $config['db']['dbname'] = 'egresados';
