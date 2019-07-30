@@ -42,7 +42,7 @@
         <template v-slot:activator="{ on }">
           <v-btn icon v-on="on">
             <v-avatar size="35">
-              <img :src="urlFoto" alt="Perfil" />
+              <img :src="urlImage + user.urlFoto" alt="Perfil" />
             </v-avatar>
           </v-btn>
         </template>
@@ -61,7 +61,10 @@
     </v-toolbar>
     <v-navigation-drawer app v-model="drawer" temporary>
       <v-flex xs12>
-        <v-img :src="urlFoto" gradient="to bottom, transparent 50%, black">
+        <v-img
+          :src="urlImage + user.urlFoto"
+          gradient="to bottom, transparent 50%, black"
+        >
           <v-layout pa-3 column fill-height class="lightbox white--text">
             <v-spacer></v-spacer>
             <v-flex shrink class="title">
@@ -117,6 +120,7 @@ import { removeUser } from "../../bd/api";
 import { urlImage } from "../../bd/config";
 export default {
   data: () => ({
+    urlImage,
     drawer: false,
     links: [
       { text: "Inicio", to: "/personal/inicio", icon: "home" },
@@ -126,10 +130,7 @@ export default {
     ]
   }),
   computed: {
-    ...mapState(["user"]),
-    urlFoto() {
-      return urlImage + this.user.urlFoto;
-    }
+    ...mapState(["user"])
   },
   methods: {
     cerrarSesion() {
