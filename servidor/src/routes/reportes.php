@@ -31,14 +31,14 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
   try {
     $egresado = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre,celular,correo,urlFoto
     FROM persona WHERE (DNI = $codigo or codigo = $codigo) and vigencia=1")->fetchAll();
-    $carreras = $this->db->query("SELECT E.nombre, A.nombre as admision, CONCAT(YEAR(Eg.fechaInicio),'-',YEAR(Eg.fechaTermino)) as fecha, C.codigo as colegiatura, C.fecha as fechaColegiatura,MA.nombre  as modalidad
+    $carreras = $this->db->query("SELECT E.nombre, A.nombre as admision, CONCAT(YEAR(Eg.fechaInicio),' - ',YEAR(Eg.fechaTermino)) as fecha, C.codigo as colegiatura, C.fecha as fechaColegiatura,MA.nombre  as modalidad
                                   FROM egresado Eg INNER JOIN escuelaProfesional E ON Eg.codigoEscuela = E.codigo
                                   INNER JOIN admision A ON Eg.codigoAdmision = A.codigo 
                                   INNER JOIN modalidadAdmision MA on MA.codigo= A.codigoModalidad
                                   INNER JOIN colegiatura C ON C.codigoEgresado = Eg.codigo
                                   INNER JOIN persona P on Eg.codigoPersona = P.codigo
                                   WHERE (DNI = $codigo or P.codigo = $codigo) ")->fetchAll();
-    $estudiosPost = $this->db->query("SELECT Pt.nombre, CONCAT(YEAR(Pt.fechaInicio),'-',YEAR(Pt.fechaTermino)) as fecha, IF(CE.razonSocial is null ,U.nombre,CE.razonSocial) as lugar
+    $estudiosPost = $this->db->query("SELECT Pt.nombre, CONCAT(YEAR(Pt.fechaInicio),' - ',YEAR(Pt.fechaTermino)) as fecha, IF(CE.razonSocial is null ,U.nombre,CE.razonSocial) as lugar
                                       FROM estudiosPostgrado Pt
                                       INNER JOIN egresado E on E.codigo =  Pt.codigoEgresado
                                       INNER JOIN persona P on E.codigoPersona = P.codigo

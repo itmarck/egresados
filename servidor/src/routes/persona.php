@@ -51,14 +51,14 @@ $app->get('/api/personas/{DNI}', function (Request $request) {
 
 $app->get('/api/personas-publico', function () {
   try {
-    $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.nombre, E.fechaTermino
+    $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.nombre, E.fechaTermino, 'Carrera' as tipo
                               FROM persona P 
                               INNER JOIN egresado E ON E.codigoPersona = P.codigo
                               INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
                               WHERE P.privacidad = 0
                               ORDER BY fechaTermino DESC
                               LIMIT 25")->fetchAll();
-    $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.fechaTermino, EP.nombre
+    $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.fechaTermino, EP.nombre, 'Estudio de postgrado' as tipo
                                     FROM persona P 
                                     INNER JOIN egresado E ON E.codigoPersona = P.codigo
                                     INNER JOIN estudiospostgrado EP on EP.codigoEgresado = E.codigo
