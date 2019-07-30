@@ -115,12 +115,30 @@ $app->delete('/api/centroEstudios-objeto-disabled', function (Request $request) 
 $app->patch('/api/centroEstudios/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  $centro = $request->getParam('centroEstudios');
   try {
+    if ($centro != null) {
+      $estudios = $this->db->query("SELECT E.codigo from centroestudios C
+                                    INNER JOIN estudiospostgrado E on E.codigoCentroEstudios = C.codigo 
+                                    WHERE C.codigo = $codigo ")->fetchAll();
+      if ($centro == "0") {
+        if ($estudios) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge un centro que lo reemplace'));
+          exit;
+        }
+      } else {
+        foreach ($estudios as $key => $C) {
+          $this->db->exec("UPDATE estudiospostgrado SET codigoCentroEstudios = $centro where codigo = $C->codigo");
+        }
+      }
+    }
+
+
     $cantidad = $this->db->exec("UPDATE centroestudios set
                                 vigencia = $vigencia
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Centro eliminado, aun se puede recuperar' : 'Centro recuperado'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
     }

@@ -122,10 +122,10 @@ $app->delete('/api/centroLaborales-objeto-disabled', function (Request $request)
 $app->patch('/api/centroLaboral/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
-  $centro = $request->db->getParam('centro');
+  $centro = $request->getParam('centro');
   try {
     if ($centro != null) {
-      $contratos = $request->db->query("SELECT C.codigo from centroLaboral L INNER JOIN contrato C on C.codigoCentroLaboral = L.codigo WHERE L.codigo = $codigo")->fetchAll();
+      $contratos = $this->db->query("SELECT C.codigo from centroLaboral L INNER JOIN contrato C on C.codigoCentroLaboral = L.codigo WHERE L.codigo = $codigo")->fetchAll();
       if ($centro == "0") {
         if ($contratos) {
           echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge un centro que lo reemplace'));

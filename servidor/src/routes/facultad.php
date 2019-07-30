@@ -139,7 +139,7 @@ $app->patch('/api/facultades/{codigo}', function (Request $request) {
                                 vigencia = $vigencia
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Vigencia actualizada'));
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Facultad eliminada, aun se puede recuperar' : 'Facultad recuperada'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
     }

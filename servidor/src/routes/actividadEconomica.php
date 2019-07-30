@@ -94,10 +94,10 @@ $app->delete('/api/actividades-objeto-disabled', function (Request $request) {
 $app->patch('/api/actividadEconomica/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
-  $actividad = $request->db->getParam('actividad');
+  $actividad = $request->getParam('actividad');
   try {
     if ($actividad != null) {
-      $centros = $request->db->query("SELECT C.codigo from actividadEconomica A INNER JOIN centrolaboral C on C.codigoActividad = A.codigo WHERE A.codigo = $codigo")->fetchAll();
+      $centros = $this->db->query("SELECT C.codigo from actividadEconomica A INNER JOIN centrolaboral C on C.codigoActividad = A.codigo WHERE A.codigo = $codigo")->fetchAll();
       if ($actividad == "0") {
         if ($centros) {
           echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge una escuela que la reemplace'));
