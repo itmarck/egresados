@@ -52,7 +52,7 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
       echo json_encode($result);
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos '.$e.getMessage()));
   }
 });
 
