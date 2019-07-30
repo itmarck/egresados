@@ -82,7 +82,8 @@ $app->get('/api/reporte/distrito/{distrito}', function (Request $request) {
 $app->get('/api/reporte/actividad/{actividad}', function (Request $request) {
   $codigo = $request->getAttribute('actividad');
   try {
-    $egresado = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo,CL.razonsocial,C.cargo,C.detalleFunciones
+    $egresado = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,
+                                  celular,correo,CL.razonsocial,C.cargo,C.detalleFunciones, 0 as toggle
                                   FROM persona P
                                   INNER JOIN egresado E on E.codigoPersona = P.codigo
                                   INNER JOIN contrato C on C.codigoEgresado = E.codigo
