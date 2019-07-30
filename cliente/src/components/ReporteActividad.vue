@@ -18,6 +18,7 @@
                   label="Seleccione actividad económica"
                   placeholder="Tecnología"
                   :hint="actividad.descripcion"
+                  persistent-hint
                   return-object
                   @change="lista = []"
                 ></v-select>
@@ -36,10 +37,30 @@
     <v-flex xs12 md6>
       <v-card v-if="lista.length != 0">
         <v-list three-line>
-          <v-list-tile>
+          <v-list-tile
+            v-for="(item, i) of lista"
+            :key="i"
+            @click="item.toggle = !item.toggle"
+          >
             <v-list-tile-content>
-              <v-list-tile-title></v-list-tile-title>
-              <v-list-tile-sub-title></v-list-tile-sub-title>
+              <v-list-tile-title v-html="item.Nombre" />
+              <div v-if="item.toggle">
+                <v-list-tile-sub-title>
+                  <v-icon small>phone</v-icon> {{ item.celular }}
+                </v-list-tile-sub-title>
+                <v-list-tile-sub-title class="caption">
+                  {{ item.correo }}
+                </v-list-tile-sub-title>
+              </div>
+              <div v-else>
+                <v-list-tile-sub-title>
+                  <span class="text--primary">{{ item.cargo }}</span> en
+                  <span class="text--primary">{{ item.razonsocial }}</span>
+                </v-list-tile-sub-title>
+                <v-list-tile-sub-title class="caption">
+                  {{ item.detalleFunciones }}
+                </v-list-tile-sub-title>
+              </div>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -66,6 +87,12 @@ export default {
     aceptar() {
       get("reporte/actividad/" + this.actividad.codigo).then(res => {
         this.snackbar(res.mensaje);
+        if (res.estado == true) {
+          this.lista = res.data.map(e => ({
+            ...e,
+            toggle: parseInt(e.toggle)
+          }));
+        }
       });
     },
     cargarActividades() {

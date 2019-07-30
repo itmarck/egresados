@@ -41,6 +41,10 @@ export default [
         component: () => import('../views/Personal/Egresados.vue')
       },
       {
+        path: 'egresados/:dni',
+        component: () => import('../views/Personal/Egresados.vue')
+      },
+      {
         path: 'reportes',
         component: () => import('../views/Personal/Reportes.vue')
       },

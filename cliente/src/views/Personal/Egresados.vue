@@ -9,7 +9,7 @@
               v-model="egresado"
               :items="egresados"
               placeholder="Seleccione Egresado"
-              item-value="codigo"
+              item-value="dni"
               item-text="nombre"
               hide-details
               return-object
@@ -201,7 +201,6 @@ export default {
     dialog: false,
     dialogSelect: 0,
 
-    persona: undefined,
     egresado: undefined,
     egresados: [],
     vigencia: 1,
@@ -366,7 +365,13 @@ export default {
     }
   },
   created() {
+    if (this.$route.params.dni) {
+      this.egresado = {
+        dni: this.$route.params.dni
+      };
+    }
     this.cargarTodo();
+    this.copiarDatos();
   }
 };
 </script>

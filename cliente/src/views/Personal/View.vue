@@ -32,7 +32,7 @@
         <v-btn
           flat
           class="hidden-sm-and-down"
-          to="admin"
+          to="/personal/admin"
           v-if="user.tipo == 'A'"
         >
           Admin
@@ -90,7 +90,11 @@
             <v-list-tile-title v-text="link.text" />
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile class="google-font" v-if="user.tipo == 'A'" to="admin">
+        <v-list-tile
+          class="google-font"
+          v-if="user.tipo == 'A'"
+          to="/personal/admin"
+        >
           <v-list-tile-action>
             <v-icon>vpn_key</v-icon>
           </v-list-tile-action>
@@ -115,10 +119,10 @@ export default {
   data: () => ({
     drawer: false,
     links: [
-      { text: "Inicio", to: "inicio", icon: "home" },
-      { text: "Mantenimiento", to: "mantenimiento", icon: "public" },
-      { text: "Egresados", to: "egresados", icon: "group" },
-      { text: "Reportes", to: "reportes", icon: "file_copy" }
+      { text: "Inicio", to: "/personal/inicio", icon: "home" },
+      { text: "Mantenimiento", to: "/personal/mantenimiento", icon: "public" },
+      { text: "Egresados", to: "/personal/egresados", icon: "group" },
+      { text: "Reportes", to: "/personal/reportes", icon: "file_copy" }
     ]
   }),
   computed: {

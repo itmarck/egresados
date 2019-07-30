@@ -24,7 +24,7 @@
                     <v-select
                       :items="centros"
                       v-model="centro"
-                      item-text="razonSocial"
+                      item-text="nombre"
                       item-value="codigo"
                       placeholder="Seleccione centro laboral"
                       label="Nombre del centro laboral"
@@ -137,9 +137,21 @@
                             ></v-text-field>
                           </template>
                           <v-date-picker
+                            v-if="!actual"
                             v-model="fechaTermino"
                             @input="termino = false"
-                          ></v-date-picker>
+                          >
+                          </v-date-picker>
+                          <v-card>
+                            <v-card-text>
+                              <v-switch
+                                hide-details
+                                label="Centro laboral actual"
+                                v-model="actual"
+                                @change="switchActual"
+                              ></v-switch>
+                            </v-card-text>
+                          </v-card>
                         </v-menu>
                       </v-flex>
                     </v-layout>
@@ -188,12 +200,14 @@
     </v-layout>
   </v-container>
 </template>
+
 <script>
 import { get, post, put } from "../../bd/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data: () => ({
     isEdit: false,
+    actual: true,
     codigo: "",
     contratos: [],
     contrato: "",
@@ -204,7 +218,7 @@ export default {
     cargo: "",
     fechaInicio: new Date().toISOString().substring(0, 10),
     inicio: false,
-    fechaTermino: new Date().toISOString().substring(0, 10),
+    fechaTermino: "Actualidad",
     termino: false,
     detalles: "",
     addCentro: false,
@@ -224,6 +238,11 @@ export default {
   },
   methods: {
     ...mapMutations(["snackbar"]),
+    switchActual() {
+      if (this.actual) {
+        this.fechaTermino = "Actualidad";
+      } else this.fechaTermino = new Date().toISOString().substring(0, 10);
+    },
     validar() {
       if (this.carrera == "") {
         this.snackbar("Ingrese nombre de la Carrera");
@@ -253,7 +272,7 @@ export default {
       }
       if (this.detalles == "") {
         let centro = this.centros.filter(e => e.codigo == this.centro)[0]
-          .razonSocial;
+          .nombre;
         if (this.addCentro) centro = this.razonSocial;
         this.snackbar("Cuéntanos un poco sobre tu trabajo en " + centro);
         return false;
@@ -267,7 +286,11 @@ export default {
       this.carrera = contrato.codigoEgresado;
       this.centro = contrato.codigoCentroLaboral;
       this.fechaInicio = contrato.fechaInicio;
-      this.fechaTermino = contrato.fechaTermino;
+      this.actual = false;
+      if (contrato.fechaTermino == null) {
+        this.actual = true;
+        this.fechaTermino = "Actualidad";
+      } else this.fechaTermino = contrato.fechaTermino;
       this.cargo = contrato.cargo;
       this.detalles = contrato.detalleFunciones;
     },
@@ -278,7 +301,7 @@ export default {
         carrera: this.carrera,
         cargo: this.cargo,
         inicio: this.fechaInicio,
-        termino: this.fechaTermino,
+        termino: this.actual ? null : this.fechaTermino,
         descripcion: this.detalles
       };
       if (this.addCentro) {
@@ -291,7 +314,7 @@ export default {
         };
       } else datos = { ...datos, centro: this.centro };
       put("contratos/" + this.codigo, datos).then(res => {
-        this.snackbar(res.mensaje)
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
         }
@@ -304,7 +327,7 @@ export default {
         carrera: this.carrera,
         cargo: this.cargo,
         inicio: this.fechaInicio,
-        termino: this.fechaTermino,
+        termino: this.actual ? null : this.fechaTermino,
         descripcion: this.detalles
       };
       if (this.addCentro) {
@@ -317,7 +340,7 @@ export default {
         };
       } else datos = { ...datos, centro: this.centro };
       post("contratos", datos).then(res => {
-        this.snackbar(res.mensaje)
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
           this.cargarTodo();
           this.nuevo();
@@ -332,7 +355,8 @@ export default {
       this.centro = "";
       this.cargo = "";
       this.fechaInicio = new Date().toISOString().substring(0, 10);
-      this.fechaTermino = new Date().toISOString().substring(0, 10);
+      this.fechaTermino = "Actualidad";
+      this.actual = true;
       this.detalles = "";
       this.ruc = "";
       this.razonSocial = "";
@@ -384,3 +408,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.v-input--selection-controls {
+  margin-top: 0;
+}
+</style>
