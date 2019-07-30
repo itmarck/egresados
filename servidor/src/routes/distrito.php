@@ -38,20 +38,24 @@ $app->get('/api/distritos-objeto-disabled', function () {
   }
 });
 
-$app->delete('/api/distritos-objeto-disabled', function (Request $request) {
-  $codigo = $request->getParam('codigo');
+
+$app->post('/api/distritos', function (Request $request) {
+  $nombre = $request->getParam('nombre');
+  $codigoProvincia = $request->getParam('provincia');
   try {
-    $cantidad = $this->db->exec("DELETE FROM distrito
-                                WHERE codigo = $codigo");
+    $cantidad = $this->db->exec("INSERT INTO distrito(codigoProvincia,nombre,vigencia) 
+                            Values($codigoProvincia,$nombre,1)");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true, 'mensaje' => 'Distrito eliminado'));
+      echo json_encode(array('estado' => true,'mensaje'=>'Distrito agregado'));
     } else {
-      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido eliminar distrito'));
+      echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar el distrito'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
   }
 });
+
+
 
 $app->put('/api/distritos/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
@@ -61,10 +65,57 @@ $app->put('/api/distritos/{codigo}', function (Request $request) {
                                 nombre ='$nombre',
                                 vigencia= 1  
                                 WHERE codigo = $codigo");
+
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Distrito actualizado'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar '));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
+$app->patch('/api/distritos/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
+  $distrito = $request->getParam('distrito');
+  try {
+    if ($distrito != null) {
+      $centros = $this->db->query("SELECT C.codigo from distrito D INNER JOIN centrolaboral C on C.codigoDistrito = D.codigo WHERE D.codigo = $codigo")->fetchAll();
+      if ($distrito == "0") {
+        if ($centros) {
+          echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge un distrito que lo reemplace'));
+          exit;
+        }
+      } else {
+        foreach ($centros as $key => $C) {
+          $this->db->exec("UPDATE centrolaboral SET codigoDistrito = $distrito where codigo = $C->codigo");
+        }
+      }
+    }
+    $cantidad = $this->db->exec("UPDATE distrito set
+                                vigencia = $vigencia
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => (!$vigencia) ? 'Distrito eliminado, aun se puede recuperar' : 'Distrito recuperado'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la vigencia'));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
+$app->delete('/api/distritos-objeto-disabled', function (Request $request) {
+  $codigo = $request->getParam('codigo');
+  try {
+    $cantidad = $this->db->exec("DELETE FROM distrito
+                                WHERE codigo = $codigo");
+    if ($cantidad > 0) {
+      echo json_encode(array('estado' => true, 'mensaje' => 'Distrito eliminado'));
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se ha podido eliminar distrito'));
     }
   } catch (PDOException $e) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
