@@ -113,14 +113,19 @@ $app->put('/api/contratos/{codigo}', function (Request $request) {
   $fechaTermino = $request->getParam('termino');
   $detalleFunciones = $request->getParam('descripcion');
   try {
-    $cantidad = $this->db->exec("UPDATE contrato set
-                                codigoEgresado ='$codigoEgresado',
-                                codigoCentroLaboral = '$codigoCentroLaboral',
-                                fechaInicio = '$fechaInicio',
-                                cargo = '$cargo',
-                                fechaTermino = '$fechaTermino',
-                                detalleFunciones = '$detalleFunciones'
-                                WHERE codigo = $codigo");
+    $sql = "UPDATE contrato set
+    codigoEgresado ='$codigoEgresado',
+    codigoCentroLaboral = '$codigoCentroLaboral',
+    fechaInicio = '$fechaInicio',
+    cargo = '$cargo',
+    detalleFunciones = '$detalleFunciones',";
+    if ($fechaTermino) {
+      $sql .= "fechaTermino = '$fechaTermino' ";
+    }else {
+      $sql .= "fechaTermino = null ";
+    }
+    $sql .="WHERE codigo = $codigo";
+    $cantidad = $this->db->exec($sql);
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Contrato actualizado'));
     } else {
