@@ -14,7 +14,7 @@ $app->get('/api/reporte/admision/{admision}', function (Request $request) {
                               INNER JOIN admision A on A.codigoEscuela = E.codigoEscuela
                               WHERE E.codigoAdmision = $codigoAdmision")->fetchAll();
     if ($data) {
-      $result = array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado '. count($data) .' egresado(s)');
+      $result = array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado ' . count($data) . ' egresado(s)');
       echo json_encode($result);
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
@@ -51,7 +51,7 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
                                 WHERE (DNI = $codigo or P.codigo = $codigo) and C.fechatermino is null ")->fetchAll();
     if ($egresado || $carreras || $estudiosPost) {
       $data = array('egresado' => $egresado[0], 'carreras' => $carreras, 'estudiosPost' => $estudiosPost, 'laboral' => $laboral);
-      echo json_encode(array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado '. count($carreras) .' carrera(s) y '. count($estudiosPost) .' postgrado(s)'));
+      echo json_encode(array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado ' . count($carreras) . ' carrera(s) y ' . count($estudiosPost) . ' postgrado(s)'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
@@ -63,14 +63,14 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
 $app->get('/api/reporte/distrito/{distrito}', function (Request $request) {
   $codigo = $request->getAttribute('distrito');
   try {
-    $egresado = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo
+    $egresado = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as Nombre,celular,correo, dni, urlFoto
                                   FROM persona P
                                   INNER JOIN egresado E on E.codigoPersona = P.codigo
                                   INNER JOIN contrato C on C.codigoEgresado = E.codigo
                                   INNER JOIN centroLaboral CL on CL.codigo = C.codigoCentroLaboral
                                   WHERE CL.codigoDistrito = $codigo and C.fechatermino is null")->fetchAll();
     if ($egresado) {
-      echo json_encode(array('estado' => true, 'data' => $egresado, 'mensaje' => 'Se han encontrado '. count($egresado) .' egresado(s)'));
+      echo json_encode(array('estado' => true, 'data' => $egresado, 'mensaje' => 'Se han encontrado ' . count($egresado) . ' egresado(s)'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
@@ -89,7 +89,7 @@ $app->get('/api/reporte/actividad/{actividad}', function (Request $request) {
                                   INNER JOIN centroLaboral CL on CL.codigo = C.codigoCentroLaboral
                                   WHERE CL.codigoActividad = $codigo and C.fechatermino is null")->fetchAll();
     if ($codigo) {
-      echo json_encode(array('estado' => true, 'data' => $egresado, 'mensaje' => 'Se han encontrado '. count($egresado) .' egresado(s)'));
+      echo json_encode(array('estado' => true, 'data' => $egresado, 'mensaje' => 'Se han encontrado ' . count($egresado) . ' egresado(s)'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
