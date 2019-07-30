@@ -24,16 +24,19 @@
                   item-text="nombre"
                   item-value="codigo"
                   placeholder="Escuela"
+                  no-data-text="No hay escuelas registradas"
                   @change="cargarAdmisiones(escuela)"
+                  :disabled="universidad == ''"
                 ></v-select>
                 <v-select
                   :items="admisiones"
                   v-model="admision"
                   item-value="codigo"
                   label="Admisión"
-                  no-data-text="Esta escuela no tiene admisiones registradas"
+                  no-data-text="No hay admisiones registradas"
                   placeholder="Seleccione admisión"
                   @change="lista = []"
+                  :disabled="escuela == ''"
                 >
                   <template slot="item" slot-scope="data">
                     {{ data.item.ciclo }}
@@ -81,9 +84,43 @@
         <v-list three-line>
           <v-list-tile v-for="(item, i) of lista" :key="i">
             <v-list-tile-content>
-              <v-list-tile-title v-html="item.nombres" />
-              <v-list-tile-sub-title>
-                {{ item.Termino }}
+              <v-list-tile-title>
+                {{ item.nombre }}
+                <span class="body-1"> ({{ item.termino }}) </span>
+              </v-list-tile-title>
+              <v-list-tile-sub-title class="caption">
+                {{
+                  item.titulacion
+                    ? "Titulado el " +
+                      new Date(
+                        item.titulacion.replace(/-/g, "\/")
+                      ).toLocaleDateString("es-ES", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                        timeZone: "America/New_York"
+                      }) +
+                      " como " +
+                      item.modalidadTitulacion
+                    : "No tiene título"
+                }}
+              </v-list-tile-sub-title>
+              <v-list-tile-sub-title class="caption">
+                {{
+                  item.colegiatura
+                    ? "Colegiado el " +
+                      new Date(
+                        item.fechaColegiatura.replace(/-/g, "\/")
+                      ).toLocaleDateString("es-ES", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                        timeZone: "America/New_York"
+                      }) +
+                      " con código " +
+                      item.colegiatura
+                    : "No tiene colegiatura"
+                }}
               </v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
@@ -124,6 +161,7 @@ export default {
     cargarEscuelas(universidad) {
       this.escuela = "";
       this.escuelas = [];
+      this.lista = [];
       if (universidad) {
         get("escuelasProfesionales/uni/" + universidad).then(res => {
           if (res.estado) this.escuelas = res.data;
@@ -134,6 +172,7 @@ export default {
     cargarAdmisiones(escuela) {
       this.admision = "";
       this.admisiones = [];
+      this.lista = [];
       if (escuela) {
         get("admisiones/" + escuela + "/" + this.universidad).then(res => {
           if (res.estado) this.admisiones = res.data;

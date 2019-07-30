@@ -34,14 +34,17 @@
         <!-- Datos -->
         <v-flex xs12>
           <v-card class="elevation-4">
-            <v-card-title class="headline font-weight-regular" primary-title>
+            <v-card-title class="headline font-weight-light" primary-title>
               <v-layout justify-space-between>
                 <v-flex>
-                  <span> {{ persona.egresado.Nombre.toUpperCase() }} </span>
+                  <span> {{ persona.egresado.nombre.toUpperCase() }} </span>
                 </v-flex>
-                <v-flex>
-                  <v-avatar size="50" color="red">
-                    <img :src="urlFoto" alt="Foto de perfil" />
+                <v-flex shrink>
+                  <v-avatar size="60" color="red">
+                    <img
+                      :src="urlImage + persona.egresado.urlFoto"
+                      alt="Foto de perfil"
+                    />
                   </v-avatar>
                 </v-flex>
               </v-layout>
@@ -67,9 +70,28 @@
                   <v-list-tile-title v-html="item.nombre" />
                   <v-list-tile-sub-title class="text--primary">
                     {{ item.admision }}
+                    {{ item.modalidad }}
+                    ({{ item.fecha }})
                   </v-list-tile-sub-title>
-                  <v-list-tile-sub-title>
-                    {{ item.colegiatura }}
+                  <v-list-tile-sub-title
+                    v-if="!item.colegiatura"
+                    class="caption"
+                  >
+                    Sin colegiatura
+                  </v-list-tile-sub-title>
+                  <v-list-tile-sub-title v-else class="caption">
+                    Colegiado el
+                    {{
+                      new Date(
+                        item.fechaColegiatura.replace(/-/g, "\/")
+                      ).toLocaleDateString("es-ES", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                        timeZone: "America/New_York"
+                      })
+                    }}
+                    con código {{ item.colegiatura }}
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
               </v-list-tile>
@@ -84,18 +106,12 @@
               <v-list-tile v-for="(item, i) of persona.estudiosPost" :key="i">
                 <v-list-tile-content>
                   <v-list-tile-title v-html="item.nombre" />
+                  <v-list-tile-sub-title
+                    class="text--primary"
+                    v-html="item.lugar"
+                  />
                   <v-list-tile-sub-title>
-                    <span class="text--primary">Finalizado el</span>
-                    {{
-                      new Date(
-                        item.fechaTermino.replace(/-/g, "\/")
-                      ).toLocaleDateString("es-ES", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                        timeZone: "America/New_York"
-                      })
-                    }}
+                    {{ item.fecha }}
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
               </v-list-tile>
@@ -110,11 +126,17 @@
               <v-list-tile v-for="(item, i) of persona.laboral" :key="i">
                 <v-list-tile-content>
                   <v-list-tile-title v-html="item.nombre" />
-                  <v-list-tile-sub-title
-                    class="text--primary"
-                    v-html="item.cargo"
-                  />
-                  <v-list-tile-sub-title v-html="item.descripcion" />
+                  <v-list-tile-sub-title>
+                    <span class="text--primary">{{ item.cargo }}</span>
+                    desde
+                    <span class="text--primary">{{ item.fechaInicio }}</span>
+                  </v-list-tile-sub-title>
+                  <v-list-tile-sub-title>
+                    {{ item.actividad }} en
+                    <span class="text-capitalize">
+                      {{ item.distrito.toLowerCase() }}
+                    </span>
+                  </v-list-tile-sub-title>
                 </v-list-tile-content>
               </v-list-tile>
             </v-list>
@@ -134,15 +156,11 @@ export default {
     ReporteSelect: () => import("./ReporteSelect")
   },
   data: () => ({
-    dni: "74813707",
+    urlImage,
+    dni: "",
 
     persona: null
   }),
-  computed: {
-    urlFoto() {
-      return urlImage + this.persona.egresado.urlFoto;
-    }
-  },
   methods: {
     ...mapMutations(["snackbar"]),
     aceptar() {
