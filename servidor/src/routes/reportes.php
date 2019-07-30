@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $app->get('/api/reporte/admision/{admision}', function (Request $request) {
   $codigoAdmision = $request->getAttribute('admision');
   try {
-    $data = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre,urlFoto, YEAR(fechaTermino) as termino, T.fecha as titulacion,MT.nombre as modalidadTitulacion, C.codigo as colegiatura,C.fecha as fechaColegiatura 
+    $data = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, YEAR(fechaTermino) as termino, T.fecha as titulacion,MT.nombre as modalidadTitulacion, C.codigo as colegiatura,C.fecha as fechaColegiatura 
                               FROM egresado E 
                               INNER JOIN persona on persona.codigo = codigoPersona
                               INNER JOIN titulacion T on E.codigo= T.codigoEgresado
@@ -35,7 +35,7 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
                                   FROM egresado Eg INNER JOIN escuelaProfesional E ON Eg.codigoEscuela = E.codigo
                                   INNER JOIN admision A ON Eg.codigoAdmision = A.codigo 
                                   INNER JOIN modalidadAdmision MA on MA.codigo= A.codigoModalidad
-                                  INNER JOIN colegiatura C ON C.codigoEgresado = Eg.codigo
+                                  LEFT JOIN colegiatura C ON C.codigoEgresado = Eg.codigo
                                   INNER JOIN persona P on Eg.codigoPersona = P.codigo
                                   WHERE (DNI = $codigo or P.codigo = $codigo) ")->fetchAll();
     $estudiosPost = $this->db->query("SELECT Pt.nombre, CONCAT(YEAR(Pt.fechaInicio),' - ',YEAR(Pt.fechaTermino)) as fecha, IF(CE.razonSocial is null ,U.nombre,CE.razonSocial) as lugar
@@ -55,7 +55,7 @@ $app->get('/api/reporte/dni/{dni}', function (Request $request) {
                                 WHERE (DNI = $codigo or P.codigo = $codigo) and C.fechatermino is null ")->fetchAll();
     if ($egresado || $carreras || $estudiosPost) {
       $data = array('egresado' => $egresado[0], 'carreras' => $carreras, 'estudiosPost' => $estudiosPost, 'laboral' => $laboral);
-      echo json_encode(array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado ' . count($carreras) . ' carrera(s) y ' . count($estudiosPost) . ' postgrado(s)'));
+      echo json_encode(array('estado' => true, 'data' => $data, 'mensaje' => 'Se ha encontrado un egresado'));
     } else {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
