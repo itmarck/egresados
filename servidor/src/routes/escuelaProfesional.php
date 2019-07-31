@@ -58,6 +58,24 @@ $app->get('/api/escuelasProfesionales/uni/{Nombre}', function (Request $request)
   }
 });
 
+$app->get('/api/escuelas/uni/{codigo}', function (Request $request) {
+  $codigo = $request->getAttribute('codigo');
+  try {
+    $data = $this->db->query("SELECT E.codigo,E.nombre
+                            FROM escuelaprofesional E
+                            INNER JOIN universidad U on U.codigo =  E.codigoUniversidad
+                            WHERE U.codigo = '$codigo' and E.vigencia=1")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+  }
+});
+
 $app->get('/api/escuelasProfesionales/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   try {
