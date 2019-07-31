@@ -21,6 +21,23 @@ $app->get('/api/admisiones', function () {
   }
 });
 
+$app->get('/api/admisiones-all', function () {
+  try {
+    $data = $this->db->query("SELECT A.codigo,codigoEscuela,date_format(fechaAdmision,'%Y/%m/%d') as fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad,A.vigencia
+                            FROM admision A
+                            INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo
+                            ORDER BY fechaAdmision")->fetchAll();
+    if ($data) {
+      $result = array('estado' => true, 'data' => $data);
+      echo json_encode($result);
+    } else {
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado admisiones', 'data' => []));
+    }
+  } catch (PDOException $e) {
+    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos', 'data' => []));
+  }
+});
+
 $app->get('/api/admisiones/{nombreEscuela}/{nombreUniversidad}', function (Request $request) {
   $nombreEscuela = $request->getAttribute('nombreEscuela');
   $nombreUniversidad = $request->getAttribute('nombreUniversidad');
@@ -50,7 +67,7 @@ $app->post('/api/admisiones/add', function (Request $request) {
   $codigoModalidad = $request->getParam('codigoModalidad');
   try {
     $cantidad = $this->db->exec("INSERT INTO admision(codigoEscuela,fechaAdmision,nombre,codigoModalidad,vigencia) 
-                            Values($codigoEscuela,'$fechaAdmision',$nombre,$codigoModalidad,1)");
+                            Values($codigoEscuela,'$fechaAdmision','$nombre',$codigoModalidad,1)");
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true));
     } else {
