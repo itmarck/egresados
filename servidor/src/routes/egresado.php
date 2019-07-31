@@ -23,7 +23,7 @@ $app->get('/api/carreras/{codigo}', function (Request $request) {
     $data = $this->db->query("SELECT E.codigo,E.codigoEscuela,EP.nombre as nombreEscuela,U.codigo as CodigoUni,U.nombre as universidad,codigoPersona,A.codigoModalidad,codigoAdmision,A.nombre as Admision,A.fechaAdmision as fechaAdmision,fechaInicio,fechaTermino, T.codigoModalidad as modalidadTitulacion, T.fecha as fechaTitulacion, C.codigo as codigoColegiatura, C.fecha as fechaColegiatura
                                 FROM  egresado E 
                                 INNER JOIN persona P on P.codigo = codigoPersona 
-                                INNER JOIN escuelaProfesional EP on E.codigoEscuela = EP.codigo 
+                                INNER JOIN escuelaprofesional EP on E.codigoEscuela = EP.codigo 
                                 INNER JOIN universidad U on EP.codigoUniversidad = U.codigo 
                                 INNER JOIN admision A on A.codigo = E.codigoAdmision 
                                 LEFT  JOIN titulacion T on E.codigo = T.codigoEgresado
