@@ -117,7 +117,7 @@ $app->delete('/api/universidades-objeto-disabled', function (Request $request) {
   }
 });
 
-$app->patch('/api/admision/{codigo}', function (Request $request) {
+$app->patch('/api/admisiones/{codigo}', function (Request $request) {
   $codigo = $request->getAttribute('codigo');
   $vigencia = ($request->getParam('vigencia')) ? 0 : 1;
   try {
@@ -127,7 +127,6 @@ $app->patch('/api/admision/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, no se puede eliminar'));
       exit;
     }
-
 
     $cantidad = $this->db->exec("UPDATE admision set
                                 vigencia = $vigencia

@@ -22,12 +22,12 @@ $app->get('/api/estudiosPostgrado/{codigo}', function (Request $request) {
 
   try {
     $universidades = $this->db->query("SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,T.nombre as tipo,Es.codigoUniversidad,U.nombre as universidad,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
-        FROM estudiospostgrado Es
-        INNER JOIN universidad U on U.codigo = Es.codigoUniversidad 
-        INNER JOIN egresado E on E.codigo = Es.codigoEgresado
-                     INNER JOIN persona P on P.codigo = E.codigoPersona
-                     INNER JOIN tipoestudiopostgrado T on T.codigo = Es.codigoTipo 
-                     WHERE P.dni = $codigo and P.vigencia = 1")->fetchAll();
+                                      FROM estudiospostgrado Es
+                                      INNER JOIN universidad U on U.codigo = Es.codigoUniversidad 
+                                      INNER JOIN egresado E on E.codigo = Es.codigoEgresado
+                                      INNER JOIN persona P on P.codigo = E.codigoPersona
+                                      INNER JOIN tipoestudiopostgrado T on T.codigo = Es.codigoTipo 
+                                      WHERE P.dni = $codigo and P.vigencia = 1")->fetchAll();
 
     $lugar = "U";
     foreach ($universidades as $key => $value) {
@@ -35,12 +35,12 @@ $app->get('/api/estudiosPostgrado/{codigo}', function (Request $request) {
       $value->select = true;
     }
     $centros = $this->db->query("SELECT Es.codigo,Es.codigoEgresado,Es.codigoTipo,T.nombre as tipo,Es.codigoCentroEstudios,C.razonSocial,Es.nombre, Es.fechaInicio,Es.fechaTermino,anioCertificacion 
-                              FROM estudiospostgrado Es
-                              INNER JOIN centroEstudios C on C.codigo= Es.codigoCentroEstudios  
-                              INNER JOIN egresado E on E.codigo = Es.codigoEgresado
-                              INNER JOIN persona P on P.codigo = E.codigoPersona
-                              INNER JOIN tipoestudiopostgrado T on T.codigo = Es.codigoTipo 
-                              WHERE P.dni = $codigo and P.vigencia = 1")->fetchAll();
+                                FROM estudiospostgrado Es
+                                INNER JOIN centroestudios C on C.codigo= Es.codigoCentroEstudios  
+                                INNER JOIN egresado E on E.codigo = Es.codigoEgresado
+                                INNER JOIN persona P on P.codigo = E.codigoPersona
+                                INNER JOIN tipoestudiopostgrado T on T.codigo = Es.codigoTipo 
+                                WHERE P.dni = $codigo and P.vigencia = 1")->fetchAll();
     $lugar = "C";
     foreach ($centros as $key => $value) {
       $value->lugar = $lugar;

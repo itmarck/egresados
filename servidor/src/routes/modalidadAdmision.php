@@ -17,7 +17,7 @@ $app->put('/api/modadlidadAdmision/{codigo}', function (Request $request) {
   $nombre = $request->getParam('nombre');
   $descripcion = $request->getParam('descripcion');
   try {
-    $cantidad = $this->db->exec("UPDATE modalidadAdmision set
+    $cantidad = $this->db->exec("UPDATE modalidadadmision set
                                 nombre ='$nombre',
                                 descripcion= '$descripcion',
                                 vigencia= 1  

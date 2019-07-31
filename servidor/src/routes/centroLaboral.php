@@ -125,7 +125,7 @@ $app->patch('/api/centroLaboral/{codigo}', function (Request $request) {
   $centro = $request->getParam('centro');
   try {
     if ($centro != null) {
-      $contratos = $this->db->query("SELECT C.codigo from centroLaboral L INNER JOIN contrato C on C.codigoCentroLaboral = L.codigo WHERE L.codigo = $codigo")->fetchAll();
+      $contratos = $this->db->query("SELECT C.codigo from centrolaboral L INNER JOIN contrato C on C.codigoCentroLaboral = L.codigo WHERE L.codigo = $codigo")->fetchAll();
       if ($centro == "0") {
         if ($contratos) {
           echo json_encode(array('estado' => false, 'mensaje' => 'Uy. Parece que tiene datos enlazados, escoge un centro que lo reemplace'));
@@ -137,7 +137,7 @@ $app->patch('/api/centroLaboral/{codigo}', function (Request $request) {
       }
     }
 
-    $cantidad = $this->db->exec("UPDATE centroLaboral set
+    $cantidad = $this->db->exec("UPDATE centrolaboral set
                                 vigencia = $vigencia
                                 WHERE codigo = $codigo");
     if ($cantidad > 0) {

@@ -80,9 +80,9 @@ $app->post('/api/contratos', function (Request $request) {
   try {
 
     if (!$codigoCentroLaboral) {
-      $codigo = $this->db->query("SELECT codigo FROM actividadEconomica where nombre = '$actividadEconomica'")->fetchall();
+      $codigo = $this->db->query("SELECT codigo FROM actividadeconomica where nombre = '$actividadEconomica'")->fetchall();
       if (!$codigo) {
-        $insert = $this->db->exec("INSERT INTO actividadEconomica(nombre,vigencia)
+        $insert = $this->db->exec("INSERT INTO actividadeconomica(nombre,vigencia)
                                   VALUES('$actividadEconomica',1)");
         $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
       }
