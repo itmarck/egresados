@@ -51,21 +51,28 @@ $app->get('/api/personas/{DNI}', function (Request $request) {
 
 $app->get('/api/personas-publico', function () {
   try {
-    $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.nombre, E.fechaTermino, 'Carrera' as tipo
+    $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.nombre, E.fechaTermino, 'C' as tipo
                               FROM persona P 
                               INNER JOIN egresado E ON E.codigoPersona = P.codigo
                               INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
                               WHERE P.privacidad = 0
                               ORDER BY fechaTermino DESC
-                              LIMIT 25")->fetchAll();
-    $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.fechaTermino, EP.nombre, 'Estudio de postgrado' as tipo
+                              LIMIT 20")->fetchAll();
+    $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.fechaTermino, EP.nombre, 'P' as tipo
                                     FROM persona P 
                                     INNER JOIN egresado E ON E.codigoPersona = P.codigo
                                     INNER JOIN estudiospostgrado EP on EP.codigoEgresado = E.codigo
                                     WHERE P.privacidad = 0
-                                    ORDER BY fechaTermino DESC
-                                    LIMIT 25")->fetchAll();
-    $data = array_merge($carreras, $postgrados);
+                                    ORDER BY EP.fechaTermino DESC
+                                    LIMIT 20")->fetchAll();
+    $experiencia = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre,CL.razonsocial,C.cargo,C.detalleFunciones,C.fechaInicio,C.fechaTermino, urlFoto,'T' as tipo
+                                    FROM persona P
+                                    INNER JOIN egresado E on E.codigoPersona = P.codigo
+                                    INNER JOIN contrato C on C.codigoEgresado = E.codigo
+                                    INNER JOIN centroLaboral CL on CL.codigo = C.codigoCentroLaboral
+                                    ORDER BY C.fechaTermino DESC
+                                    LIMIT 20")->fetchAll();
+    $data = array_merge($carreras, $postgrados, $experiencia);
     usort($data, 'ordenar');
     $data = array_slice($data, 0, 20);
     if ($data) {
