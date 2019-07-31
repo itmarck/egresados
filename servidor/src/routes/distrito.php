@@ -26,7 +26,8 @@ $app->get('/api/distritos-objeto', function () {
 });
 
 $app->get('/api/distritos-objeto-disabled', function () {
-  $data = $this->db->query("SELECT D.codigo, CONCAT(P.nombre,'-', De.nombre) as descripcion ,D.nombre, D.vigencia from distrito D
+  $data = $this->db->query("SELECT D.codigo, CONCAT(P.nombre,'-', De.nombre) as descripcion ,D.nombre, D.vigencia 
+                            FROM distrito D
                             INNER JOIN provincia P on P.codigo = D.codigoProvincia
                             INNER JOIN departamento De on De.codigo = P.codigoDepartamento
                             WHERE D.vigencia=0 ")->fetchAll();

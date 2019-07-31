@@ -228,8 +228,8 @@ $app->get('/api/carreras/actividadEconomica/{codigo}', function (Request $reques
                               FROM egresado INNER JOIN persona on persona.codigo = codigoPersona
                               INNER JOIN contrato C on egresado.codigo= C.codigoEgresado
                               INNER JOIN centroLaboral Centro on C.codigoCentroLaboral = Centro.codigo
-                              INNER JOIN actividadEconomica A on Centro.codigoActividad = A.codigo
-                              WHERE actividadEconomica.codigo = $codigo")->fetchAll();
+                              INNER JOIN actividadeconomica A on Centro.codigoActividad = A.codigo
+                              WHERE actividadeconomica.codigo = $codigo")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
