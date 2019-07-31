@@ -23,7 +23,7 @@ $app->get('/api/admisiones', function () {
 
 $app->get('/api/admisiones-all', function () {
   try {
-    $data = $this->db->query("SELECT A.codigo,codigoEscuela as escuela,EP.nombre as nombreEscuela,EP.codigoUniversidad as universidad ,fechaAdmision as fecha,CONCAT(A.nombre,' ',M.nombre) as nombre  ,codigoModalidad as modalidad, codigoModalidad as modalidad,A.vigencia
+    $data = $this->db->query("SELECT A.codigo,codigoEscuela as escuela,EP.nombre as nombreEscuela,EP.codigoUniversidad as universidad ,A.nombre as ciclo,fechaAdmision as fecha,CONCAT(A.nombre,' ',M.nombre) as nombre  ,codigoModalidad as modalidad, codigoModalidad as modalidad,A.vigencia
                             FROM admision A
                             INNER JOIN escuelaProfesional EP on EP.codigo = codigoEscuela 
                             INNER JOIN modalidadAdmision M on M.codigo = A.codigoModalidad
