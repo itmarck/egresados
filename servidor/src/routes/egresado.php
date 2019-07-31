@@ -37,7 +37,7 @@ $app->get('/api/carreras/{codigo}', function (Request $request) {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos '. $e->getMessage()));
   }
 });
 

@@ -23,9 +23,10 @@ $app->get('/api/admisiones', function () {
 
 $app->get('/api/admisiones-all', function () {
   try {
-    $data = $this->db->query("SELECT A.codigo,codigoEscuela as escuela,EP.codigoUniversidad as universidad ,date_format(fechaAdmision,'%Y/%m/%d') as fecha,A.nombre ,codigoModalidad as modalidad, codigoModalidad as modalidad,A.vigencia
+    $data = $this->db->query("SELECT A.codigo,codigoEscuela as escuela,EP.nombre as escuela,EP.codigoUniversidad as universidad ,fechaAdmision as fecha,CONCAT(A.nombre,' ',M.nombre) as nombre  ,codigoModalidad as modalidad, codigoModalidad as modalidad,A.vigencia
                             FROM admision A
                             INNER JOIN escuelaProfesional EP on EP.codigo = codigoEscuela 
+                            INNER JOIN modalidadAdmision M on M.codigo = A.codigoModalidad
                             ORDER BY fechaAdmision")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
