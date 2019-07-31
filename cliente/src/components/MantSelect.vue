@@ -17,7 +17,8 @@ export default {
       "Centros de Estudio",
       "Centros Laborales",
       "Actividades Económicas",
-      "Distritos"
+      "Distritos",
+      "Admisiones"
     ]
   }),
   computed: {
