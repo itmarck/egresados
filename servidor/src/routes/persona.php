@@ -51,21 +51,24 @@ $app->get('/api/personas/{DNI}', function (Request $request) {
 
 $app->get('/api/personas-publico', function () {
   try {
-    $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.nombre, E.fechaTermino, 'C' as tipo
+    $carreras = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,U.nombre as lugar,urlFoto, EP.nombre, E.fechaTermino, 'C' as tipo
                               FROM persona P 
                               INNER JOIN egresado E ON E.codigoPersona = P.codigo
                               INNER JOIN escuelaprofesional EP on EP.codigo = E.codigoEscuela
+                              INNER JOIN universidad U on EP.codigoUniversidad = U.codigo
                               WHERE P.privacidad = 0
                               ORDER BY fechaTermino DESC
                               LIMIT 20")->fetchAll();
-    $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,urlFoto, EP.fechaTermino, EP.nombre, 'P' as tipo
+    $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,IF(CE.razonSocial is null ,U.nombre,CE.razonSocial) as lugar ,urlFoto, EP.fechaTermino, EP.nombre, 'P' as tipo
                                     FROM persona P 
                                     INNER JOIN egresado E ON E.codigoPersona = P.codigo
                                     INNER JOIN estudiospostgrado EP on EP.codigoEgresado = E.codigo
+                                    LEFT JOIN centroEstudios CE on  CE.codigo = EP.codigoCentroEstudios
+                                    LEFT JOIN universidad U on U.codigo = EP.codigoUniversidad 
                                     WHERE P.privacidad = 0
                                     ORDER BY EP.fechaTermino DESC
                                     LIMIT 20")->fetchAll();
-    $experiencia = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre,CL.razonsocial,C.cargo,C.detalleFunciones,C.fechaInicio,C.fechaTermino, urlFoto,'T' as tipo
+    $experiencia = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres, CL.razonsocial as lugar,C.cargo,C.detalleFunciones,C.fechaInicio,C.fechaTermino, urlFoto,'T' as tipo
                                     FROM persona P
                                     INNER JOIN egresado E on E.codigoPersona = P.codigo
                                     INNER JOIN contrato C on C.codigoEgresado = E.codigo
