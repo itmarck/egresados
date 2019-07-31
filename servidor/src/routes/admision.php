@@ -7,7 +7,7 @@ $app->get('/api/admisiones', function () {
   try {
     $data = $this->db->query("SELECT A.codigo,codigoEscuela,date_format(fechaAdmision,'%Y/%m/%d') as fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
                             FROM admision A
-                            INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo 
+                            INNER JOIN modalidadadmision M on A.codigoModalidad = M.codigo 
                             WHERE A.vigencia=1
                             ORDER BY fechaAdmision")->fetchAll();
     if ($data) {
@@ -25,8 +25,8 @@ $app->get('/api/admisiones-all', function () {
   try {
     $data = $this->db->query("SELECT A.codigo,codigoEscuela as escuela,EP.nombre as nombreEscuela,EP.codigoUniversidad as universidad ,A.nombre as ciclo,fechaAdmision as fecha,CONCAT(A.nombre,' ',M.nombre) as nombre  ,codigoModalidad as modalidad, codigoModalidad as modalidad,A.vigencia
                             FROM admision A
-                            INNER JOIN escuelaProfesional EP on EP.codigo = codigoEscuela 
-                            INNER JOIN modalidadAdmision M on M.codigo = A.codigoModalidad
+                            INNER JOIN escuelaprofesional EP on EP.codigo = codigoEscuela 
+                            INNER JOIN modalidadadmision M on M.codigo = A.codigoModalidad
                             ORDER BY fechaAdmision")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
@@ -45,7 +45,7 @@ $app->get('/api/admisiones/{nombreEscuela}/{nombreUniversidad}', function (Reque
   try {
     $data = $this->db->query("SELECT A.codigo,codigoEscuela,date_format(fechaAdmision,'%Y/%m/%d') as fechaAdmision,A.nombre as ciclo,codigoModalidad, M.nombre as modalidad 
                             FROM admision A
-                            INNER JOIN modalidadAdmision M on A.codigoModalidad = M.codigo  
+                            INNER JOIN modalidadadmision M on A.codigoModalidad = M.codigo  
                             INNER JOIN escuelaprofesional E on E.codigo = A.codigoEscuela
                             INNER JOIN universidad U on E.codigoUniversidad = U.codigo 
                             WHERE A.vigencia=1 and E.nombre = '$nombreEscuela' and U.nombre = '$nombreUniversidad'
@@ -61,7 +61,7 @@ $app->get('/api/admisiones/{nombreEscuela}/{nombreUniversidad}', function (Reque
   }
 });
 
-$app->post('/api/admisiones/add', function (Request $request) {
+$app->post('/api/admisiones', function (Request $request) {
   $nombre = $request->getParam('nombre');
   $codigoEscuela = $request->getParam('escuela');
   $fechaAdmision = $request->getParam('admision');
