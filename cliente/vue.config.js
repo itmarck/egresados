@@ -1,4 +1,4 @@
 module.exports = {
-   //publicPath: '/dist'
+   publicPath: '/egresados/cliente/dist'
 };
 
