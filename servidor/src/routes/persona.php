@@ -73,6 +73,7 @@ $app->get('/api/personas-publico', function () {
                                     INNER JOIN egresado E on E.codigoPersona = P.codigo
                                     INNER JOIN contrato C on C.codigoEgresado = E.codigo
                                     INNER JOIN centrolaboral CL on CL.codigo = C.codigoCentroLaboral
+                                    WHERE P.privacidad = 0
                                     ORDER BY C.fechaTermino DESC
                                     LIMIT 20")->fetchAll();
     $data = array_merge($carreras, $postgrados, $experiencia);

@@ -14,7 +14,7 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH");
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
-$config['db']['host']   = 'http://unprg.xyz/';
+$config['db']['host']   = 'localhost';
 $config['db']['user']   = 'root';
 $config['db']['pass']   = '';
 $config['db']['dbname'] = 'egresados';
@@ -57,5 +57,6 @@ require '../routes/universidad.php';
 require '../routes/usuario.php';
 require '../routes/tipoEstudioPostgrado.php';
 require '../routes/reportes.php';
+require '../routes/estadisticas.php';
 
 $app->run();
