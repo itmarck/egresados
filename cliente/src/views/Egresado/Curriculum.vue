@@ -198,7 +198,11 @@ export default {
       if (!this.contratosSeleccionados) return null;
       return this.contratosSeleccionados.map(e => ({
         fecha:
-          this.getYear(e.fechaInicio) + " - " + this.getYear(e.fechaTermino),
+          e.fechaTermino == null
+            ? this.getYear(e.fechaInicio) + " - Ahora"
+            : this.getYear(e.fechaInicio) +
+              " - " +
+              this.getYear(e.fechaTermino),
         centro: e.centroLaboral,
         cargo: e.cargo,
         tiempo: "(" + e.tiempo + " " + e.unidad + ")",
