@@ -7,6 +7,7 @@
     <mant-laborales v-else-if="tabla == 'Centros Laborales'" />
     <mant-actividades v-else-if="tabla == 'Actividades Económicas'" />
     <mant-distritos v-else-if="tabla == 'Distritos'" />
+    <mant-admision v-else-if="tabla == 'Admisiones'" />
   </v-container>
 </template>
 
@@ -20,7 +21,8 @@ export default {
     MantEstudios: () => import("../../components/MantEstudios"),
     MantFacultades: () => import("../../components/MantFacultades"),
     MantLaborales: () => import("../../components/MantLaborales"),
-    MantUniversidades: () => import("../../components/MantUniversidades")
+    MantUniversidades: () => import("../../components/MantUniversidades"),
+    MantAdmision: () => import("../../components/MantAdmision")
   },
   computed: {
     ...mapState("mantenimiento", ["tabla"])

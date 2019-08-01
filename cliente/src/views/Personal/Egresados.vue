@@ -110,6 +110,9 @@
                         <v-date-picker
                           v-model="fechaNacimiento"
                           @input="fecha = false"
+                          locale="es-MX"
+                          :show-current="false"
+                          :max="new Date().toISOString().substr(0, 10)"
                         ></v-date-picker>
                       </v-menu>
                       <v-text-field

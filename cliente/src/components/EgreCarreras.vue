@@ -49,6 +49,9 @@
                         <v-date-picker
                           v-model="fechaInicio"
                           @input="inicio = false"
+                          locale="es-MX"
+                          :show-current="false"
+                          :max="new Date().toISOString().substr(0, 10)"
                         ></v-date-picker>
                       </v-menu>
                     </v-flex>
@@ -73,6 +76,9 @@
                         <v-date-picker
                           v-model="fechaTermino"
                           @input="termino = false"
+                          locale="es-MX"
+                          :show-current="false"
+                          :max="new Date().toISOString().substr(0, 10)"
                         ></v-date-picker>
                       </v-menu>
                     </v-flex>
@@ -149,6 +155,9 @@
                       <v-date-picker
                         v-model="fechaAdmision"
                         @input="fAdmision = false"
+                        locale="es-MX"
+                        :show-current="false"
+                        :max="new Date().toISOString().substr(0, 10)"
                       ></v-date-picker>
                     </v-menu>
                     <v-select
@@ -294,6 +303,9 @@
             <v-date-picker
               v-model="fechaTitulacion"
               @input="fTitulacion = false"
+              locale="es-MX"
+              :show-current="false"
+              :max="new Date().toISOString().substr(0, 10)"
             ></v-date-picker>
           </v-menu>
           <v-checkbox label="Agregar colegiatura" v-model="addColegiatura" />
@@ -324,6 +336,9 @@
                 <v-date-picker
                   v-model="fechaColegiatura"
                   @input="colegiatura = false"
+                  locale="es-MX"
+                  :show-current="false"
+                  :max="new Date().toISOString().substr(0, 10)"
                 ></v-date-picker>
               </v-menu>
             </v-card-text>
