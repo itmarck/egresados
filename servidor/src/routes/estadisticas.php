@@ -58,7 +58,7 @@ $app->get('/api/estadisticas/universidades', function (Request $request) {
                                     INNER JOIN egresado E on E.codigoEscuela = EP.codigo
                                     INNER JOIN persona P on P.codigo = E.codigoPersona 
                                     GROUP by U.codigo
-                                    ORDER BY cantidad DESC")->fetchAll();
+                                    ORDER BY U.siglas")->fetchAll();
         $total = $this->db->query("SELECT COUNT(codigo) as total from persona")->fetchAll();
 
         if ($data) {
