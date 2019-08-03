@@ -8,7 +8,6 @@ use PHPMailer\PHPMailer\Exception;
 require '../PHPMailer/Exception.php';
 require '../PHPMailer/PHPMailer.php';
 require '../PHPMailer/SMTP.php';
-const contraseña = "3P1CI*2019";
 
 $app->get('/api/personas', function () {
   try {
@@ -116,7 +115,8 @@ $app->post('/api/personas', function (Request $request) {
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
-        $hash = password_hash(($contraseña) ? $contraseña : contraseña, PASSWORD_DEFAULT);
+        $clave = ($contraseña != null) ? $contraseña : "3P1CI*2019";
+        $hash = str_replace('/','',password_hash($clave, PASSWORD_DEFAULT));
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
           $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia)
@@ -131,12 +131,10 @@ $app->post('/api/personas', function (Request $request) {
                 $mail->Username   = 'egresados.unprg@gmail.com';                     
                 $mail->Password   = 'EGRESADOS2019';                               
                 $mail->SMTPSecure = 'tls';                                  
-                $mail->Port       = 587;                                    
-            
-                //Recipients
+                $mail->Port       = 587;     
+
                 $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
                 $mail->addAddress("$correo");       
-            
               
                 $mail->isHTML(true);                                  
                 $mail->Subject = 'Invitación al sistema de seguimiento de egresados';
