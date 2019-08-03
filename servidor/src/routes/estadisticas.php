@@ -26,6 +26,28 @@ $app->get('/api/estadisticas/departamentos/{top}', function (Request $request) {
     }
 });
 
+$app->get('/api/estadisticas/total', function (Request $request) {
+
+    try {
+        $egresados = $this->db->query("SELECT COUNT(codigo) as E
+                                    FROM persona")->fetchAll();
+        $universidades = $this->db->query("SELECT COUNT(codigo) as U
+                                    FROM universidad")->fetchAll();
+        $centros = $this->db->query("SELECT COUNT(codigo) as C
+        
+                                    FROM centroEstudios")->fetchAll();
+        $data =  array('egresados' => $universidades[0]->U, 'universidades' => $egresados[0]->E, 'centros' => $centros[0]->C);
+        if ($data) {
+            $result = array('estado' => true, 'data' => $data);
+            echo json_encode($result);
+        } else {
+            echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+        }
+    } catch (PDOException $e) {
+        echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    }
+});
+
 $app->get('/api/estadisticas/actividades/{top}', function (Request $request) {
     $top = $request->getAttribute('top');
     try {
