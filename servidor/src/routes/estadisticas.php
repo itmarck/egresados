@@ -115,7 +115,7 @@ $app->get('/api/estadisticas/general', function (Request $request) {
                                     ORDER BY mes")->fetchAll();
                 $data = [0,0,0,0,0,0,0,0,0,0,0,0];
                 foreach ($datos as $key => $Uni) {
-                    $data[$Uni->mes] = $Uni->cantidad;
+                    $data[$Uni->mes] = intval($Uni->cantidad);
                 }
                 array_push($series,array('name' => $nombre,'data'=>$data));
             }
@@ -171,22 +171,4 @@ $app->get('/api/estadisticas/centros/{top}', function (Request $request) {
     }
 });
 
-$app->get('/api/estadisticas/carreras/{carrera}', function (Request $request) {
-    $carrera = $request->getAttribute('carrera');
-    try {
-        $data = $this->db->query("SELECT CE.razonSocial, COUNT(EP.codigo) as egresados
-                                FROM centroestudios CE
-                                INNER JOIN estudiospostgrado EP on EP.codigoCentroEstudios = CE.codigo
-                                GROUP by CE.codigo
-                                ORDER BY egresados DESC
-                                LIMIT $top")->fetchAll();
-        if ($data) {
-            $result = array('estado' => true, 'data' => $data);
-            echo json_encode($result);
-        } else {
-            echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
-        }
-    } catch (PDOException $e) {
-        echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
-    }
-});
+
