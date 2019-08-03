@@ -6,17 +6,37 @@ $app->get('/api/estadisticas/departamentos/{top}', function (Request $request) {
     $top = $request->getAttribute('top');
 
     try {
-        $data = $this->db->query("SELECT DE.nombre, COUNT( C.codigo ) as egresados
+        $mayores = $this->db->query("SELECT DE.nombre 
                                     FROM distrito D
                                     INNER JOIN centrolaboral CL on Cl.codigoDistrito = D.codigo
                                     INNER JOIN contrato C on C.codigoCentroLaboral = CL.codigo
                                     INNER JOIN provincia P on P.codigo = D.codigoProvincia
                                     INNER JOIN departamento DE on P.codigoDepartamento = DE.codigo
-                                    GROUP by DE.codigo
-                                    ORDER BY egresados DESC
+                                    WHERE DATE_SUB(NOW(),INTERVAL 6 YEAR) < C.fechaInicio
+                                    GROUP by DE.codigo 
+                                    ORDER By COUNT(C.codigo) DESC
                                     LIMIT $top")->fetchAll();
-        if ($data) {
-            $result = array('estado' => true, 'data' => $data);
+
+        if ($mayores) {
+            $series = array();
+            foreach ($mayores as $key => $Dep) {
+                $nombre =  $Dep->nombre;
+
+                $datos = $this->db->query("SELECT TIMESTAMPDIFF(YEAR, C.fechaInicio,NOW()) as anio, COUNT( C.codigo ) as egresados
+                                                    FROM distrito D
+                                                    INNER JOIN centrolaboral CL on Cl.codigoDistrito = D.codigo
+                                                    INNER JOIN contrato C on C.codigoCentroLaboral = CL.codigo
+                                                    INNER JOIN provincia P on P.codigo = D.codigoProvincia
+                                                    INNER JOIN departamento DE on P.codigoDepartamento = DE.codigo
+                                                    WHERE DE.nombre = '$nombre' and DATE_SUB(NOW(),INTERVAL 6 YEAR) < C.fechaInicio
+                                                    GROUP by DE.codigo ,TIMESTAMPDIFF(YEAR, C.fechaInicio,NOW())")->fetchAll();
+                $data = [0,0,0,0,0,0];
+                foreach ($datos as $key => $Dato) {
+                    $data[$Dato->anio] = intval($Dato->egresados);
+                }
+                array_push($series,array('name' => $nombre,'data'=>$data));
+            }
+            $result = array('estado' => true, 'data' => $series);
             echo json_encode($result);
         } else {
             echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
