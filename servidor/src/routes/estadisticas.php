@@ -72,7 +72,7 @@ $app->get('/api/estadisticas/universidades', function (Request $request) {
                     array_push($porcentajes, $p);
                     array_push($categorias, $cat->siglas);
                     $sw++;
-                }else {
+                } else {
                     $aux = $aux + $cat->cantidad;
                 }
             }
@@ -81,6 +81,45 @@ $app->get('/api/estadisticas/universidades', function (Request $request) {
             array_push($categorias, 'Otros');
 
             $result = array('estado' => true, 'data' => array('data' => $porcentajes, 'categories' => $categorias));
+            echo json_encode($result);
+        } else {
+            echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+        }
+    } catch (PDOException $e) {
+        echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    }
+});
+
+$app->get('/api/estadisticas/general', function (Request $request) {
+    try {
+        $mayores = $this->db->query("SELECT U.nombre
+                                    FROM universidad U
+                                    INNER JOIN escuelaprofesional EP on EP.codigoUniversidad = U.codigo
+                                    INNER JOIN egresado E on E.codigoEscuela = EP.codigo
+                                    WHERE YEAR(E.fechaTermino) = YEAR(CURRENT_DATE())
+                                    GROUP BY U.codigo
+                                    ORDER by COUNT( E.codigo ) DESC
+                                    LIMIT 5")->fetchAll();
+
+        if ($mayores) {
+            $series = array();
+            foreach ($mayores as $key => $UNI) {
+                $nombre =  $UNI->nombre;
+
+                $datos = $this->db->query("SELECT  MONTH(E.fechaTermino) as mes, COUNT( E.codigo ) as cantidad
+                                    FROM universidad U
+                                    INNER JOIN escuelaprofesional EP on EP.codigoUniversidad = U.codigo
+                                    INNER JOIN egresado E on E.codigoEscuela = EP.codigo
+                                    WHERE YEAR(E.fechaTermino) = YEAR(CURRENT_DATE()) and U.nombre = '$nombre'
+                                    GROUP BY U.codigo,mes
+                                    ORDER BY mes")->fetchAll();
+                $data = [0,0,0,0,0,0,0,0,0,0,0,0];
+                foreach ($datos as $key => $Uni) {
+                    $data[$Uni->mes] = $Uni->cantidad;
+                }
+                array_push($series,array('name' => $nombre,'data'=>$data));
+            }
+            $result = array('estado' => true, 'data' => $series);
             echo json_encode($result);
         } else {
             echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
