@@ -2,7 +2,12 @@
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\UploadedFile;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
+require '../PHPMailer/Exception.php';
+require '../PHPMailer/PHPMailer.php';
+require '../PHPMailer/SMTP.php';
 const contraseña = "3P1CI*2019";
 
 $app->get('/api/personas', function () {
@@ -68,13 +73,13 @@ $app->get('/api/personas-publico', function () {
                                     WHERE P.privacidad = 0
                                     ORDER BY EP.fechaTermino DESC
                                     LIMIT 20")->fetchAll();
-    $experiencia = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres, CL.razonsocial as lugar,C.cargo as nombre,C.fechaInicio as fecha,C.fechaTermino, urlFoto,'T' as tipo
+    $experiencia = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres, CL.razonsocial as lugar,C.cargo as nombre,C.fechaInicio as fecha, IF(C.fechaTermino,C.fechaTermino,c.fechaInicio) as fecha , urlFoto,'T' as tipo
                                     FROM persona P
                                     INNER JOIN egresado E on E.codigoPersona = P.codigo
                                     INNER JOIN contrato C on C.codigoEgresado = E.codigo
                                     INNER JOIN centrolaboral CL on CL.codigo = C.codigoCentroLaboral
                                     WHERE P.privacidad = 0
-                                    ORDER BY C.fechaTermino DESC
+                                    ORDER BY fecha DESC
                                     LIMIT 20")->fetchAll();
     $data = array_merge($carreras, $postgrados, $experiencia);
     usort($data, 'ordenar');
@@ -118,22 +123,26 @@ $app->post('/api/personas', function (Request $request) {
                                   VALUES('$usuario','$hash','E',$codigo,1)");
           if ($cantidad > 0) {
             $this->db->commit();
-            $to = "$correo";
-            $subject = "Asunto del email";
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $message = "
-                          <html>
-                          <head>
-                          <title>HTML</title>
-                          </head>
-                          <body>
-                          <h1>Esto es un H1</h1>
-                          <p>Esto es un párrafo en HTML</p>
-                          </body>
-                          </html>";
-
-            mail($to, $subject, $message, $headers);
+            $mail = new PHPMailer(true);
+                $mail->SMTPDebug = 0;                                       
+                $mail->isSMTP();                                            
+                $mail->Host       = 'smtp.gmail.com';  
+                $mail->SMTPAuth   = true;                                   
+                $mail->Username   = 'egresados.unprg@gmail.com';                     
+                $mail->Password   = 'EGRESADOS2019';                               
+                $mail->SMTPSecure = 'tls';                                  
+                $mail->Port       = 587;                                    
+            
+                //Recipients
+                $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
+                $mail->addAddress("$correo");       
+            
+              
+                $mail->isHTML(true);                                  
+                $mail->Subject = 'Invitación al sistema de seguimiento de egresados';
+                $mail->Body    = 'Has sido registrado en el portal por un personal administrativo <b>in bold!</b>';
+                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                $mail->send();
             echo json_encode(array('estado' => true, 'mensaje' => 'Persona registrada correctamente'));
           } else {
             $this->db->rollback();
@@ -271,3 +280,4 @@ function ordenar($a, $b)
 {
   return strtotime($b->fecha) - strtotime($a->fecha);
 }
+
