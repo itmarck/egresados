@@ -37,7 +37,7 @@ $app->get('/api/estadisticas/total', function (Request $request) {
         
                                     FROM centroEstudios")->fetchAll();
         $data = [];
-        array_push($data, array('Usuarios registrados' => $universidades[0]->U), array('Universidades registradas' => $egresados[0]->E), array('Centros de estudios registrados' => $centros[0]->C));
+        array_push($data, array('texto'=>'Usuarios registrados','valor' => $universidades[0]->U), array('texto'=>'Universidades registradas' ,'valor' => $egresados[0]->E), array('texto'=>'Centros de estudios registrados' ,'valor' => $centros[0]->C));
         if ($data) {
             $result = array('estado' => true, 'data' => $data);
             echo json_encode($result);
