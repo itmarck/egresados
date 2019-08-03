@@ -115,7 +115,7 @@ $app->get('/api/estadisticas/general', function (Request $request) {
                                     ORDER BY mes")->fetchAll();
                 $data = [0,0,0,0,0,0,0,0,0,0,0,0];
                 foreach ($datos as $key => $Uni) {
-                    $data[$Uni->mes] = intval($Uni->cantidad);
+                    $data[$Uni->mes -1] = intval($Uni->cantidad);
                 }
                 array_push($series,array('name' => $nombre,'data'=>$data));
             }
