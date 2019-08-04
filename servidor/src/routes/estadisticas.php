@@ -152,11 +152,11 @@ $app->get('/api/estadisticas/general', function (Request $request) {
 $app->get('/api/estadisticas/actividades/{top}', function (Request $request) {
     $top = $request->getAttribute('top');
     try {
-        $data = $this->db->query("SELECT  A.nombre, COUNT(C.codigo) as cantidad
+        $data = $this->db->query("SELECT  A.nombre ,COUNT(c.codigo) as cantidad
                                     from centrolaboral CL
+                                    INNER JOIN contrato C on C.codigoCentroLaboral = CL.codigo
                                     INNER JOIN actividadeconomica A on A.codigo = CL.codigoActividad
-                                    INNER JOIN contrato C on C.codigoCentroLaboral
-                                    GROUP BY A.codigo
+                                    GROUP by A.codigo
                                     ORDER BY cantidad DESC")->fetchAll();
        $total = $this->db->query("SELECT COUNT(codigo) as total from contrato")->fetchAll();
 
