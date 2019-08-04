@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="cargado">
+  <v-card v-if="cargado" height="100%">
     <v-container fluid>
       <v-layout column mt-2>
         <div
@@ -49,7 +49,7 @@ export default {
         bar: {
           columnWidth: "50%",
           dataLabels: {
-            position: "top" // top, center, bottom
+            position: "top"
           }
         }
       },
