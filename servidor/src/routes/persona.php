@@ -116,7 +116,7 @@ $app->post('/api/personas', function (Request $request) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
         $clave = ($contraseña != null) ? $contraseña : "3P1CI*2019";
-        $hash = str_replace('/', '', password_hash($clave, PASSWORD_DEFAULT));
+        $hash = password_hash($clave, PASSWORD_DEFAULT);
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
           $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia)
@@ -292,7 +292,6 @@ $app->post('/api/correo', function (Request $request) {
   $mail->CharSet = 'UTF-8';
   $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
   $mail->addAddress("javier120699lili@gmail.com");
-  $mail->addAddress("fabianpacherres@gmail.com");
   $mail->isHTML(true);
   $mail->Subject =  '¡Bienvenido!';
   $mail->Body    = $bienvenida;
