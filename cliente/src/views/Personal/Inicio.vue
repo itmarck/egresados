@@ -1,6 +1,7 @@
 <template>
   <v-container grid-list-lg>
     <v-layout row wrap>
+      <!-- Totales -->
       <v-flex xs12>
         <v-layout row wrap>
           <v-flex xs4 v-for="(item, i) of totales" :key="i">
@@ -17,17 +18,19 @@
           </v-flex>
         </v-layout>
       </v-flex>
-      <v-flex xs12 md8>
+      <!-- General -->
+      <v-flex xs12 md8 xl9>
         <v-layout row wrap>
-          <v-flex xs12>
+          <v-flex xs12 xl7>
             <est-general />
           </v-flex>
-          <v-flex xs12>
-            <est-departamentos />
+          <v-flex xs12 xl5>
+            <est-departamentos :color="true" />
           </v-flex>
         </v-layout>
       </v-flex>
-      <v-flex xs12 md4>
+      <!-- Secundarios -->
+      <v-flex xs12 md4 xl3>
         <v-layout row wrap>
           <v-flex xs12> <est-universidades /> </v-flex>
           <v-flex xs12> <est-actividades /> </v-flex>

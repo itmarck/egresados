@@ -1,13 +1,19 @@
 <template>
   <v-container grid-list-lg fill-height>
     <v-layout row wrap>
-      <!-- Datos -->
+      <!-- Estadisticas -->
       <v-flex xs12 md8 xl9>
-        <v-card>
-          <v-card-text>
-            Datos estadísticos
-          </v-card-text>
-        </v-card>
+        <v-layout row wrap>
+          <v-flex xs12 xl8>
+            <est-departamentos :color="false" />
+          </v-flex>
+          <v-flex xs12 xl4>
+            <v-layout row wrap>
+              <v-flex xs12 sm6 xl12><est-universidades /></v-flex>
+              <v-flex xs12 sm6 xl12><est-actividades /></v-flex>
+            </v-layout>
+          </v-flex>
+        </v-layout>
       </v-flex>
       <!-- Noticias -->
       <v-flex xs12 md4 xl3>
@@ -71,6 +77,11 @@
 import { get } from "../../bd/api";
 import { urlImage } from "../../bd/config";
 export default {
+  components: {
+    EstActividades: () => import("../../components/stats/Actividades.vue"),
+    EstDepartamentos: () => import("../../components/stats/Departamentos.vue"),
+    EstUniversidades: () => import("../../components/stats/Universidades.vue")
+  },
   data: () => ({
     urlImage,
     lista: []
