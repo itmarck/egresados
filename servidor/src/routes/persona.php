@@ -116,31 +116,30 @@ $app->post('/api/personas', function (Request $request) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
         $clave = ($contraseña != null) ? $contraseña : "3P1CI*2019";
-        $hash = str_replace('/','',password_hash($clave, PASSWORD_DEFAULT));
+        $hash = str_replace('/', '', password_hash($clave, PASSWORD_DEFAULT));
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
           $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersona,vigencia)
                                   VALUES('$usuario','$hash','E',$codigo,1)");
           if ($cantidad > 0) {
             $this->db->commit();
+            require '../PHPMailer/Plantillas.php';
             $mail = new PHPMailer(true);
-                $mail->SMTPDebug = 0;                                       
-                $mail->isSMTP();                                            
-                $mail->Host       = 'smtp.gmail.com';  
-                $mail->SMTPAuth   = true;                                   
-                $mail->Username   = 'egresados.unprg@gmail.com';                     
-                $mail->Password   = 'EGRESADOS2019';                               
-                $mail->SMTPSecure = 'tls';                                  
-                $mail->Port       = 587;     
-
-                $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
-                $mail->addAddress("$correo");       
-              
-                $mail->isHTML(true);                                  
-                $mail->Subject = 'Invitación al sistema de seguimiento de egresados';
-                $mail->Body    = 'Has sido registrado en el portal por un personal administrativo <b>in bold!</b>';
-                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-                $mail->send();
+            $mail->SMTPDebug = 0;
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'egresados.unprg@gmail.com';
+            $mail->Password   = 'EGRESADOS2019';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+            $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
+            $mail->addAddress("$correo");
+            $mail->isHTML(true);
+            $mail->Subject = 'Invitaci&oacuten al sistema de seguimiento de egresados';
+            $mail->Body    = $bienvenida;
+            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $mail->send();
             echo json_encode(array('estado' => true, 'mensaje' => 'Persona registrada correctamente'));
           } else {
             $this->db->rollback();
@@ -279,3 +278,24 @@ function ordenar($a, $b)
   return strtotime($b->fecha) - strtotime($a->fecha);
 }
 
+$app->post('/api/correo', function (Request $request) {
+  require '../PHPMailer/Plantillas.php';
+  $mail = new PHPMailer(true);
+  $mail->SMTPDebug = 2;
+  $mail->isSMTP();
+  $mail->Host       = 'smtp.gmail.com';
+  $mail->SMTPAuth   = true;
+  $mail->Username   = 'egresados.unprg@gmail.com';
+  $mail->Password   = 'EGRESADOS2019';
+  $mail->SMTPSecure = 'tls';
+  $mail->Port       = 587;
+  $mail->CharSet = 'UTF-8';
+  $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
+  $mail->addAddress("javier120699lili@gmail.com");
+  $mail->addAddress("fabianpacherres@gmail.com");
+  $mail->isHTML(true);
+  $mail->Subject =  '¡Bienvenido!';
+  $mail->Body    = $bienvenida;
+  $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+  $mail->send();
+});
