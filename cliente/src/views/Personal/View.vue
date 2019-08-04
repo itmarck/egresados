@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-xs>
+  <v-container fluid>
     <v-toolbar app>
       <v-toolbar-side-icon @click="drawer = !drawer" class="hidden-md-and-up" />
       <v-toolbar-title class="hidden-sm-and-down">
