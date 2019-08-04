@@ -107,7 +107,7 @@ export default {
       patch("recuperar/" + this.persona.codigo, { clave: this.clave }).then(
         res => {
           this.snackbar(res.mensaje);
-          if (res.estado == true) this.$router.push("./login");
+          if (res.estado == true) this.$router.push("/login");
         }
       );
     }
