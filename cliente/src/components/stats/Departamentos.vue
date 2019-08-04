@@ -28,6 +28,9 @@ import { get } from "../../bd/api";
 import ApexChart from "vue-apexcharts";
 export default {
   components: { ApexChart },
+  props: {
+    color: Boolean
+  },
   data: () => ({
     cargado: false,
 
@@ -36,6 +39,12 @@ export default {
         id: "vuechart-example",
         toolbar: {
           show: false
+        }
+      },
+      theme: {
+        monochrome: {
+          enabled: true,
+          color: "#0D47A1"
         }
       },
       plotOptions: {
@@ -65,6 +74,15 @@ export default {
     }
   },
   created() {
+    if (this.color)
+      this.options = {
+        ...this.options,
+        theme: {
+          monochrome: {
+            enabled: false
+          }
+        }
+      };
     get("estadisticas/departamentos/5").then(res => {
       this.options.xaxis.categories = this.lastYears;
       this.series = res.data;
