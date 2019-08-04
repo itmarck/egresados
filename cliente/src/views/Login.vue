@@ -34,14 +34,40 @@
                   flat
                   class="caption font-weight-light text-xs-center"
                   color="secondary"
+                  @click="dialog = true"
                 >
-                  Olvidé la contraseña
+                  Olvidé mi contraseña
                 </v-btn>
               </v-flex>
             </v-layout>
           </v-form>
         </v-flex>
       </v-layout>
+      <!-- Dialog para recuperar -->
+      <v-dialog v-model="dialog" persistent max-width="480">
+        <v-form @submit.prevent="recuperar">
+          <v-card>
+            <v-card-title class="font-weight-light" primary-title>
+              Te enviaremos con un enlace a tu correo para recuperar tu cuenta y
+              cambiar la contraseña.
+            </v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="correo"
+                append-icon="email"
+                label="Correo registrado"
+                placeholder="correo@ejemplo.com"
+                type="text"
+              />
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat @click="dialog = false">Cancelar</v-btn>
+              <v-btn flat color="primary" type="submit">Aceptar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+      </v-dialog>
     </v-container>
   </v-content>
 </template>
@@ -55,10 +81,25 @@ export default {
   },
   data: () => ({
     usuario: "",
-    clave: ""
+    clave: "",
+
+    dialog: false,
+    correo: ""
   }),
   methods: {
     ...mapMutations(["snackbar"]),
+    validar() {
+      if (this.correo == "") {
+        this.snackbar("Ingrese correo donde se enviará el enlace");
+        return false;
+      }
+      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!pattern.test(this.correo)) {
+        this.snackbar("Ingrese un correo válido");
+        return false;
+      }
+      return true;
+    },
     ingresar() {
       post("usuarios/ingresar", {
         nombre: this.usuario,
@@ -68,6 +109,15 @@ export default {
         if (res.estado == true) {
           setUser(res.data);
           this.$router.push("/registro");
+        }
+      });
+    },
+    recuperar() {
+      if (!this.validar()) return;
+      post("recuperar", { correo: this.correo }).then(res => {
+        if (res.estado == true) {
+          this.dialog = false;
+          this.snackbar("Se envió un enlace a " + this.correo);
         }
       });
     }
