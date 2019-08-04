@@ -12,6 +12,11 @@ export default [
     component: Login
   },
   {
+    path: '/recuperar/:hash',
+    name: 'recuperar',
+    component: () => import('../views/Recuperar.vue')
+  },
+  {
     path: '/registro',
     name: 'registro',
     component: () => import('../views/Registro.vue')

@@ -26,6 +26,7 @@ export default {
     ...mapMutations(["hideSnack"])
   },
   created() {
+    if (!getUser()) return;
     userFromServer().then(vigencia => {
       if (vigencia == 0) {
         removeUser();
