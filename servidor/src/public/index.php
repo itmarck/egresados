@@ -58,5 +58,5 @@ require '../routes/usuario.php';
 require '../routes/tipoEstudioPostgrado.php';
 require '../routes/reportes.php';
 require '../routes/estadisticas.php';
-
+require '../routes/recuperar.php';
 $app->run();

@@ -2,11 +2,7 @@
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
-require '../PHPMailer/Exception.php';
-require '../PHPMailer/PHPMailer.php';
-require '../PHPMailer/SMTP.php';
 
 $app->post('/api/recuperar', function (Request $request) {
     $correo = $request->getParam('correo');
