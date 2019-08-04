@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="cargado">
+  <v-card v-if="cargado" height="100%">
     <v-container fluid>
       <v-layout column mt-2>
         <div
@@ -29,9 +29,9 @@ export default {
   data: () => ({
     cargado: false,
 
-    series: [3, 1, 5, 1],
+    series: [],
     options: {
-      labels: ["Mineria", "Pesca de peces", "askdjh", "asdw"],
+      labels: [],
       chart: {
         id: "vuechart-example",
         toolbar: {
@@ -49,8 +49,14 @@ export default {
       }
     }
   }),
-  beforeCreate() {
-    get("estadisticas/universidades").then(res => {
+  created() {
+    get("estadisticas/actividades/5").then(res => {
+      if (res.estado == false) return;
+      this.options = {
+        ...this.options,
+        labels: res.data.categories
+      };
+      this.series = res.data.data;
       this.cargado = true;
     });
   }
