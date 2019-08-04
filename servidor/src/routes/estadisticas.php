@@ -34,7 +34,7 @@ $app->get('/api/estadisticas/departamentos/{top}', function (Request $request) {
                 foreach ($datos as $key => $Dato) {
                     $data[$Dato->anio] = intval($Dato->egresados);
                 }
-                array_push($series,array('name' => $nombre,'data'=>$data));
+                array_push($series,array('name' => $nombre,'data'=>array_reverse($data)));
             }
             $result = array('estado' => true, 'data' => $series);
             echo json_encode($result);
@@ -152,20 +152,38 @@ $app->get('/api/estadisticas/general', function (Request $request) {
 $app->get('/api/estadisticas/actividades/{top}', function (Request $request) {
     $top = $request->getAttribute('top');
     try {
-        $data = $this->db->query("SELECT A.nombre, COUNT(C.codigo) as contratos 
-                                FROM actividadeconomica A
-                                INNER JOIN centrolaboral CL on Cl.codigoDistrito = A.codigo
-                                INNER JOIN contrato C on C.codigoCentroLaboral = CL.codigo
-                                INNER JOIN egresado E on E.codigo = C.codigoEgresado
-                                GROUP by A.codigo
-                                ORDER BY contratos DESC
-                                LIMIT $top")->fetchAll();
-        if ($data) {
-            $result = array('estado' => true, 'data' => $data);
-            echo json_encode($result);
-        } else {
-            echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
-        }
+        $data = $this->db->query("SELECT  A.nombre, COUNT(C.codigo) as cantidad
+                                    from centrolaboral CL
+                                    INNER JOIN actividadeconomica A on A.codigo = CL.codigoActividad
+                                    INNER JOIN contrato C on C.codigoCentroLaboral
+                                    GROUP BY A.codigo
+                                    ORDER BY cantidad DESC")->fetchAll();
+       $total = $this->db->query("SELECT COUNT(codigo) as total from contrato")->fetchAll();
+
+       if ($data) {
+           $porcentajes = [];
+           $categorias = [];
+           $sw = 1;
+           $aux = 0;
+           foreach ($data as $key => $cat) {
+               if ($sw <= $top) {
+                   $p = ($cat->cantidad / $total[0]->total) * 100;
+                   array_push($porcentajes, $p);
+                   array_push($categorias, $cat->nombre);
+                   $sw++;
+               } else {
+                   $aux = $aux + $cat->cantidad;
+               }
+           }
+           $aux = ($aux / $total[0]->total) * 100;
+           array_push($porcentajes, $aux);
+           array_push($categorias, 'Otros');
+
+           $result = array('estado' => true, 'data' => array('data' => $porcentajes, 'categories' => $categorias));
+           echo json_encode($result);
+       } else {
+           echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
+       }
     } catch (PDOException $e) {
         echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
     }
