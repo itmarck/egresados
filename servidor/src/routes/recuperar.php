@@ -7,9 +7,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 $app->post('/api/recuperar', function (Request $request) {
     $correo = $request->getParam('correo');
     try {
-        $hash = $this->db->query("SELECT clave from usuario where correo = $correo")->fetchAll();
-        $clave = str_replace('/', '', $hash);
-        $url = "http://unprg.xyz/recuperar/$clave";
+        $hash = $this->db->query("SELECT clave from usuario U INNER JOIN persona P on  P.codigo = U.codigoPersona where correo = '$correo'")->fetchAll();
+        $clave = str_replace('/', '', $hash[0]->clave);
+        $url = "http://localhost:8080/recuperar/$clave";
         require '../PHPMailer/Plantillas.php';
         $mail = new PHPMailer(true);
         $mail->SMTPDebug = 0;
@@ -27,27 +27,29 @@ $app->post('/api/recuperar', function (Request $request) {
         $mail->Body    = "Ingresa aqui para recuperar tu contraseña $url";
         $mail->AltBody = "Ingresa aqui para recuperar tu contraseña $url";
         $mail->send();
+        echo json_encode(array('estado' => true, 'mensaje' => 'Enlace de recuperacion enviado a ' . $correo));
     } catch (PDOException $e) {
-        echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ', $e->getMessage()));
+        echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
     }
 });
 
 // nombres nombredeusuario tipo 
 $app->get('/api/recuperar/{hash}', function (Request $request) {
     $url = $request->getAttribute('hash');
-    $codigo = $request->getParam('codigo');
     try {
-        $usuario = $this->db->query("SELECT clave,tipo from usuario where codigo = $codigo")->fetchAll();
-        if (verifyHass($usuario[0]->clave, $url)) {
-            if ($usuario[0]->tipo == "E") {
-                $data = $this->db->query("SELECT nombres,U.nombre as usuario,tipo from persona P INNER JOIN usuario U on U.codigoPersona = P.codigo where U.codigo = $codigo")->fetchAll();
-            } else {
-                $data = $this->db->query("SELECT nombres,U.nombre as usuario,tipo from persona P INNER JOIN usuario U on U.codigoPersonal = P.codigo where U.codigo = $codigo")->fetchAll();
+        $usuario = $this->db->query("SELECT clave,tipo,codigo from usuario")->fetchAll();
+        foreach ($usuario as $key => $user) {
+            if (verifyHass($user->clave, $url)) {
+                if ($user->tipo == "E") {
+                    $data = $this->db->query("SELECT nombres,U.codigo ,U.nombre as usuario,tipo from persona P INNER JOIN usuario U on U.codigoPersona = P.codigo where U.codigo = $user->codigo")->fetchAll();
+                } else {
+                    $data = $this->db->query("SELECT nombres,U.codigo U.nombre as usuario,tipo from persona P INNER JOIN usuario U on U.codigoPersonal = P.codigo where U.codigo = $user->codigo")->fetchAll();
+                }
+                echo json_encode(array('estado' => true, 'data' => $data[0]));
+                exit;
             }
-            echo json_encode(array('estado' => true, 'data' => $data[0]));
-        } else {
-            echo json_encode(array('estado' => false, 'mensaje' => 'Datos no coinciden'));
         }
+        echo json_encode(array('estado' => false, 'mensaje' => 'Datos no coinciden', 'data' => []));
     } catch (PDOException $e) {
         echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ', $e->getMessage()));
     }
@@ -55,18 +57,11 @@ $app->get('/api/recuperar/{hash}', function (Request $request) {
 // clave codigoP tipo
 // mensajito 
 $app->patch('/api/recuperar/{codigo}', function (Request $request) {
-    $codigoP = $request->getAttribute('codigo');
+    $codigo = $request->getAttribute('codigo');
     $clave = $request->getParam('clave');
-    $tipo = $request->getParam('tipo');
 
     try {
-        if ($tipo == "persona") {
-            $codigo = $this->db->query("SELECT U.codigo, U.clave FROM usuario U INNER JOIN persona P on P.codigo = U.codigoPersona  WHERE codigoPersona = '$codigoP' ")->fetchAll();
-        } else {
-            $codigo = $this->db->query("SELECT U.codigo, U.clave FROM usuario U INNER JOIN personal P on P.codigo = U.codigoPersonal  WHERE codigoPersonal = '$codigoP' ")->fetchAll();
-        }
 
-        $codigo = $codigo[0]->codigo;
         $hash = password_hash($clave, PASSWORD_DEFAULT);
         $cantidad = $this->db->exec("UPDATE usuario set
                                       clave = '$hash'
