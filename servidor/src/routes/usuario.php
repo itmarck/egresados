@@ -25,7 +25,7 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
     $usuario = $this->db->query("SELECT nombre , clave,vigencia FROM usuario WHERE nombre = '$nombre'")->fetchAll();
     if ($usuario) {
       if ($usuario[0]->vigencia == 1) {
-        if ( verifyHass($clave,$usuario[0]->clave)) {
+        if (password_verify($clave, $usuario[0]->clave)) {
           $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE nombre = '$nombre'  and vigencia=1")->fetchAll();
           $sql =  "SELECT tipo, P.codigo,dni,urlFoto, P.nombres,apellidoPaterno as paterno,apellidoMaterno as materno FROM usuario ";
           $codigoPersona = $user[0]->codigoPersona;
@@ -117,7 +117,7 @@ $app->put('/api/usuarios/{codigo}', function (Request $request) {
   $codigoPersona = $request->getParam('codigoPersona');
   try {
     $user = $this->db->query("SELECT codigoPersona FROM usuario WHERE codigo = '$codigo' and vigencia=1")->fetchAll();
-    $hash = str_replace('/', '', password_hash($clave, PASSWORD_DEFAULT));
+    $hash =  password_hash($clave, PASSWORD_DEFAULT);
     $Persona = $user[0]->codigoPersona;
     $sql = "UPDATE usuario set
             nombre ='$nombre',
@@ -169,7 +169,7 @@ $app->patch('/api/usuarios/{codigo}', function (Request $request) {
     if (password_verify($old, $codigo[0]->clave)) {
 
       $codigo = $codigo[0]->codigo;
-      $hash = str_replace('/', '', password_hash($pass, PASSWORD_DEFAULT));
+      $hash = password_hash($pass, PASSWORD_DEFAULT);
       $cantidad = $this->db->exec("UPDATE usuario set
                                 clave = '$hash'
                                 WHERE codigo = $codigo");
@@ -185,13 +185,3 @@ $app->patch('/api/usuarios/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
-function verifyHass($clave, $hash)
-{
-  $clave = str_replace('/','',password_hash($clave,PASSWORD_DEFAULT));
-  if ($clave = $hash) {
-    return true;
-  } else {
-    return false;
-  }
-  
-}
