@@ -115,11 +115,15 @@ export default {
     recuperar() {
       if (!this.validar()) return;
       post("recuperar", { correo: this.correo }).then(res => {
-        if (res.estado == true) {
-          this.dialog = false;
-          this.snackbar("Se envió un enlace a " + this.correo);
-        }
+        this.snackbar(res.mensaje);
+        if (res.estado == true) this.limpiar();
       });
+    },
+    limpiar() {
+      this.dialog = false;
+      this.usuario = "";
+      this.clave = "";
+      this.correo = "";
     }
   }
 };
