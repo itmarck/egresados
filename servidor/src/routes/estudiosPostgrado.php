@@ -194,7 +194,7 @@ $app->put('/api/estudiosPostgrado/{codigo}', function (Request $request) {
       exit;
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos '. $e->getMessage()));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
 

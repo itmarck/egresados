@@ -2,6 +2,7 @@
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 
 $app->post('/api/recuperar', function (Request $request) {
@@ -74,6 +75,7 @@ $app->patch('/api/recuperar/{codigo}', function (Request $request) {
                                       clave = '$hash'
                                       WHERE codigo = $codigo");
         if ($cantidad > 0) {
+            echo json_encode(array('estado' => true, 'mensaje' => 'Contraseña actualizada'));
             $datos = $this->db->query("UPDATE usuario set
                                             clave = '$hash'
                                             WHERE codigo = $codigo");
@@ -95,7 +97,6 @@ $app->patch('/api/recuperar/{codigo}', function (Request $request) {
             $mail->Body    = $cambio;
             $mail->AltBody = "Tu clave ha sido cambiada";
             $mail->send();
-            echo json_encode(array('estado' => true, 'mensaje' => 'Contraseña actualizada'));
         } else {
             echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la contraseña'));
         }
