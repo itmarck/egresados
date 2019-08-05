@@ -63,7 +63,16 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn flat @click="dialog = false">Cancelar</v-btn>
-              <v-btn flat color="primary" type="submit">Aceptar</v-btn>
+              <v-btn flat color="primary" type="submit">
+                <span v-if="!enviando">Aceptar</span>
+                <v-progress-circular
+                  v-else
+                  size="20"
+                  width="2"
+                  indeterminate
+                  color="primary"
+                ></v-progress-circular>
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-form>
@@ -84,7 +93,8 @@ export default {
     clave: "",
 
     dialog: false,
-    correo: ""
+    correo: "",
+    enviando: false
   }),
   methods: {
     ...mapMutations(["snackbar"]),
@@ -114,9 +124,11 @@ export default {
     },
     recuperar() {
       if (!this.validar()) return;
+      this.enviando = true;
       post("recuperar", { correo: this.correo }).then(res => {
         this.snackbar(res.mensaje);
         if (res.estado == true) this.limpiar();
+        else this.enviando = false;
       });
     },
     limpiar() {
@@ -124,6 +136,7 @@ export default {
       this.usuario = "";
       this.clave = "";
       this.correo = "";
+      this.enviando = false;
     }
   }
 };
