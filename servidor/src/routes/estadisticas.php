@@ -89,7 +89,7 @@ $app->get('/api/estadisticas/universidades', function (Request $request) {
             foreach ($data as $key => $cat) {
                 if ($sw <= 5) {
                     $p = ($cat->cantidad / $total[0]->total) * 100;
-                    array_push($porcentajes, $p);
+                    array_push($porcentajes, round($p, 1));
                     array_push($categorias, $cat->siglas);
                     $sw++;
                 } else {
