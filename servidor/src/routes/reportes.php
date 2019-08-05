@@ -6,14 +6,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $app->get('/api/reporte/admision/{admision}', function (Request $request) {
   $codigoAdmision = $request->getAttribute('admision');
   try {
-    $data = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, YEAR(fechaTermino) as termino, T.fecha as titulacion,MT.nombre as modalidadTitulacion, C.codigo as colegiatura,C.fecha as fechaColegiatura 
-                              FROM egresado E 
-                              INNER JOIN persona on persona.codigo = codigoPersona
-                              INNER JOIN titulacion T on E.codigo= T.codigoEgresado
-                              INNER JOIN modalidadtitulacion MT on MT.codigo = T.codigoModalidad
-                              INNER JOIN colegiatura C on E.codigo = C.codigoEgresado
-                              INNER JOIN admision A on A.codigoEscuela = E.codigoEscuela
-                              WHERE E.codigoAdmision = $codigoAdmision")->fetchAll();
+    $data = $this->db->query("SELECT DISTINCT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, YEAR(fechaTermino) as termino, T.fecha as titulacion,MT.nombre as 										  modalidadTitulacion, C.codigo as colegiatura,C.fecha as fechaColegiatura 
+                                                    FROM egresado E 
+                                                    INNER JOIN persona on persona.codigo = codigoPersona
+                                                    LEFT JOIN titulacion T on E.codigo= T.codigoEgresado
+                                                    LEFT JOIN modalidadtitulacion MT on MT.codigo = T.codigoModalidad
+                                                    LEFT JOIN colegiatura C on E.codigo = C.codigoEgresado
+                                                    INNER JOIN admision A on A.codigoEscuela = E.codigoEscuela
+                                                    WHERE E.codigoAdmision = $codigoAdmision")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data, 'mensaje' => 'Se han encontrado ' . count($data) . ' egresado(s)');
       echo json_encode($result);

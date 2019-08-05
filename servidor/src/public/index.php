@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Http\UploadedFile;
 
-header('Access-Control-Allow-Origin: http://unprg.xyz');
+header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH");
 
@@ -16,7 +16,7 @@ $config['addContentLengthHeader'] = false;
 
 $config['db']['host']   = 'localhost';
 $config['db']['user']   = 'root';
-$config['db']['pass']   = '123';
+$config['db']['pass']   = '';
 $config['db']['dbname'] = 'egresados';
 
 $app = new \Slim\App(['settings' => $config]);
