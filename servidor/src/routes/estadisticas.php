@@ -8,7 +8,7 @@ $app->get('/api/estadisticas/departamentos/{top}', function (Request $request) {
     try {
         $mayores = $this->db->query("SELECT DE.nombre 
                                     FROM distrito D
-                                    INNER JOIN centrolaboral CL on Cl.codigoDistrito = D.codigo
+                                    INNER JOIN centrolaboral CL on CL.codigoDistrito = D.codigo
                                     INNER JOIN contrato C on C.codigoCentroLaboral = CL.codigo
                                     INNER JOIN provincia P on P.codigo = D.codigoProvincia
                                     INNER JOIN departamento DE on P.codigoDepartamento = DE.codigo
@@ -24,7 +24,7 @@ $app->get('/api/estadisticas/departamentos/{top}', function (Request $request) {
 
                 $datos = $this->db->query("SELECT TIMESTAMPDIFF(YEAR, C.fechaInicio,NOW()) as anio, COUNT( C.codigo ) as egresados
                                                     FROM distrito D
-                                                    INNER JOIN centrolaboral CL on Cl.codigoDistrito = D.codigo
+                                                    INNER JOIN centrolaboral CL on CL.codigoDistrito = D.codigo
                                                     INNER JOIN contrato C on C.codigoCentroLaboral = CL.codigo
                                                     INNER JOIN provincia P on P.codigo = D.codigoProvincia
                                                     INNER JOIN departamento DE on P.codigoDepartamento = DE.codigo
@@ -42,7 +42,7 @@ $app->get('/api/estadisticas/departamentos/{top}', function (Request $request) {
             echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
         }
     } catch (PDOException $e) {
-        echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+        echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
     }
 });
 
@@ -152,7 +152,7 @@ $app->get('/api/estadisticas/general', function (Request $request) {
 $app->get('/api/estadisticas/actividades/{top}', function (Request $request) {
     $top = $request->getAttribute('top');
     try {
-        $data = $this->db->query("SELECT  A.nombre ,COUNT(c.codigo) as cantidad
+        $data = $this->db->query("SELECT  A.nombre ,COUNT(C.codigo) as cantidad
                                     from centrolaboral CL
                                     INNER JOIN contrato C on C.codigoCentroLaboral = CL.codigo
                                     INNER JOIN actividadeconomica A on A.codigo = CL.codigoActividad
