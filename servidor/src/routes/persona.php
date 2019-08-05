@@ -123,7 +123,6 @@ $app->post('/api/personas', function (Request $request) {
                                   VALUES('$usuario','$hash','E',$codigo,1)");
           if ($cantidad > 0) {
             $this->db->commit();
-            require '../PHPMailer/Plantillas.php';
             $mail = new PHPMailer(true);
             $mail->SMTPDebug = 0;
             $mail->isSMTP();
@@ -133,10 +132,12 @@ $app->post('/api/personas', function (Request $request) {
             $mail->Password   = 'EGRESADOS2019';
             $mail->SMTPSecure = 'tls';
             $mail->Port       = 587;
+            $mail->CharSet = 'UTF-8';
             $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
             $mail->addAddress("$correo");
             $mail->isHTML(true);
             $mail->Subject = 'Invitaci&oacuten al sistema de seguimiento de egresados';
+            require '../PHPMailer/Plantillas/welcome.php';
             $mail->Body    = $bienvenida;
             $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
             $mail->send();
