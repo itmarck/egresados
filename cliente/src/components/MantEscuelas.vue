@@ -139,7 +139,7 @@
 </template>
 
 <script>
-import { get, post, patch } from "../bd/api";
+import { get, post, patch, put } from "../bd/api";
 import { mapMutations } from "vuex";
 export default {
   components: {
