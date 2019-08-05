@@ -199,6 +199,7 @@ export default {
     copiarDatos() {
       if (this.item) {
         this.isEdit = true;
+        this.provincia = "1";
         this.nombre = this.item.nombre;
         this.vigencia = this.item.vigencia;
       } else this.nuevo();
