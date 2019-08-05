@@ -78,6 +78,7 @@
                           @input="termino = false"
                           locale="es-MX"
                           :show-current="false"
+                          :min="fechaInicio"
                           :max="new Date().toISOString().substr(0, 10)"
                         ></v-date-picker>
                       </v-menu>
