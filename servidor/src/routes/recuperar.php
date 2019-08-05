@@ -7,10 +7,12 @@ use PHPMailer\PHPMailer\PHPMailer;
 $app->post('/api/recuperar', function (Request $request) {
     $correo = $request->getParam('correo');
     try {
-        $hash = $this->db->query("SELECT clave from usuario U INNER JOIN persona P on  P.codigo = U.codigoPersona where correo = '$correo'")->fetchAll();
+        $hash = $this->db->query("SELECT clave,nombres from usuario U INNER JOIN persona P on  P.codigo = U.codigoPersona where correo = '$correo'")->fetchAll();
+       if ($hash) {
         $clave = str_replace('/', '', $hash[0]->clave);
         $url = "http://localhost:8080/recuperar/$clave";
-        require '../PHPMailer/Plantillas.php';
+        $nombre = $hash[0]->nombres;
+        require '../PHPMailer/Plantillas/restore.php';
         $mail = new PHPMailer(true);
         $mail->SMTPDebug = 0;
         $mail->isSMTP();
@@ -23,11 +25,16 @@ $app->post('/api/recuperar', function (Request $request) {
         $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
         $mail->addAddress("$correo");
         $mail->isHTML(true);
-        $mail->Subject = 'Confirmar recuperacion de contraseña';
-        $mail->Body    = "Ingresa aqui para recuperar tu contraseña $url";
+        $mail->Subject = 'Solicitud de cambio de contraseña';
+        $mail->Body    = $recuperar;
         $mail->AltBody = "Ingresa aqui para recuperar tu contraseña $url";
         $mail->send();
         echo json_encode(array('estado' => true, 'mensaje' => 'Enlace de recuperacion enviado a ' . $correo));
+       }else {
+        echo json_encode(array('estado' => false, 'mensaje' => 'Este correo no se encuentra registrado'));
+
+       }
+        
     } catch (PDOException $e) {
         echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
     }
