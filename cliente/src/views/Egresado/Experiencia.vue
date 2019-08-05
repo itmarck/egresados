@@ -254,10 +254,6 @@ export default {
         this.snackbar("Ingrese nombre de la Carrera");
         return false;
       }
-      if (this.centro == "") {
-        this.snackbar("Seleccione su Centro laboral");
-        return false;
-      }
       if (this.addCentro) {
         if (this.razonSocial == "") {
           this.snackbar("Ingrese el nombre del Centro laboral");
@@ -269,6 +265,11 @@ export default {
         }
         if (this.distrito == "") {
           this.snackbar("¿Dónde está ubicado tu Centro laboral?");
+          return false;
+        }
+      } else {
+        if (this.centro == "") {
+          this.snackbar("Seleccione su centro laboral");
           return false;
         }
       }
