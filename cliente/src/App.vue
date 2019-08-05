@@ -5,6 +5,7 @@
       :value="snack"
       bottom
       left
+      :multi-line="mensaje.length > 50"
       :timeout="5000"
       color="secondary"
       @input="hideSnack"
