@@ -19,6 +19,11 @@ const SIZES = {
 
 var doc = new jsPDF();
 
+function sidebar() {
+  doc.setFillColor(COLOR.principal);
+  doc.rect(0, 0, SIZES.sidebar, MAXHEIGHT, 'F');
+}
+
 function fotoPerfil(foto) {
   let img = new Image();
   img.src = urlImage + foto;
@@ -36,7 +41,7 @@ function fotoPerfil(foto) {
 function subtituloSidebar(texto, y) {
   doc
     .setFontSize(14)
-    .setTextColor(COLOR.principal)
+    .setTextColor(COLOR.blanco)
     .setFontStyle('bold')
     .text(texto.toUpperCase(), MARGEN, y);
 }
@@ -46,7 +51,7 @@ function datosSidebar(datos = [], y) {
   for (let i = 0; i < datos.length; i++) {
     doc
       .setFontSize(10)
-      .setTextColor(COLOR.texto)
+      .setTextColor(COLOR.blanco)
       .setFontStyle('normal');
     let options = { maxWidth: SIZES.sidebar - MARGEN * 2 };
     if (i == 0) options = {};
@@ -168,14 +173,17 @@ function datosEducacion(datos, y) {
 function validarPagina(y) {
   if (y > MAXHEIGHT - MARGEN - 20) {
     doc.addPage();
+    sidebar();
     return MARGEN;
   } else return y;
 }
 
-export function basica2(datos, color) {
+export function plantilla1(datos, color) {
   init(color);
 
-  // fotoPerfil(datos.foto);
+  // Sidebar
+  sidebar();
+  fotoPerfil(datos.foto);
   subtituloSidebar('CONTACTO', SIZES.sidebar);
   datosSidebar(datos.contacto, SIZES.sidebar);
   subtituloSidebar('DATOS', SIZES.sidebar + 40);
