@@ -12,20 +12,20 @@ $bienvenida = '<!DOCTYPE html>
 			<td style="padding: 10px 0 30px 0;">
 				<table align="center" border="0" cellpadding="0" cellspacing="0" width="650" style="border: 1px solid #cccccc; border-collapse: collapse;">
 					<tr>
-						<td align="center" bgcolor="#0D47A1" style="font-family:Georgia, Times New Roman, Times, serif ;padding: 40px 0px; color: rgb(255, 255, 255); font-size: 15px; font-weight: bold;">
-                            <h1 >Bienvenido al sistema de control de egresados</h1>
+						<td align="center" bgcolor="#0D47A1" style="padding: 40px 0px; color: rgb(255, 255, 255); font-size: 15px; font-weight: bold;">
+							' . $titulo . '
                         </td>
 					</tr>
 					<tr>
 						<td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
 							<table border="0" cellpadding="0" cellspacing="0" width="100%">
 								<tr>
-									<td style="color: #153643;  font-size: 24px; font-family: Arial, Helvetica, sans-serif;">
+									<td style="color: #153643; font-family:Georgia, Times New Roman, Times, serif ; font-size: 24px; ">
 										Te brindamos una amigable plataforma online para interactuar con tu alma mater
 									</td>
                                 </tr>
                                 <tr>
-                                        <td style="color: #153643;  font-size: 20px; padding: 25px 0px 25px 0px">
+                                        <td style="color: #153643; font-family:Georgia, Times New Roman, Times, serif ; font-size: 20px; padding: 25px 0px 25px 0px">
                                             En la appweb tú podras:
                                         </td>
                                 </tr>

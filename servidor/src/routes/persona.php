@@ -115,7 +115,17 @@ $app->post('/api/personas', function (Request $request) {
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
-        $clave = ($contraseña != null) ? $contraseña : "3P1CI*2019";
+        if ($contraseña != null) {
+          $clave = $contraseña;
+          $titulo = "<h1 >Bienvenido al sistema de egresados</h1>
+          <h2>UNPRG</h2>";
+        } else {
+          $titulo = "<h1 >Te invitamos al sistema de control de egresados</h1>
+          <h2>UNPRG</h2>";
+          $clave = "3P1CI*2019";
+        }
+
+
         $hash = password_hash($clave, PASSWORD_DEFAULT);
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
@@ -136,7 +146,8 @@ $app->post('/api/personas', function (Request $request) {
             $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
             $mail->addAddress("$correo");
             $mail->isHTML(true);
-            $mail->Subject = 'Invitaci&oacuten al sistema de seguimiento de egresados';
+            $mail->Subject = 'UNPRG Egresados';
+
             require '../PHPMailer/Plantillas/welcome.php';
             $mail->Body    = $bienvenida;
             $mail->AltBody = 'Has sido registrado en UNPRG Egresados';
