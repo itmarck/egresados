@@ -92,22 +92,27 @@
         </v-flex>
         <!-- Seleccion de opciones -->
         <v-flex xs12>
-          <v-select
-            :items="plantillas"
-            v-model="plantilla"
-            item-text="texto"
-            item-value="valor"
-            solo
-          ></v-select>
-          <v-select
-            :items="colores"
-            v-model="color"
-            item-text="texto"
-            item-value="valor"
-            placeholder="Color de énfasis"
-            solo
-          ></v-select>
-          <v-btn block color="primary" type="submit">Generar Curriculum</v-btn>
+          <v-card>
+            <v-card-text>
+              <v-select
+                :items="plantillas"
+                v-model="plantilla"
+                label="Seleccione plantilla"
+                item-text="texto"
+                item-value="valor"
+              ></v-select>
+              <v-select
+                :items="colores"
+                v-model="color"
+                label="Seleccione color de énfasis"
+                item-text="texto"
+                item-value="valor"
+              ></v-select>
+              <v-btn block color="primary" type="submit">
+                Generar Curriculum
+              </v-btn>
+            </v-card-text>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-form>
@@ -121,16 +126,15 @@ import { generarPDF } from "../../pdf/index";
 export default {
   data: () => ({
     plantillas: [
-      { texto: "Plantilla Básica I", valor: 0 },
-      { texto: "Plantilla Básica II", valor: 1 }
+      { texto: "Básica simple", valor: 1 },
+      { texto: "Básica con barra lateral", valor: 0 }
     ],
-    plantilla: 0,
+    plantilla: 1,
     colores: [
       { texto: "Gris", valor: "#424242" },
-      { texto: "Negro", valor: "#181818" },
-      { texto: "Azul", valor: "#0D47A1" },
-      { texto: "Verde", valor: "#004D3B" },
-      { texto: "Rojo", valor: "#742129" }
+      { texto: "Plata", valor: "#708090" },
+      { texto: "Verde oscuro", valor: "#2F4F4F" },
+      { texto: "Negro", valor: "#181818" }
     ],
     color: "#424242",
     contratos: [],
@@ -214,6 +218,7 @@ export default {
     },
     generar() {
       if (!this.validar()) return;
+      this.snackbar("Descargando... Por favor espere");
       let datos = {
         nombre: this.persona.nombres + " " + this.persona.apellidoPaterno,
         titulo: this.titulo,
@@ -227,7 +232,6 @@ export default {
         foto: this.user.urlFoto
       };
       generarPDF(datos, this.plantilla, this.color);
-      this.snackbar("Descargando PDF");
     },
     cargarPersona() {
       get("personas/" + this.user.dni).then(res => (this.persona = res.data));
