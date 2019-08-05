@@ -55,7 +55,7 @@ $app->get('/api/estadisticas/total', function (Request $request) {
                                     FROM universidad")->fetchAll();
         $centros = $this->db->query("SELECT COUNT(codigo) as C
         
-                                    FROM centroEstudios")->fetchAll();
+                                    FROM centroestudios")->fetchAll();
         $data = [];
         array_push($data, array('texto' => 'Usuarios registrados', 'valor' => $universidades[0]->U), array('texto' => 'Universidades registradas', 'valor' => $egresados[0]->E), array('texto' => 'Centros de estudios registrados', 'valor' => $centros[0]->C));
         if ($data) {
