@@ -8,13 +8,13 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn flat to="login"> Ingresar </v-btn>
+        <v-btn flat to="/login"> Ingresar </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <!-- Vista -->
     <v-container fill-height grid-list-lg>
       <v-layout justify-center align-center>
-        <v-flex xs12 sm8 md6 xl4>
+        <v-flex xs12 sm8 md6 xl4 v-if="persona.nombres && !invalido">
           <v-form @submit.prevent="cambiar">
             <v-layout row wrap>
               <v-flex xs12>
@@ -47,6 +47,32 @@
             </v-layout>
           </v-form>
         </v-flex>
+        <v-flex d-flex xs12 sm8 md6 xl4 v-else-if="!invalido">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </v-flex>
+        <v-flex xs12 sm8 md6 xl4 v-else>
+          <v-card>
+            <v-card-title primary-title class="title font-weight-light">
+              Enlace inválido o ha expirado
+            </v-card-title>
+            <v-card-text>
+              Puede que éste enlace ya se haya usado. Si aún lo necesitas por
+              favor reenvía el correo en el Inicio de sesión desde la opción
+              <span class="font-weight-light">
+                OLVIDÉ MI CONTRASEÑA
+              </span>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat color="primary" to="/login">
+                Ir a Reenviar correo
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
       </v-layout>
     </v-container>
   </v-content>
@@ -60,7 +86,8 @@ export default {
     clave: "",
     repetir: "",
 
-    persona: {}
+    persona: {},
+    invalido: false
   }),
   methods: {
     ...mapMutations(["snackbar"]),
@@ -77,17 +104,18 @@ export default {
     },
     cambiar() {
       if (!this.validar()) return;
-      let datos = { tipo: "personal", clave: this.clave };
-      if (this.persona.tipo == "E") datos = { ...datos, tipo: "persona" };
-      patch("recuperar/" + this.persona.codigo, datos).then(res => {
-        this.snackbar(res.mensaje);
-        if (res.estado == true) this.$router.push("/login");
-      });
+      patch("recuperar/" + this.persona.codigo, { clave: this.clave }).then(
+        res => {
+          this.snackbar(res.mensaje);
+          if (res.estado == true) this.$router.push("/login");
+        }
+      );
     }
   },
   created() {
     get("recuperar/" + this.$route.params.hash).then(res => {
-      this.persona = res.data;
+      if (res.estado == true) this.persona = res.data;
+      else this.invalido = true;
     });
   }
 };

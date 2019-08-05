@@ -1,12 +1,13 @@
-import { basica } from './basica';
+import { plantilla1 } from './plantilla1';
+import { plantilla2 } from './plantilla2';
 
 export function generarPDF(datos, plantilla, color) {
   switch (plantilla) {
     case 0:
-      basica(datos, color);
+      plantilla1(datos, color);
       break;
-
-    default:
+    case 1:
+      plantilla2(datos, color);
       break;
   }
 }
