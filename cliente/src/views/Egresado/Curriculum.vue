@@ -120,7 +120,10 @@ import { mapState, mapMutations } from "vuex";
 import { generarPDF } from "../../pdf/index";
 export default {
   data: () => ({
-    plantillas: [{ texto: "Plantilla Básica", valor: 0 }],
+    plantillas: [
+      { texto: "Plantilla Básica I", valor: 0 },
+      { texto: "Plantilla Básica II", valor: 1 }
+    ],
     plantilla: 0,
     colores: [
       { texto: "Gris", valor: "#424242" },
