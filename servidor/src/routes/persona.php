@@ -62,7 +62,7 @@ $app->get('/api/personas-publico', function () {
                               INNER JOIN universidad U on EP.codigoUniversidad = U.codigo
                               WHERE P.privacidad = 0
                               ORDER BY fechaTermino DESC
-                              LIMIT 20")->fetchAll();
+                              LIMIT 10")->fetchAll();
     $postgrados = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres,IF(CE.razonSocial is null ,U.nombre,CE.razonSocial) as lugar ,urlFoto, EP.fechaTermino as fecha, EP.nombre, 'P' as tipo
                                     FROM persona P 
                                     INNER JOIN egresado E ON E.codigoPersona = P.codigo
@@ -71,18 +71,18 @@ $app->get('/api/personas-publico', function () {
                                     LEFT JOIN universidad U on U.codigo = EP.codigoUniversidad 
                                     WHERE P.privacidad = 0
                                     ORDER BY EP.fechaTermino DESC
-                                    LIMIT 20")->fetchAll();
-    $experiencia = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres, CL.razonsocial as lugar,C.cargo as nombre,C.fechaInicio as fecha, IF(C.fechaTermino,C.fechaTermino,c.fechaInicio) as fecha , urlFoto,'T' as tipo
+                                    LIMIT 10")->fetchAll();
+    $experiencia = $this->db->query("SELECT CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombres, CL.razonsocial as lugar,C.cargo as nombre,C.fechaInicio as fecha, IF(C.fechaTermino,C.fechaTermino,C.fechaInicio) as fecha , urlFoto,'T' as tipo
                                     FROM persona P
                                     INNER JOIN egresado E on E.codigoPersona = P.codigo
                                     INNER JOIN contrato C on C.codigoEgresado = E.codigo
                                     INNER JOIN centrolaboral CL on CL.codigo = C.codigoCentroLaboral
                                     WHERE P.privacidad = 0
                                     ORDER BY fecha DESC
-                                    LIMIT 20")->fetchAll();
+                                    LIMIT 10")->fetchAll();
     $data = array_merge($carreras, $postgrados, $experiencia);
     usort($data, 'ordenar');
-    $data = array_slice($data, 0, 20);
+    $data = array_slice($data, 0, 10);
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -90,7 +90,7 @@ $app->get('/api/personas-publico', function () {
       echo json_encode(array('estado' => false, 'mensaje' => 'No se han encontrado datos', 'data' => []));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
   }
 });
 
@@ -143,7 +143,7 @@ $app->post('/api/personas', function (Request $request) {
             $mail->SMTPSecure = 'tls';
             $mail->Port       = 587;
             $mail->CharSet = 'UTF-8';
-            $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
+            $mail->setFrom('egresados.unprg@gmail.com', 'Egresados UNPRG');
             $mail->addAddress("$correo");
             $mail->isHTML(true);
             $mail->Subject = 'UNPRG Egresados';
@@ -267,7 +267,9 @@ $app->post('/api/personas/images/{codigo}', function (Request $request) {
     echo json_encode(array('estado' => true, 'mensaje' => 'Foto agregada'));
     $file = $this->db->query("SELECT urlFoto FROM persona WHERE codigo = $codigo")->fetchAll();
     $file = $file[0]->urlFoto;
-    unlink("../public/images/" . $file);
+    if ($file != 'default.jpg') {
+      unlink("../public/images/" . $file);
+    }
     $this->db->exec("UPDATE persona SET urlfoto = '$filename' where codigo = $codigo");
   } else {
     echo json_encode(array('estado' => false, 'mensaje' => 'Error al subir la imagen'));
@@ -289,24 +291,3 @@ function ordenar($a, $b)
 {
   return strtotime($b->fecha) - strtotime($a->fecha);
 }
-
-$app->post('/api/correo', function (Request $request) {
-  require '../PHPMailer/Plantillas.php';
-  $mail = new PHPMailer(true);
-  $mail->SMTPDebug = 2;
-  $mail->isSMTP();
-  $mail->Host       = 'smtp.gmail.com';
-  $mail->SMTPAuth   = true;
-  $mail->Username   = 'egresados.unprg@gmail.com';
-  $mail->Password   = 'EGRESADOS2019';
-  $mail->SMTPSecure = 'tls';
-  $mail->Port       = 587;
-  $mail->CharSet = 'UTF-8';
-  $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
-  $mail->addAddress("javier120699lili@gmail.com");
-  $mail->isHTML(true);
-  $mail->Subject =  '¡Bienvenido!';
-  $mail->Body    = $bienvenida;
-  $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-  $mail->send();
-});

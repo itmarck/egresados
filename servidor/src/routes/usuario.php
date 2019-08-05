@@ -37,7 +37,7 @@ $app->post('/api/usuarios/ingresar', function (Request $request) {
                   WHERE nombre = '$nombre'  and usuario.vigencia=1";
           }
           $data = $this->db->query($sql)->fetchAll();
-          $result = array('estado' => true, 'mensaje' => 'Ingresando...', 'data' => $data[0]);
+          $result = array('estado' => true, 'mensaje' => 'Bienvenido ' . $data[0]->nombres, 'data' => $data[0]);
           echo json_encode($result);
         } else {
           $result = array('estado' => false, 'mensaje' => 'Contraseña Incorrecta');

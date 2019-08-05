@@ -2,6 +2,7 @@
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 
 $app->post('/api/recuperar', function (Request $request) {
@@ -10,7 +11,7 @@ $app->post('/api/recuperar', function (Request $request) {
         $hash = $this->db->query("SELECT clave,nombres from usuario U INNER JOIN persona P on  P.codigo = U.codigoPersona where correo = '$correo'")->fetchAll();
         if ($hash) {
             $clave = str_replace('/', '', $hash[0]->clave);
-            $url = "http://localhost:8080/recuperar/$clave";
+            $url = "http://unprg.xyz/recuperar/$clave";
             $nombre = $hash[0]->nombres;
             require '../PHPMailer/Plantillas/restore.php';
             $mail = new PHPMailer(true);
@@ -22,7 +23,7 @@ $app->post('/api/recuperar', function (Request $request) {
             $mail->Password   = 'EGRESADOS2019';
             $mail->SMTPSecure = 'tls';
             $mail->Port       = 587;
-            $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
+            $mail->setFrom('egresados.unprg@gmail.com', 'Egresados UNPRG');
             $mail->addAddress("$correo");
             $mail->isHTML(true);
             $mail->Subject = 'Solicitud de cambio de clave';
@@ -74,6 +75,7 @@ $app->patch('/api/recuperar/{codigo}', function (Request $request) {
                                       clave = '$hash'
                                       WHERE codigo = $codigo");
         if ($cantidad > 0) {
+            echo json_encode(array('estado' => true, 'mensaje' => 'Contraseña actualizada'));
             $datos = $this->db->query("UPDATE usuario set
                                             clave = '$hash'
                                             WHERE codigo = $codigo");
@@ -86,7 +88,7 @@ $app->patch('/api/recuperar/{codigo}', function (Request $request) {
             $mail->Password   = 'EGRESADOS2019';
             $mail->SMTPSecure = 'tls';
             $mail->Port       = 587;
-            $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
+            $mail->setFrom('egresados.unprg@gmail.com', 'Egresados UNPRG');
             $mail->addAddress("$correo");
             $mail->isHTML(true);
             $mail->Subject = 'Solicitud de cambio de clave';
@@ -95,7 +97,6 @@ $app->patch('/api/recuperar/{codigo}', function (Request $request) {
             $mail->Body    = $cambio;
             $mail->AltBody = "Tu clave ha sido cambiada";
             $mail->send();
-            echo json_encode(array('estado' => true, 'mensaje' => 'Contraseña actualizada'));
         } else {
             echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo actualizar la contraseña'));
         }
