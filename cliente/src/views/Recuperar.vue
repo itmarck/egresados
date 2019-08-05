@@ -104,12 +104,14 @@ export default {
     },
     cambiar() {
       if (!this.validar()) return;
-      patch("recuperar/" + this.persona.codigo, { clave: this.clave }).then(
-        res => {
-          this.snackbar(res.mensaje);
-          if (res.estado == true) this.$router.push("/login");
-        }
-      );
+      patch("recuperar/" + this.persona.codigo, {
+        clave: this.clave,
+        correo: this.persona.correo,
+        nombres: this.persona.nombres
+      }).then(res => {
+        this.snackbar(res.mensaje);
+        if (res.estado == true) this.$router.push("/login");
+      });
     }
   },
   created() {
