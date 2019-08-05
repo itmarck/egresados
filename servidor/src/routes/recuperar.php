@@ -8,33 +8,31 @@ $app->post('/api/recuperar', function (Request $request) {
     $correo = $request->getParam('correo');
     try {
         $hash = $this->db->query("SELECT clave,nombres from usuario U INNER JOIN persona P on  P.codigo = U.codigoPersona where correo = '$correo'")->fetchAll();
-       if ($hash) {
-        $clave = str_replace('/', '', $hash[0]->clave);
-        $url = "http://localhost:8080/recuperar/$clave";
-        $nombre = $hash[0]->nombres;
-        require '../PHPMailer/Plantillas/restore.php';
-        $mail = new PHPMailer(true);
-        $mail->SMTPDebug = 0;
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'egresados.unprg@gmail.com';
-        $mail->Password   = 'EGRESADOS2019';
-        $mail->SMTPSecure = 'tls';
-        $mail->Port       = 587;
-        $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
-        $mail->addAddress("$correo");
-        $mail->isHTML(true);
-        $mail->Subject = 'Solicitud de cambio de contraseña';
-        $mail->Body    = $recuperar;
-        $mail->AltBody = "Ingresa aqui para recuperar tu contraseña $url";
-        $mail->send();
-        echo json_encode(array('estado' => true, 'mensaje' => 'Enlace de recuperacion enviado a ' . $correo));
-       }else {
-        echo json_encode(array('estado' => false, 'mensaje' => 'Este correo no se encuentra registrado'));
-
-       }
-        
+        if ($hash) {
+            $clave = str_replace('/', '', $hash[0]->clave);
+            $url = "http://localhost:8080/recuperar/$clave";
+            $nombre = $hash[0]->nombres;
+            require '../PHPMailer/Plantillas/restore.php';
+            $mail = new PHPMailer(true);
+            $mail->SMTPDebug = 0;
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'egresados.unprg@gmail.com';
+            $mail->Password   = 'EGRESADOS2019';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+            $mail->setFrom('egresados.unprg@gmail.com', 'Egresados Unprg');
+            $mail->addAddress("$correo");
+            $mail->isHTML(true);
+            $mail->Subject = 'Solicitud de cambio de clave';
+            $mail->Body    = $recuperar;
+            $mail->AltBody = "Ingresa aqui para recuperar tu contraseña $url";
+            $mail->send();
+            echo json_encode(array('estado' => true, 'mensaje' => 'Enlace de recuperacion enviado a ' . $correo));
+        } else {
+            echo json_encode(array('estado' => false, 'mensaje' => 'Este correo no se encuentra registrado'));
+        }
     } catch (PDOException $e) {
         echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos ' . $e->getMessage()));
     }

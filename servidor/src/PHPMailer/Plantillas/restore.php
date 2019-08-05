@@ -32,7 +32,7 @@ $recuperar = '<!DOCTYPE html>
 								<tr>
 									<td
 										style="color: #153643; font-family:Georgia, Times New Roman, Times, serif ; font-size: 20px; padding: 25px 0px 25px 0px">
-										Hemos recibido una solictud de cambio de contraseña, para poder realizar el
+										Hemos recibido una solicitud de cambio de clave, para poder realizar el
 										cambio haz click en el siguien enlace:
 									</td>
 								</tr>
@@ -50,7 +50,7 @@ $recuperar = '<!DOCTYPE html>
 																style="color: rgb(255, 255, 255);  text-align: center;   font-size: 16px; line-height: 20px;">
 																<a style="text-decoration: none; border-radius: 40px ; padding: 20px ; color: #ffffff;"
 																	href="' . $url . '">
-																	Recuperar contraseña
+																	Recuperar clave
 																</a>
 															</td>
 														</tr>

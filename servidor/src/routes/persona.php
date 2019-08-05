@@ -139,7 +139,7 @@ $app->post('/api/personas', function (Request $request) {
             $mail->Subject = 'Invitaci&oacuten al sistema de seguimiento de egresados';
             require '../PHPMailer/Plantillas/welcome.php';
             $mail->Body    = $bienvenida;
-            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $mail->AltBody = 'Has sido registrado en UNPRG Egresados';
             $mail->send();
             echo json_encode(array('estado' => true, 'mensaje' => 'Persona registrada correctamente'));
           } else {
