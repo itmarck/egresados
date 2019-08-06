@@ -94,7 +94,7 @@
                         La contraseña por defecto para las cuentas recien
                         creadas es
                         <span class="body-1 font-weight-black">
-                          3P1CI*2019
+                          {{ defaultPass }}
                         </span>
                       </p>
                     </v-card-text>
@@ -224,6 +224,8 @@ import { get, post, del, patch } from "../../bd/api";
 import { mapMutations } from "vuex";
 export default {
   data: () => ({
+    defaultPass: "3P1CI*2019",
+
     isSelect: false,
     personales: [],
     personal: {},
