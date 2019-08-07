@@ -185,6 +185,21 @@ export default {
   },
   methods: {
     ...mapMutations(["snackbar"]),
+    validar() {
+      if (this.universidad == undefined) {
+        this.snackbar("Ingrese nombre de Universidad");
+        return false;
+      }
+      if (this.nombre == "") {
+        this.snackbar("Ingrese nombre de Escuela");
+        return false;
+      }
+      if (this.siglas == "") {
+        this.snackbar("Seleccione admisión");
+        return false;
+      }
+      return true;
+    },
     copiarDatos() {
       if (this.escuela) {
         this.isEdit = true;
@@ -199,6 +214,7 @@ export default {
       } else this.nuevo();
     },
     agregar() {
+      if (!this.validar()) return;
       let datos = {
         nombre: this.nombre,
         siglas: this.siglas,
@@ -225,6 +241,7 @@ export default {
       });
     },
     editar() {
+      if (!this.validar()) return;
       let datos = {
         nombre: this.nombre,
         siglas: this.siglas,
