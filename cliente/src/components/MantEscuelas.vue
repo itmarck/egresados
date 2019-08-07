@@ -98,10 +98,18 @@
               </v-card-text>
             </v-card>
           </v-flex>
-          <v-btn v-if="isEdit && vigencia == true" @click="wait(editar)">
+          <v-btn
+            v-if="isEdit && vigencia == true"
+            @click="wait(editar)"
+            type="submit"
+          >
             Editar
           </v-btn>
-          <v-btn v-else-if="vigencia == true" @click="wait(agregar)">
+          <v-btn
+            v-else-if="vigencia == true"
+            @click="wait(agregar)"
+            type="submit"
+          >
             Agregar
           </v-btn>
           <v-btn v-if="isEdit && vigencia == true" @click="dialog = true">
@@ -195,12 +203,19 @@ export default {
         this.snackbar("Ingrese nombre de Universidad");
         return false;
       }
+      if (
+        this.universidad == "Universidad Nacional Pedro Ruiz Gallo" &&
+        this.facultad == ""
+      ) {
+        this.snackbar("Ingrese nombre de la facultad");
+        return false;
+      }
       if (this.nombre == "") {
         this.snackbar("Ingrese nombre de Escuela");
         return false;
       }
       if (this.siglas == "") {
-        this.snackbar("Seleccione admisión");
+        this.snackbar("Ingrese siglas de Escuela");
         return false;
       }
       return true;
@@ -215,7 +230,6 @@ export default {
         this.siglas = this.escuela.siglas;
         this.estado = this.escuela.estado;
         this.vigencia = this.escuela.vigencia;
-        if (this.facultad != "") this.cargarFacultades();
       } else this.nuevo();
     },
     agregar() {
@@ -223,17 +237,13 @@ export default {
       let datos = {
         nombre: this.nombre,
         siglas: this.siglas,
-        nombreUniversidad: this.universidad,
+        universidad: this.universidad,
         estado: this.estado
       };
       if (this.universidad == "Universidad Nacional Pedro Ruiz Gallo") {
-        if (this.facultad == "") {
-          this.snackbar("La Facultad no puede estar vacia");
-          return;
-        }
         datos = {
           ...datos,
-          nombreFacultad: this.facultad,
+          facultad: this.facultad,
           siglasFacultad: this.obtenerSiglas(this.facultad)
         };
       }
@@ -250,17 +260,13 @@ export default {
       let datos = {
         nombre: this.nombre,
         siglas: this.siglas,
-        nombreUniversidad: this.universidad,
+        universidad: this.universidad,
         estado: this.estado
       };
       if (this.universidad == "Universidad Nacional Pedro Ruiz Gallo") {
-        if (this.facultad == "") {
-          this.snackbar("La Facultad no puede estar vacia");
-          return;
-        }
         datos = {
           ...datos,
-          nombreFacultad: this.facultad,
+          facultad: this.facultad,
           siglasFacultad: this.obtenerSiglas(this.facultad)
         };
       }
@@ -317,6 +323,7 @@ export default {
     cargarTodo() {
       this.cargarEscuelas();
       this.cargarUniversidades();
+      this.cargarFacultades();
     },
     cargarUniversidades() {
       get("universidades").then(res => (this.universidades = res.data));
