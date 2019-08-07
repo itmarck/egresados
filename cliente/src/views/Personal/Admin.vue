@@ -88,13 +88,9 @@
                       </v-radio-group>
                       <p class="body-1 font-weight-light">
                         El usuario podrá agregar o modifcar sus datos personales
-                        al iniciar sesión
-                      </p>
-                      <p class="body-1 font-weight-light">
-                        La contraseña por defecto para las cuentas recien
-                        creadas es
-                        <span class="body-1 font-weight-black">
-                          {{ defaultPass }}
+                        al iniciar sesión.
+                        <span class="font-weight-regular">
+                          Se le enviará un correo con su contraseña.
                         </span>
                       </p>
                     </v-card-text>
@@ -197,7 +193,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!-- Dialog para eliminar datos -->
+      <!-- Dialog para  datos -->
       <v-dialog v-model="dialogTablas" persistent max-width="360">
         <v-card>
           <v-card-title class="title" primary-title>
@@ -224,8 +220,6 @@ import { get, post, del, patch } from "../../bd/api";
 import { mapMutations } from "vuex";
 export default {
   data: () => ({
-    defaultPass: "3P1CI*2019",
-
     isSelect: false,
     personales: [],
     personal: {},
