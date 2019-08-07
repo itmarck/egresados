@@ -98,10 +98,12 @@
               </v-card-text>
             </v-card>
           </v-flex>
-          <v-btn v-if="isEdit && vigencia == true" @click="editar">
+          <v-btn v-if="isEdit && vigencia == true" @click="wait(editar)">
             Editar
           </v-btn>
-          <v-btn v-else-if="vigencia == true" @click="agregar">Agregar</v-btn>
+          <v-btn v-else-if="vigencia == true" @click="wait(agregar)">
+            Agregar
+          </v-btn>
           <v-btn v-if="isEdit && vigencia == true" @click="dialog = true">
             Eliminar
           </v-btn>
@@ -185,6 +187,24 @@ export default {
   },
   methods: {
     ...mapMutations(["snackbar"]),
+    wait(callback) {
+      setTimeout(callback, 1);
+    },
+    validar() {
+      if (this.universidad == undefined) {
+        this.snackbar("Ingrese nombre de Universidad");
+        return false;
+      }
+      if (this.nombre == "") {
+        this.snackbar("Ingrese nombre de Escuela");
+        return false;
+      }
+      if (this.siglas == "") {
+        this.snackbar("Seleccione admisión");
+        return false;
+      }
+      return true;
+    },
     copiarDatos() {
       if (this.escuela) {
         this.isEdit = true;
@@ -199,6 +219,7 @@ export default {
       } else this.nuevo();
     },
     agregar() {
+      if (!this.validar()) return;
       let datos = {
         nombre: this.nombre,
         siglas: this.siglas,
@@ -225,6 +246,7 @@ export default {
       });
     },
     editar() {
+      if (!this.validar()) return;
       let datos = {
         nombre: this.nombre,
         siglas: this.siglas,

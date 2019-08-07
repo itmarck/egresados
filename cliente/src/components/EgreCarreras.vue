@@ -229,10 +229,10 @@
             </v-card>
           </v-flex>
           <!-- Botones -->
-          <v-btn v-if="isEdit" @click="editar" type="submit">
+          <v-btn v-if="isEdit" @click="wait(editar)" type="submit">
             Editar
           </v-btn>
-          <v-btn v-else @click="agregar" type="submit">
+          <v-btn v-else @click="wait(agregar)" type="submit">
             Agregar
           </v-btn>
           <v-btn v-if="isEdit" @click="dialog = true">
@@ -424,6 +424,9 @@ export default {
   },
   methods: {
     ...mapMutations(["snackbar"]),
+    wait(callback) {
+      setTimeout(callback, 1);
+    },
     validar() {
       if (this.universidad == "") {
         this.snackbar("Ingrese nombre de Universidad");

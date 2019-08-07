@@ -27,7 +27,16 @@
                 </v-card>
               </v-flex>
               <v-flex xs12>
-                <v-btn type="submit" block color="primary">Ingresar</v-btn>
+                <v-btn type="submit" block color="primary">
+                  <span v-if="!ingresando">Ingresar</span>
+                  <v-progress-circular
+                    v-else
+                    size="20"
+                    width="2"
+                    indeterminate
+                    color="#FFF"
+                  ></v-progress-circular>
+                </v-btn>
               </v-flex>
               <v-flex xs12 d-flex>
                 <v-btn
@@ -70,7 +79,6 @@
                   size="20"
                   width="2"
                   indeterminate
-                  color="primary"
                 ></v-progress-circular>
               </v-btn>
             </v-card-actions>
@@ -91,6 +99,7 @@ export default {
   data: () => ({
     usuario: "",
     clave: "",
+    ingresando: false,
 
     dialog: false,
     correo: "",
@@ -111,6 +120,7 @@ export default {
       return true;
     },
     ingresar() {
+      this.ingresando = true;
       post("usuarios/ingresar", {
         nombre: this.usuario,
         clave: this.clave
@@ -119,7 +129,7 @@ export default {
         if (res.estado == true) {
           setUser(res.data);
           this.$router.push("/registro");
-        }
+        } else this.ingresando = false;
       });
     },
     recuperar() {

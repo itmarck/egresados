@@ -124,7 +124,15 @@
                 </v-card>
               </v-flex>
               <v-flex xs12>
-                <v-btn block color="primary" type="submit">Registrarse</v-btn>
+                <v-btn block color="primary" type="submit">
+                  <span v-if="!enviando">Registrarse</span>
+                  <v-progress-circular
+                    v-else
+                    size="20"
+                    width="2"
+                    indeterminate
+                  ></v-progress-circular>
+                </v-btn>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -142,6 +150,7 @@ export default {
     PublicToolbar: () => import("../components/PublicToolbar")
   },
   data: () => ({
+    enviando: false,
     correo: "",
     usuario: "",
     password: "",
@@ -191,6 +200,7 @@ export default {
     },
     registrar() {
       if (!this.validar()) return;
+      this.enviando = true;
       post("personas", {
         dni: this.dni,
         correo: this.correo,
@@ -215,7 +225,7 @@ export default {
               this.$router.push("/login");
             }
           });
-        }
+        } else this.enviando = false;
       });
     }
   }
