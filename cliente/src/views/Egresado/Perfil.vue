@@ -5,9 +5,32 @@
       <v-flex xs12 xl7>
         <v-layout row wrap justify-center>
           <v-flex>
-            <v-card>
-              <v-img :src="urlFoto" aspect-ratio="1" />
-            </v-card>
+            <v-hover v-slot:default="{ hover }">
+              <v-card @click="pickFile" style="cursor: pointer">
+                <v-img :src="urlFoto" aspect-ratio="1">
+                  <v-container
+                    v-if="hover"
+                    fill-height
+                    fluid
+                    pa-0
+                    style="background: black; opacity: 0.5"
+                  >
+                    <v-layout justify-center align-center ma-0>
+                      <v-flex xs12 d-flex>
+                        <v-icon large color="white">image</v-icon>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="image"
+                    accept="image/*"
+                    @change="onFilePicked"
+                  />
+                </v-img>
+              </v-card>
+            </v-hover>
           </v-flex>
           <v-flex xs12 sm8 lg9 xl8>
             <v-card>
@@ -153,19 +176,6 @@
                     label="Seleccione estado civil"
                     placeholder="Estado civil"
                   ></v-select>
-                  <v-text-field
-                    label="Seleccione foto de perfil"
-                    @click="pickFile"
-                    v-model="imageName"
-                    prepend-icon="photo"
-                  ></v-text-field>
-                  <input
-                    type="file"
-                    style="display: none"
-                    ref="image"
-                    accept="image/*"
-                    @change="onFilePicked"
-                  />
                 </v-card-text>
               </v-card>
             </v-flex>
@@ -244,21 +254,20 @@ export default {
         estado: this.estadoCivil
       };
       put("personas/" + this.persona.codigo, datos).then(res => {
-        let respuesta = res.mensaje;
+        this.snackbar(res.mensaje);
         if (res.estado == true) {
-          if (this.imageFile != "")
-            uploadPhoto(
-              "personas/images/" + this.user.codigo,
-              this.imageFile
-            ).then(res => {
-              this.cargarDatos();
-              this.snackbar(res.mensaje + " " + respuesta);
-            });
           this.cargarDatos();
           this.isEdit = false;
         }
-        this.snackbar(respuesta);
       });
+    },
+    subirFoto() {
+      uploadPhoto("personal/images/" + this.user.codigo, this.imageFile).then(
+        res => {
+          this.snackbar(res.mensaje);
+          this.cargarDatos();
+        }
+      );
     },
     editar() {
       this.copiarDatos();
@@ -301,6 +310,7 @@ export default {
         fr.addEventListener("load", () => {
           this.imageUrl = fr.result;
           this.imageFile = files[0];
+          this.subirFoto();
         });
       } else {
         this.imageName = "";
