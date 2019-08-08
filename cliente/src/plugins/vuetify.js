@@ -1,6 +1,8 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
-import 'vuetify/src/stylus/app.styl'
+import Vue from 'vue';
+import Vuetify from 'vuetify/lib';
+import 'vuetify/src/stylus/app.styl';
+
+import es from 'vuetify/es5/locale/es';
 
 Vue.use(Vuetify, {
   iconfont: 'md',
@@ -10,14 +12,9 @@ Vue.use(Vuetify, {
     accent: '#0D47A1',
     bright: '#F4BE1D',
     error: '#aa1515'
+  },
+  lang: {
+    locales: { es },
+    current: 'es'
   }
-})
-
-/* 
-
-#FAFAFA Blanco
-#F4BE1D Amarillo
-#0D47A1 Azul
-#181818 Negro 
-
-*/
+});
