@@ -164,7 +164,7 @@ $app->post('/api/personal/images/{codigo}', function (Request $request) {
   if ($imagen->getError() === UPLOAD_ERR_OK) {
     $filename = moveUploadedFile($directory, $imagen);
     echo json_encode(array('estado' => true, 'mensaje' => 'Foto agregada'));
-    $file = $this->db->query("SELECT urlFoto FROM persona WHERE codigo = $codigo")->fetchAll();
+    $file = $this->db->query("SELECT urlFoto FROM personal WHERE codigo = $codigo")->fetchAll();
     $file = $file[0]->urlFoto;
     if ($file != 'default.jpg') {
       unlink("../public/images/" . $file);

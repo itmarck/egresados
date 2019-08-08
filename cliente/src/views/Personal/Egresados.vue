@@ -214,7 +214,7 @@ export default {
     paterno: "",
     materno: "",
     genero: "1",
-    fechaNacimiento: new Date().toISOString().substring(0, 10),
+    fechaNacimiento: new Date().toISOString(),
     fecha: false,
     celular: "",
     estados: [
@@ -336,7 +336,7 @@ export default {
       this.paterno = "";
       this.materno = "";
       this.genero = "1";
-      this.fechaNacimiento = new Date().toISOString().substring(0, 10);
+      this.fechaNacimiento = new Date().toISOString();
       this.celular = "";
       this.estadoCivil = "";
       this.egresado = undefined;

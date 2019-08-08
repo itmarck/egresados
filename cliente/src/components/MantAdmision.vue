@@ -188,7 +188,7 @@ export default {
     universidad: "",
     escuelas: [],
     escuela: "",
-    fechaAdmision: new Date().toISOString().substring(0, 10),
+    fechaAdmision: new Date().toISOString(),
     fAdmision: false,
     ciclo: "",
     modalidades: [],
@@ -235,7 +235,7 @@ export default {
       this.item = undefined;
       this.universidad = "";
       this.escuela = "";
-      this.fechaAdmision = new Date().toISOString().substring(0, 10);
+      this.fechaAdmision = new Date().toISOString();
       this.ciclo = "";
       this.modalidad = "";
       this.vigencia = 1;

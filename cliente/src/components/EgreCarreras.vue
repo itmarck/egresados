@@ -376,13 +376,13 @@ export default {
     universidad: "",
     escuelas: [],
     escuela: "",
-    fechaInicio: new Date().toISOString().substring(0, 10),
+    fechaInicio: new Date().toISOString(),
     inicio: false,
-    fechaTermino: new Date().toISOString().substring(0, 10),
+    fechaTermino: new Date().toISOString(),
     termino: false,
-    fechaAdmision: new Date().toISOString().substring(0, 10),
+    fechaAdmision: new Date().toISOString(),
     fAdmision: false,
-    fechaTitulacion: new Date().toISOString().substring(0, 10),
+    fechaTitulacion: new Date().toISOString(),
     fTitulacion: false,
     ciclo: "",
     titulacion: {},
@@ -396,7 +396,7 @@ export default {
     admision: "",
     addColegiatura: false,
     codigoColegiado: null,
-    fechaColegiatura: new Date().toISOString().substring(0, 10),
+    fechaColegiatura: new Date().toISOString(),
     colegiatura: false
   }),
   computed: {
@@ -456,16 +456,16 @@ export default {
       this.codigo = "";
       this.universidad = "";
       this.escuela = "";
-      this.fechaInicio = new Date().toISOString().substring(0, 10);
-      this.fechaTermino = new Date().toISOString().substring(0, 10);
-      this.fechaAdmision = new Date().toISOString().substring(0, 10);
+      this.fechaInicio = new Date().toISOString();
+      this.fechaTermino = new Date().toISOString();
+      this.fechaAdmision = new Date().toISOString();
       this.admision = "";
       this.ciclo = "";
       this.modalidad = "";
       this.modalidadTitulacion = "";
-      this.fechaTitulacion = new Date().toISOString().substring(0, 10);
+      this.fechaTitulacion = new Date().toISOString();
       this.codigoColegiado = "";
-      this.fechaColegiatura = new Date().toISOString().substring(0, 10);
+      this.fechaColegiatura = new Date().toISOString();
       this.titulacion = {};
     },
     copiarDatos(carrera) {
@@ -483,7 +483,7 @@ export default {
             this.fechaInicio = carrera.fechaInicio;
             this.fechaTermino = carrera.fechaTermino;
             this.admision = carrera.codigoAdmision;
-            this.fechaAdmision = new Date().toISOString().substring(0, 10);
+            this.fechaAdmision = new Date().toISOString();
             this.ciclo = "";
             this.modalidad = "";
             this.fechaTitulacion = carrera.fechaTitulacion;
@@ -491,9 +491,9 @@ export default {
             this.codigoColegiado = carrera.codigoColegiatura;
             this.modalidadTitulacion = carrera.modalidadTitulacion;
             if (carrera.fechaColegiatura == null)
-              this.fechaColegiatura = new Date().toISOString().substring(0, 10);
+              this.fechaColegiatura = new Date().toISOString();
             if (carrera.fechaTitulacion == null)
-              this.fechaTitulacion = new Date().toISOString().substring(0, 10);
+              this.fechaTitulacion = new Date().toISOString();
             if (this.codigoColegiado) this.addColegiatura = true;
             else this.addColegiatura = false;
             if (res.estado) this.admisiones = res.data;
