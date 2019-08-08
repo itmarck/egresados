@@ -262,7 +262,7 @@ export default {
       });
     },
     subirFoto() {
-      uploadPhoto("personal/images/" + this.user.codigo, this.imageFile).then(
+      uploadPhoto("personas/images/" + this.user.codigo, this.imageFile).then(
         res => {
           this.snackbar(res.mensaje);
           this.cargarDatos();
