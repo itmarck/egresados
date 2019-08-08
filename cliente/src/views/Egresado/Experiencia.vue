@@ -287,9 +287,10 @@ export default {
         return false;
       }
       if (this.detalles == "") {
-        let centro = this.centros.filter(e => e.codigo == this.centro)[0]
-          .nombre;
+        let centro;
         if (this.addCentro) centro = this.razonSocial;
+        else
+          centro = this.centros.filter(e => e.codigo == this.centro)[0].nombre;
         this.snackbar("Cuéntanos un poco sobre tu trabajo en " + centro);
         return false;
       }
