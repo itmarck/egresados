@@ -192,7 +192,7 @@ export default {
     paterno: "",
     materno: "",
     genero: "1",
-    fechaNacimiento: new Date().toISOString().substring(0, 10),
+    fechaNacimiento: new Date().toISOString(),
     fecha: false,
     celular: "",
     estados: [

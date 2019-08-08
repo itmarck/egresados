@@ -228,7 +228,7 @@ export default {
     centros: [],
     centro: "",
     cargo: "",
-    fechaInicio: new Date().toISOString().substring(0, 10),
+    fechaInicio: new Date().toISOString(),
     inicio: false,
     fechaTermino: "Actualidad",
     termino: false,
@@ -256,7 +256,7 @@ export default {
     switchActual() {
       if (this.actual) {
         this.fechaTermino = "Actualidad";
-      } else this.fechaTermino = new Date().toISOString().substring(0, 10);
+      } else this.fechaTermino = new Date().toISOString();
     },
     validar() {
       if (this.carrera == "") {
@@ -371,7 +371,7 @@ export default {
       this.carrera = "";
       this.centro = "";
       this.cargo = "";
-      this.fechaInicio = new Date().toISOString().substring(0, 10);
+      this.fechaInicio = new Date().toISOString();
       this.fechaTermino = "Actualidad";
       this.actual = true;
       this.detalles = "";

@@ -315,8 +315,8 @@ export default {
       this.carrera = "";
       this.tipo = "";
       this.codigo = "";
-      this.fechaInicio = new Date().toISOString().substring(0, 10);
-      this.fechaTermino = new Date().toISOString().substring(0, 10);
+      this.fechaInicio = new Date().toISOString();
+      this.fechaTermino = new Date().toISOString();
       this.nombre = "";
       this.certificacion = "2019";
       this.lugar = "U";
