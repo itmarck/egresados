@@ -72,7 +72,6 @@ $app->post('/api/contratos', function (Request $request) {
   $fechaTermino = $request->getParam('termino');
   $detalleFunciones = $request->getParam('descripcion');
   $codigoCentroLaboral = $request->getParam('centro');
-
   $actividadEconomica = $request->getParam('actividadEconomica');
   $codigoDistrito = $request->getParam('distrito');
   $ruc  = $request->getParam('ruc');
@@ -92,8 +91,15 @@ $app->post('/api/contratos', function (Request $request) {
       $codigo = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
       $codigoCentroLaboral = $codigo[0]->codigo;
     }
-    $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
-  Values('$codigoEgresado','$codigoCentroLaboral','$fechaInicio','$cargo','$fechaTermino','$detalleFunciones',1)");
+    if ($fechaTermino == null) {
+      $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
+      Values('$codigoEgresado','$codigoCentroLaboral','$fechaInicio','$cargo',null,'$detalleFunciones',1)");
+    } else {
+      $cantidad = $this->db->exec("INSERT INTO contrato(codigoEgresado,codigoCentroLaboral,fechaInicio,cargo,fechaTermino,detalleFunciones,vigencia) 
+    Values('$codigoEgresado','$codigoCentroLaboral','$fechaInicio','$cargo','$fechaTermino','$detalleFunciones',1)");
+    }
+
+
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Contrato agregado correctamente'));
     } else {
@@ -121,10 +127,10 @@ $app->put('/api/contratos/{codigo}', function (Request $request) {
     detalleFunciones = '$detalleFunciones',";
     if ($fechaTermino) {
       $sql .= "fechaTermino = '$fechaTermino' ";
-    }else {
+    } else {
       $sql .= "fechaTermino = null ";
     }
-    $sql .="WHERE codigo = $codigo";
+    $sql .= "WHERE codigo = $codigo";
     $cantidad = $this->db->exec($sql);
     if ($cantidad > 0) {
       echo json_encode(array('estado' => true, 'mensaje' => 'Contrato actualizado'));

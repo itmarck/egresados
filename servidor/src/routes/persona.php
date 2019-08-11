@@ -118,11 +118,13 @@ $app->post('/api/personas', function (Request $request) {
         if ($contraseña != null) {
           $clave = $contraseña;
           $titulo = "<h1 >Bienvenido al sistema de egresados</h1>
-          <h2>UNPRG</h2>";
+                    <h2>UNPRG</h2>";
+          $subtitulo = 'Te brindamos una amigable plataforma online para interactuar con tu alma mater';
         } else {
           $titulo = "<h1 >Te invitamos al sistema de control de egresados</h1>
           <h2>UNPRG</h2>";
           $clave = "3P1CI*2019";
+          $subtitulo = 'Te brindamos una amigable plataforma online para interactuar con tu alma mater  y tu clave es: ' . $clave;
         }
 
 

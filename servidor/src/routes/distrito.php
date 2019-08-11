@@ -45,14 +45,14 @@ $app->post('/api/distritos', function (Request $request) {
   $codigoProvincia = $request->getParam('provincia');
   try {
     $cantidad = $this->db->exec("INSERT INTO distrito(codigoProvincia,nombre,vigencia) 
-                            Values($codigoProvincia,$nombre,1)");
+                            Values($codigoProvincia,'$nombre',1)");
     if ($cantidad > 0) {
-      echo json_encode(array('estado' => true,'mensaje'=>'Distrito agregado'));
+      echo json_encode(array('estado' => true, 'mensaje' => 'Distrito agregado'));
     } else {
-      echo json_encode(array('estado' => false,'mensaje'=>'No se pudo registrar el distrito'));
+      echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar el distrito'));
     }
   } catch (PDOException $e) {
-    echo json_encode(array('estado' => false,'mensaje'=>'Error al conectar con la base de datos'));
+    echo json_encode(array('estado' => false, 'mensaje' => 'Error al conectar con la base de datos'));
   }
 });
 

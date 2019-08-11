@@ -2,10 +2,13 @@
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 
 $app->get('/api/personal', function () {
   try {
-    $data = $this->db->query("SELECT codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni, correo, vigencia FROM personal ")->fetchAll();
+    $data = $this->db->query("SELECT P.codigo,CONCAT(nombres,' ',apellidoPaterno,' ',apellidoMaterno) as nombre, dni, correo, P.vigencia FROM personal P inner join usuario U on U.codigoPersonal = P.codigo where tipo = 'P' ")->fetchAll();
     if ($data) {
       $result = array('estado' => true, 'data' => $data);
       echo json_encode($result);
@@ -64,14 +67,35 @@ $app->post('/api/personal', function (Request $request) {
       if ($cantidad > 0) {
         $persona = $this->db->query("SELECT last_insert_id() as codigo")->fetchAll();
         $codigo = $persona[0]->codigo;
-        $hash = password_hash(($contraseña) ? $contraseña : contraseña, PASSWORD_DEFAULT);
+        $hash = password_hash(($contraseña) ? $contraseña : "3P1CI*2019", PASSWORD_DEFAULT);
         $nombre = $this->db->query("SELECT nombre FROM usuario WHERE nombre = '$usuario'")->fetchAll();
         if (!$nombre) {
           $cantidad = $this->db->exec("INSERT INTO usuario(nombre,clave,tipo,codigoPersonal,vigencia)
                                   VALUES('$usuario','$hash','P',$codigo,1)");
+          $titulo = "<h1>Te invitamos al sistema de control de egresados</h1>
+          <h2>UNPRG</h2>";
+          $subtitulo = 'Te brindamos una amigable plataforma online para interactuar con tu alma mater  y tu clave es: 3P1CI*2019';
           if ($cantidad > 0) {
             $this->db->commit();
             echo json_encode(array('estado' => true, 'mensaje' => 'Personal registrado correctamente'));
+            $mail = new PHPMailer(true);
+            $mail->SMTPDebug = 0;
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'egresados.unprg@gmail.com';
+            $mail->Password   = 'EGRESADOS2019';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+            $mail->CharSet = 'UTF-8';
+            $mail->setFrom('egresados.unprg@gmail.com', 'UNPRG Egresados');
+            $mail->addAddress("$correo");
+            $mail->isHTML(true);
+            $mail->Subject = 'UNPRG Egresados';
+            require '../PHPMailer/Plantillas/welcome.php';
+            $mail->Body    = $bienvenida;
+            $mail->AltBody = 'Has sido registrado en UNPRG Egresados';
+            $mail->send();
           } else {
             $this->db->rollback();
             echo json_encode(array('estado' => false, 'mensaje' => 'No se pudo registrar el usuario'));
