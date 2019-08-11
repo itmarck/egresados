@@ -286,6 +286,7 @@ export default {
       post("personal", {
         dni: this.dni,
         correo: this.correo,
+        usuario: this.correo.split("@")[0],
         nombres: this.nombres,
         paterno: this.paterno,
         materno: this.materno,
