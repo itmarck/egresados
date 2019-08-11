@@ -21,7 +21,7 @@ $bienvenida = '<!DOCTYPE html>
 							<table border="0" cellpadding="0" cellspacing="0" width="100%">
 								<tr>
 									<td style="color: #153643; font-family:Georgia, Times New Roman, Times, serif ; font-size: 24px; ">
-										Te brindamos una amigable plataforma online para interactuar con tu alma mater
+										' . $subtitulo . '
 									</td>
                                 </tr>
                                 <tr>
@@ -86,18 +86,18 @@ $bienvenida = '<!DOCTYPE html>
                                                     <td width="260" valign="top">
                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="box-shadow: 2px 2px 20px">
                                                             <tr>
-                                                                <td>
-                                                                    <img src="https://i.postimg.cc/XYBWPZgv/2019-08-03-5.png" alt="" width="100%" height="140" style="display: block;" />
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                    <td bgcolor="#0D47A1" height="65px" style="color: rgb(255, 255, 255);  text-align: center;   font-size: 16px; line-height: 20px;">
-                                                                            Seguir las estadisticas de la UNPRG
-                                                                </td>
-                                                            </tr>
+																<td bgcolor="#0D47A1" style=" text-align: center; height: 200px; font-size: 12px; font-weight: bold;">
+																	<a href="http://unprg.xyz" style="box-shadow: 2px 2px 10px 2px #000000 ; padding:80px ; color: #ffffff; text-decoration: none;">
+																		VISITA LA WEB
+																	</a>
+																</td>
+																
+															</tr>
+                                                            
                                                         </table>
                                                     </td>
-                                                </tr>
+												</tr>
+												
 										</table>
 									</td>
 								</tr>
