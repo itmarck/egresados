@@ -29,10 +29,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `actividadeconomica` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `descripcion` text COLLATE utf8_unicode_ci,
+  `nombre` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` text COLLATE utf8_spanish_ci,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `actividadeconomica`
@@ -56,10 +56,10 @@ CREATE TABLE `admision` (
   `codigo` int(11) NOT NULL,
   `codigoEscuela` int(11) NOT NULL,
   `fechaAdmision` date NOT NULL,
-  `nombre` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `codigoModalidad` int(11) NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -69,9 +69,9 @@ CREATE TABLE `admision` (
 
 CREATE TABLE `centroestudios` (
   `codigo` int(11) NOT NULL,
-  `razonSocial` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `razonSocial` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `centroestudios`
@@ -93,10 +93,10 @@ CREATE TABLE `centrolaboral` (
   `codigo` int(11) NOT NULL,
   `codigoActividad` int(11) NOT NULL,
   `codigoDistrito` int(11) DEFAULT NULL,
-  `RUC` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `razonSocial` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `RUC` varchar(20) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `razonSocial` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -106,10 +106,10 @@ CREATE TABLE `centrolaboral` (
 
 CREATE TABLE `colegiatura` (
   `codigoEgresado` int(11) NOT NULL,
-  `codigo` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `codigo` varchar(32) COLLATE utf8_spanish_ci NOT NULL,
   `fecha` date NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -121,12 +121,12 @@ CREATE TABLE `contrato` (
   `codigo` int(11) NOT NULL,
   `codigoEgresado` int(11) NOT NULL,
   `codigoCentroLaboral` int(11) NOT NULL,
-  `cargo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `cargo` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `fechaInicio` date NOT NULL,
   `fechaTermino` date DEFAULT NULL,
-  `detalleFunciones` text COLLATE utf8_unicode_ci NOT NULL,
+  `detalleFunciones` text COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -136,9 +136,9 @@ CREATE TABLE `contrato` (
 
 CREATE TABLE `departamento` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `departamento`
@@ -180,9 +180,9 @@ INSERT INTO `departamento` (`codigo`, `nombre`, `vigencia`) VALUES
 CREATE TABLE `distrito` (
   `codigo` int(11) NOT NULL,
   `codigoProvincia` int(11) NOT NULL,
-  `nombre` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `distrito`
@@ -2035,7 +2035,7 @@ CREATE TABLE `egresado` (
   `fechaInicio` date NOT NULL,
   `fechaTermino` date NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -2046,12 +2046,12 @@ CREATE TABLE `egresado` (
 CREATE TABLE `escuelaprofesional` (
   `codigo` int(11) NOT NULL,
   `codigoFacultad` int(11) DEFAULT NULL,
-  `nombre` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `siglas` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nombre` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `siglas` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
   `estado` tinyint(1) NOT NULL,
   `codigoUniversidad` int(11) DEFAULT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `escuelaprofesional`
@@ -2072,12 +2072,12 @@ CREATE TABLE `estudiospostgrado` (
   `codigoTipo` int(11) NOT NULL,
   `codigoUniversidad` int(11) DEFAULT NULL,
   `codigoCentroEstudios` int(11) DEFAULT NULL,
-  `nombre` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `fechaInicio` date NOT NULL,
   `fechaTermino` date NOT NULL,
   `anioCertificacion` year(4) DEFAULT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -2087,11 +2087,11 @@ CREATE TABLE `estudiospostgrado` (
 
 CREATE TABLE `facultad` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `siglas` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nombre` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `siglas` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
   `estado` tinyint(1) NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `facultad`
@@ -2109,10 +2109,10 @@ INSERT INTO `facultad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) VALU
 
 CREATE TABLE `modalidadadmision` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `descripcion` text COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` text COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `modalidadadmision`
@@ -2134,10 +2134,10 @@ INSERT INTO `modalidadadmision` (`codigo`, `nombre`, `descripcion`, `vigencia`) 
 
 CREATE TABLE `modalidadtitulacion` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `descripcion` text COLLATE utf8_unicode_ci,
+  `nombre` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` text COLLATE utf8_spanish_ci,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `modalidadtitulacion`
@@ -2157,19 +2157,19 @@ INSERT INTO `modalidadtitulacion` (`codigo`, `nombre`, `descripcion`, `vigencia`
 
 CREATE TABLE `persona` (
   `codigo` int(11) NOT NULL,
-  `nombres` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `apellidoMaterno` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `apellidoPaterno` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `nombres` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
+  `apellidoMaterno` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
+  `apellidoPaterno` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
   `genero` tinyint(1) NOT NULL,
   `fechaNacimiento` date NOT NULL,
-  `celular` char(9) COLLATE utf8_unicode_ci NOT NULL,
-  `correo` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `dni` char(8) COLLATE utf8_unicode_ci NOT NULL,
-  `estadoCivil` char(1) COLLATE utf8_unicode_ci NOT NULL,
+  `celular` char(9) COLLATE utf8_spanish_ci NOT NULL,
+  `correo` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
+  `dni` char(8) COLLATE utf8_spanish_ci NOT NULL,
+  `estadoCivil` char(1) COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL,
-  `urlFoto` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `urlFoto` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `privacidad` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `persona`
@@ -2186,16 +2186,16 @@ INSERT INTO `persona` (`codigo`, `nombres`, `apellidoMaterno`, `apellidoPaterno`
 
 CREATE TABLE `personal` (
   `codigo` int(11) NOT NULL,
-  `apellidoPaterno` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `apellidoMaterno` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `dni` char(8) COLLATE utf8_unicode_ci NOT NULL,
+  `apellidoPaterno` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
+  `apellidoMaterno` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
+  `dni` char(8) COLLATE utf8_spanish_ci NOT NULL,
   `genero` tinyint(1) NOT NULL,
-  `correo` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `celular` char(9) COLLATE utf8_unicode_ci NOT NULL,
+  `correo` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
+  `celular` char(9) COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL,
-  `nombres` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `urlFoto` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `nombres` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
+  `urlFoto` varchar(255) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `personal`
@@ -2213,9 +2213,9 @@ INSERT INTO `personal` (`codigo`, `apellidoPaterno`, `apellidoMaterno`, `dni`, `
 CREATE TABLE `provincia` (
   `codigo` int(11) NOT NULL,
   `codigoDepartamento` int(11) NOT NULL,
-  `nombre` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `provincia`
@@ -2424,10 +2424,10 @@ INSERT INTO `provincia` (`codigo`, `codigoDepartamento`, `nombre`, `vigencia`) V
 
 CREATE TABLE `tipoestudiopostgrado` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `descripcion` text COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` text COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `tipoestudiopostgrado`
@@ -2456,7 +2456,7 @@ CREATE TABLE `titulacion` (
   `codigoModalidad` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -2466,11 +2466,11 @@ CREATE TABLE `titulacion` (
 
 CREATE TABLE `universidad` (
   `codigo` int(11) NOT NULL,
-  `nombre` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `siglas` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `siglas` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `estado` tinyint(1) NOT NULL,
   `vigencia` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `universidad`
@@ -2495,12 +2495,12 @@ INSERT INTO `universidad` (`codigo`, `nombre`, `siglas`, `estado`, `vigencia`) V
 CREATE TABLE `usuario` (
   `codigo` int(11) NOT NULL,
   `codigoPersonal` int(11) DEFAULT NULL,
-  `nombre` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `clave` varchar(90) COLLATE utf8_unicode_ci NOT NULL,
-  `tipo` char(1) COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(64) COLLATE utf8_spanish_ci NOT NULL,
+  `clave` varchar(90) COLLATE utf8_spanish_ci NOT NULL,
+  `tipo` char(1) COLLATE utf8_spanish_ci NOT NULL,
   `vigencia` tinyint(1) NOT NULL,
   `codigoPersona` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
